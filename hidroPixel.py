@@ -1435,7 +1435,7 @@ class HidroPixel:
             # não sei o motivo de não ter funcionado para a segunda tabela. mas funcionou e deixei assim
             a = True
 
-    def leh_geotiff_escreve_ascii(self, arquivo, arquivo2, int_float):
+    def leh_geotiff_escreve_ascii(self, arquivo, arquivo2, int_float,mapa_classes = 'n'):
         '''Esta função realiza a leitura do arquivo .tif enviado pelo user e o converte em .rst tipo ascii para leitura no visual basic
             arquivo1 = diretório do arquivo arquivo raster tiff
             arquivo2 = arquivo raster tipo rst ascii (será criado)''' 
@@ -1493,6 +1493,10 @@ class HidroPixel:
             arquivo_rdc.write(f'Max_X,{self.x_max}\n')
             arquivo_rdc.write(f'Min_Y,{self.y_min}\n')
             arquivo_rdc.write(f'Max_Y,{self.y_max}\n')
+            if mapa_classes == 'y':
+                # Determina quantidade de classes
+                qtd_classes = len(np.unique(dados_lidos[dados_lidos !=0]))
+                arquivo_rdc.write(f'watershed_classes,{qtd_classes}\n')
 
     def leh_rst_escreve_geotiff(self, arquivo1, arquivo2, file_type):
         '''Esta função lê os arquivos processados nas rotinas em visual basic, no formato .rst(ascii) e os escreve em geotiff (no diretório informado)
@@ -2517,7 +2521,7 @@ class HidroPixel:
         self.leh_geotiff_escreve_ascii(self.dlg_flow_rout.le_5_pg2.text(),total_exc_rain_file, 'float')
 
         watershed_into_classes = direct_temp + r'\watershed_into_classes.rst'
-        self.leh_geotiff_escreve_ascii(self.dlg_flow_rout.le_6_pg2.text(),watershed_into_classes, 'int') 
+        self.leh_geotiff_escreve_ascii(self.dlg_flow_rout.le_6_pg2.text(),watershed_into_classes, 'int',mapa_classes = 'y') 
 
         # Escreve txt contendo código de direções de fluxo
         flow_directions_code = direct_temp + r'\input_files_config_flow_rout.txt'
