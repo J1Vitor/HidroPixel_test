@@ -22,7 +22,7 @@
 """
 from qgis.PyQt import uic
 from qgis.PyQt.QtCore import QSettings, QTranslator, QCoreApplication, QRegularExpression
-from qgis.PyQt.QtGui import QIcon, QRegExpValidator, QIntValidator, QFont
+from qgis.PyQt.QtGui import QIcon, QRegExpValidator, QIntValidator, QFont, QPixmap
 from qgis.PyQt.QtWidgets import QApplication, QMainWindow, QAction, QFileDialog, QMessageBox, QTableWidgetItem, QWidget, QStackedWidget,QPushButton
 from qgis.core import QgsMessageLog, Qgis, QgsProject,QgsMapLayer,QgsRasterLayer
 import qgis.utils
@@ -1430,10 +1430,10 @@ class HidroPixel:
                         item = QTableWidgetItem(str(Rhclasse_list[lin]))
                         table.setItem(lin, col, item)    
 
-            # Configura a segunda tabela
-            else:
-                # não sei o motivo de não ter funcionado para a segunda tabela. mas funcionou e deixei assim
-                a = True
+        # Configura a segunda tabela
+        else:
+            # não sei o motivo de não ter funcionado para a segunda tabela. mas funcionou e deixei assim
+            a = True
 
     def leh_geotiff_escreve_ascii(self, arquivo, arquivo2, int_float):
         '''Esta função realiza a leitura do arquivo .tif enviado pelo user e o converte em .rst tipo ascii para leitura no visual basic
@@ -2079,8 +2079,8 @@ class HidroPixel:
             arquivo_txt.write("Selected input file directory\n")
             arquivo_txt.write(f'{1 if self.dlg_exc_rain.le_1_pg2.text() !="" else 0},watershed,{bacia_file}\n')
             arquivo_txt.write(f'{1 if self.dlg_exc_rain.le_2_pg2.text() !="" else 0},curve_number_map,{cn_file}\n')
-            arquivo_txt.write(f'{1 if self.dlg_exc_rain.le_3_pg2.text() !="" else 0},Areal_averaged_rainfall,{chuva_media if self.dlg_exc_rain.rb_1_pg1.isChecked() == True else ''}\n')
-            arquivo_txt.write(f'{1 if self.dlg_exc_rain.le_4_pg2.text() !="" else 0},Spatially_distributed_rainfall,{chuva_distribuida if self.dlg_exc_rain.rb_2_pg1.isChecked() == True else ''}\n')
+            arquivo_txt.write(f'{1 if self.dlg_exc_rain.le_3_pg2.text() !="" else 0},Areal_averaged_rainfall,{chuva_media if self.dlg_exc_rain.rb_1_pg1.isChecked() == True else ""}\n')
+            arquivo_txt.write(f'{1 if self.dlg_exc_rain.le_4_pg2.text() !="" else 0},Spatially_distributed_rainfall,{chuva_distribuida if self.dlg_exc_rain.rb_2_pg1.isChecked() == True else ""}\n')
             arquivo_txt.write(f'{1},parameters,{direct_parameters}\n')
 
         # Escreve aquivos de saída
@@ -2516,6 +2516,9 @@ class HidroPixel:
         total_exc_rain_file = direct_temp + r'\total_excess_rainfall.rst'
         self.leh_geotiff_escreve_ascii(self.dlg_flow_rout.le_5_pg2.text(),total_exc_rain_file, 'float')
 
+        watershed_into_classes = direct_temp + r'\watershed_into_classes.rst'
+        self.leh_geotiff_escreve_ascii(self.dlg_flow_rout.le_6_pg2.text(),watershed_into_classes, 'int') 
+
         # Escreve txt contendo código de direções de fluxo
         flow_directions_code = direct_temp + r'\input_files_config_flow_rout.txt'
         with open(flow_directions_code, 'w', encoding = 'utf-8') as arquivo_txt:
@@ -2525,6 +2528,7 @@ class HidroPixel:
             arquivo_txt.write(f'{1 if self.dlg_flow_rout.le_3_pg2.text() !="" else 0},flow_travel_time,{flow_tt_file}\n')
             arquivo_txt.write(f'{1 if self.dlg_flow_rout.le_4_pg2.text() !="" else 0},excess_hyetographs,{hietograma_file}\n')
             arquivo_txt.write(f'{1 if self.dlg_flow_rout.le_5_pg2.text() !="" else 0},total_excess_rainfall,{total_exc_rain_file}\n')
+            arquivo_txt.write(f'{1 if self.dlg_flow_rout.le_6_pg2.text() !="" else 0},watershed_into_classes,{total_exc_rain_file}\n')
             arquivo_txt.write(f'{1},parameters,{parameters_flow_rout}')
 
         self.output1_flow_rout = direct_temp + r'\map_of_resulting_peak_discharge.rst'
@@ -2542,18 +2546,18 @@ class HidroPixel:
     def plot_hidrogramas_e_metricas(self):
         """Esta função gera o hidrograma calculado vs observado e adiciona as métricas de comparação"""
         # leh hidrograma observado
-        hidrograma_obs = self.dlg_flow_rout.le_6_pg4.text()
         cont = 0
         if self.dlg_flow_rout.ch_12_pg4.isChecked() == True and self.dlg_flow_rout.le_6_pg4.text() !='' and self.dlg_flow_rout.le_7_pg4.text() == '':
-            with open(hidrograma_obs,'r',encoding = 'ISO-8859-1') as arquivo_txt:
+            hidrograma_calc = self.dlg_flow_rout.le_6_pg4.text()
+            with open(hidrograma_calc,'r',encoding = 'ISO-8859-1') as arquivo_txt:
                 cabecalho = arquivo_txt.readline()
                 linhas = arquivo_txt.readlines()
-                vazoes_obs = np.zeros(len(linhas))
-                tempos_obs = np.zeros(len(linhas))
+                vazoes_calc = np.zeros(len(linhas))
+                tempos_calc = np.zeros(len(linhas))
 
                 for linha in linhas:
-                    tempos_obs[cont] = linha.replace('\n','').split(',')[0]
-                    vazoes_obs[cont] = linha.replace('\n','').split(',')[1]
+                    tempos_calc[cont] = linha.replace('\n','').split(',')[0]
+                    vazoes_calc[cont] = linha.replace('\n','').split(',')[1]
                     cont+=1
                     
             # Determinação do delta_t: deve ser o mesmo para o hidrograma calculado e observado
@@ -2563,7 +2567,7 @@ class HidroPixel:
             plt.figure(figsize=(8, 6))
             plt.gcf().canvas.manager.window.setWindowTitle('Resulting Watershed Hydrograph')
             plt.title('HYDROGRAPH')
-            plt.plot(tempos_obs, vazoes_obs,c='black', label="Observed Runoff")
+            plt.plot(tempos_calc, vazoes_calc,c='red', label="Calculated Runoff")
             plt.xlabel('time (min)')
             plt.ylabel('Q(m³/s)')
             plt.legend()
@@ -2571,6 +2575,7 @@ class HidroPixel:
             plt.show()
 
         elif self.dlg_flow_rout.ch_12_pg4.isChecked() == True and self.dlg_flow_rout.le_6_pg4.text() !='' and self.dlg_flow_rout.le_7_pg4.text() != '':
+            hidrograma_obs = self.dlg_flow_rout.le_7_pg4.text()
             with open(hidrograma_obs,'r',encoding = 'ISO-8859-1') as arquivo_txt:
                 cabecalho = arquivo_txt.readline()
                 linhas = arquivo_txt.readlines()
@@ -2587,7 +2592,7 @@ class HidroPixel:
 
             # leh hidrograma calculado
             
-            hidrograma_calc = self.dlg_flow_rout.le_7_pg4.text()
+            hidrograma_calc = self.dlg_flow_rout.le_6_pg4.text()
         
             with open(hidrograma_calc,'r') as arquivo_txt:
                 cabecalho = arquivo_txt.readline()
@@ -2616,7 +2621,7 @@ class HidroPixel:
             plt.gcf().canvas.manager.window.setWindowTitle('Resulting Watershed Hydrograph')
             plt.title('HYDROGRAPH')
             plt.plot(tempos_obs, vazoes_obs,c='black', label="Observed Runoff")
-            plt.plot(tempos_obs, vazoes_calc,c='red', label="Calculated Runoff")
+            plt.plot(tempos_calc, vazoes_calc,c='red', label="Calculated Runoff")
             plt.xlabel('time (min)')
             plt.ylabel('Q(m³/s)')
             plt.legend()
@@ -2812,6 +2817,14 @@ class HidroPixel:
         self.dlg_hidro_pixel = HidroPixelDialog()
         # Verifica se a interface já foi mostrada anteriormente
         if not hasattr(self, 'dlg_hidro_pixel') or not  self.dlg_hidro_pixel.isVisible():
+            # Adiciona logo Hidropixel na pagina incial
+            caminho_icon = os.path.abspath(self.diretorio_atual + r"/icons/logo_menu.png")
+            pixmap = QPixmap(caminho_icon)
+
+            # Configurando a imagem na QLabel
+            self.dlg_hidro_pixel.label_2.setPixmap(pixmap)
+            self.dlg_hidro_pixel.label_2.setScaledContents(True)
+
             # Inicializa self.dlg_hidro_pixel apenas se ainda não estiver inicializado ou se estiver fechado
             # Mostra a interface gráfica
             self.dlg_hidro_pixel.show()
@@ -3005,6 +3018,7 @@ class HidroPixel:
             self.dlg_flow_rout.tbtn_pg2_3.clicked.connect(lambda: self.carregaArquivos(self.dlg_flow_rout.le_3_pg2))
             self.dlg_flow_rout.tbtn_pg2_4.clicked.connect(lambda: self.carregaArquivos(self.dlg_flow_rout.le_4_pg2,file_type='text'))
             self.dlg_flow_rout.tbtn_pg2_5.clicked.connect(lambda: self.carregaArquivos(self.dlg_flow_rout.le_5_pg2))
+            self.dlg_flow_rout.tbtn_pg2_6.clicked.connect(lambda: self.carregaArquivos(self.dlg_flow_rout.le_6_pg2))
 
             # configura botões de salvar e salvar para um arquivo: flow travel time
             self.dlg_flow_rout.btn_save_file_pg1.clicked.connect(lambda: self.save_to_file(3, 1))

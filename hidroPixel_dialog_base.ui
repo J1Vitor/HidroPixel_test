@@ -6,12 +6,24 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>285</width>
-    <height>301</height>
+    <width>308</width>
+    <height>305</height>
    </rect>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>285</width>
+    <height>305</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>441</width>
+    <height>400</height>
+   </size>
+  </property>
   <property name="windowTitle">
-   <string>Hidropixel Plugin</string>ICON
+   <string>Hidropixel Plugin</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
@@ -23,21 +35,21 @@
       <enum>QFrame::Raised</enum>
      </property>
      <layout class="QGridLayout" name="gridLayout">
-      <item row="3" column="0">
-       <widget class="QPushButton" name="btn_flow_rout">
+      <item row="4" column="0">
+       <widget class="QPushButton" name="btn_flow_trav">
         <property name="text">
-         <string>FLOW ROUTING</string>
+         <string>FLOW TRAVEL TIME</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="0">
+       <widget class="QPushButton" name="btn_help">
+        <property name="text">
+         <string>HELP</string>
         </property>
        </widget>
       </item>
       <item row="2" column="0">
-       <widget class="QPushButton" name="btn_exes_rain">
-        <property name="text">
-         <string>EXCESS RAINFALL</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
        <widget class="QLabel" name="label_2">
         <property name="whatsThis">
          <string extracomment="sdsd"/>
@@ -47,26 +59,55 @@
 rgb:213, 213, 213;</string>
         </property>
         <property name="text">
-         <string>Hidropixel</string>
+         <string/>
+        </property>
+        <property name="scaledContents">
+         <bool>true</bool>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
-       <widget class="QPushButton" name="btn_flow_trav">
+      <item row="6" column="0">
+       <widget class="QPushButton" name="btn_flow_rout">
         <property name="text">
-         <string>FLOW TRAVEL TIME</string>
+         <string>FLOW ROUTING</string>
         </property>
        </widget>
       </item>
-      <item row="4" column="0">
-       <widget class="QPushButton" name="btn_help">
+      <item row="0" column="0">
+       <spacer name="verticalSpacer">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="5" column="0">
+       <widget class="QPushButton" name="btn_exes_rain">
         <property name="text">
-         <string>HELP</string>
+         <string>EXCESS RAINFALL</string>
         </property>
        </widget>
+      </item>
+      <item row="3" column="0">
+       <spacer name="verticalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
       </item>
      </layout>
     </widget>

@@ -367,8 +367,8 @@ class DesenvolvePlugin():
                     # Fechando o dataset GDAL
 
                     rst_file_bacia = None
-                    return self.global_vars.bacia
                     print(f'Qtd pix bacia: {np.count_nonzero(self.global_vars.bacia)}\nÁrea da bacia: {(np.count_nonzero(self.global_vars.bacia))*30**2/1000000} Km²')
+                    return self.global_vars.bacia
 
             elif function == 2 or function == 3:
                 # Realizando a abertura do arquivo raster e coletando as informações referentes as dimensões do mesmo
@@ -4519,9 +4519,10 @@ class DesenvolvePlugin():
             arquivo2 = arquivo raster tiff (será criado)"""
 
         # Convertendo arquivo ascii para geotiff
-        self.rdc_vars.nlin = 1701
-        self.rdc_vars.ncol = 2722
+        self.rdc_vars.ncol = 1924
+        self.rdc_vars.nlin = 962
         rst_to_raster = np.zeros((self.rdc_vars.nlin,self.rdc_vars.ncol))
+        cont = 0
 
         # Leitura do arquivo ascii
         if file_type == 'int':
@@ -4529,7 +4530,7 @@ class DesenvolvePlugin():
                 for lin in range(self.rdc_vars.nlin):
                     for col in range(self.rdc_vars.ncol):
                         rst_to_raster[lin,col] = int(arquivo_ascii.readline())
-
+                        cont+=1
         elif file_type == 'float':
             with open(arquivo1, 'r') as arquivo_ascii:
                 for lin in range(self.rdc_vars.nlin):
@@ -4563,6 +4564,8 @@ class DesenvolvePlugin():
         banda = None
         driver = None
         tipo_dados = None
+
+        return cont
 
     def apaga_arquivos_temp(self):
         '''Esta função exclui os arquivos temporários criados durante a execução do plugin'''
@@ -4651,47 +4654,37 @@ class DesenvolvePlugin():
     def run_22(self):
         '''Verifica possíveis inconsistências'''
         # Leitura do mesmo arquivo (bacia) por dois métodos: leitura do .rst bin; leitura do geotiff (.tif)
-        arquivo_bacia_rst = r"C:\PyQGIS\hidropixel\temp\DEM.rst"
-        arquivo_bacia_tif = r"C:\Users\joao1\OneDrive\Área de Trabalho\Pesquisa\SmallExample\input_geotiff\2_dem.tif"
+        arquivo_bacia_rst = r"C:\Users\joao1\OneDrive\Área de Trabalho\Pesquisa\Bacia_mulugun\hidropixel_files\entrada_hidropixel\entrada_hidropixel\Input_ascii\arquivo_rodada_1\BACIA_RECL_ASCII.RST"
+        arquivo_bacia_tif = r"C:\Users\joao1\OneDrive\Área de Trabalho\Pesquisa\Bacia_mulugun\hidropixel_files\entrada_hidropixel\entrada_hidropixel\bacia.tif"
 
-        result = self.leh_geotiff_escreve_ascii(arquivo_bacia_tif, arquivo_bacia_rst,'int')
-        bacia_rst = result[1]
-        bacia_tif = result[0]
+        bacia_tif = self.leh_rst_escreve_geotiff(arquivo_bacia_rst,arquivo_bacia_tif,'int')
 
         # comparação do arquivo lido
-        print(np.count_nonzero(bacia_rst != bacia_tif))
-        print(np.count_nonzero(bacia_rst!= 0))
+        print(bacia_tif)
 
-        # Convertendo arquivo ascii para geotiff
-        fn_bacia_geotiff = r"C:\Users\joao1\OneDrive\Documentos\arquivos_para_test\TravelTime_rst_to_tif.tif"
-        # Define os dados a serem escritos
-        dados_p_acum = bacia_rst
-        tipo_dados = gdalconst.GDT_Float32
+        # # Convertendo arquivo ascii para geotiff
+        # fn_bacia_geotiff = r"C:\Users\joao1\OneDrive\Documentos\arquivos_para_test\TravelTime_rst_to_tif.tif"
+        # # Define os dados a serem escritos
+        # dados_p_acum = bacia_rst
+        # tipo_dados = gdalconst.GDT_Float32
 
-        # Obtendo o driver para escrita do arquivo em GeoTiff
-        driver = gdal.GetDriverByName('GTiff')
+        # # Obtendo o driver para escrita do arquivo em GeoTiff
+        # driver = gdal.GetDriverByName('GTiff')
 
-        # Cria arquivo final
-        dataset = driver.Create(fn_bacia_geotiff, self.rdc_vars.ncol, self.rdc_vars.nlin, 1, tipo_dados)
-        dataset.SetGeoTransform(self.rdc_vars.geotransform)
-        dataset.SetProjection(self.rdc_vars.projection)
+        # # Cria arquivo final
+        # dataset = driver.Create(fn_bacia_geotiff, self.rdc_vars.ncol, self.rdc_vars.nlin, 1, tipo_dados)
+        # dataset.SetGeoTransform(self.rdc_vars.geotransform)
+        # dataset.SetProjection(self.rdc_vars.projection)
 
-        # Escreve os dados na banda do arquivo
-        banda = dataset.GetRasterBand(1)
-        banda.WriteArray(dados_p_acum)
+        # # Escreve os dados na banda do arquivo
+        # banda = dataset.GetRasterBand(1)
+        # banda.WriteArray(dados_p_acum)
 
-        # Fechando o arquivo
-        dataset = None
-        banda = None
-        driver = None
-        tipo_dados = None
+        # # Fechando o arquivo
+        # dataset = None
+        # banda = None
+        # driver = None
+        # tipo_dados = None
 
 # classe = DesenvolvePlugin()
-# classe.plot_hidrogramas_e_metricas()
-rst_to_raster = np.zeros((1701,2722))
-
-arquivo1 = r'C:/Users/joao1/OneDrive/Documentos/arquivos_para_test/input_tif/output/hidrograma.txt'
-with open(arquivo1, 'r',encoding = 'ISO-8859-1') as arquivo_txt:
-    cabecalho = arquivo_txt.readline()
-    a=arquivo_txt.readline()
-o arqua = 1
+# classe.run_22()

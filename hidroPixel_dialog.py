@@ -26,10 +26,12 @@ import os
 
 from qgis.PyQt import uic
 from qgis.PyQt import QtWidgets
+from .resources import *
+
 
 # This loads your .ui file so that PyQt can populate your plugin with the elements from Qt Designer
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
-    os.path.dirname(__file__), 'hidroPixel_dialog_base.ui'))
+    os.path.dirname(__file__), 'hidroPixel_dialog_base.ui'),resource_suffix='')
 
 
 class HidroPixelDialog(QtWidgets.QDialog, FORM_CLASS):

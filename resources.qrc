@@ -9,5 +9,6 @@
     <file>icons/info.png</file>
     <file>icons/info(1).png</file>
     <file>icons/info(2).png</file>
+    <file>icons/logo_menu.png</file>
   </qresource>
 </RCC>

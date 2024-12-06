@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>750</width>
+    <width>762</width>
     <height>618</height>
    </rect>
   </property>
@@ -59,6 +59,12 @@
         </item>
         <item row="1" column="0">
          <widget class="QStackedWidget" name="pages_flow_tt">
+          <property name="minimumSize">
+           <size>
+            <width>720</width>
+            <height>0</height>
+           </size>
+          </property>
           <property name="currentIndex">
            <number>0</number>
           </property>
@@ -127,9 +133,9 @@
                <property name="geometry">
                 <rect>
                  <x>0</x>
-                 <y>0</y>
-                 <width>671</width>
-                 <height>576</height>
+                 <y>-122</y>
+                 <width>683</width>
+                 <height>571</height>
                 </rect>
                </property>
                <layout class="QGridLayout" name="gridLayout_6">
@@ -141,7 +147,7 @@
                    </font>
                   </property>
                   <property name="title">
-                   <string>General informations:</string>
+                   <string>General information:</string>
                   </property>
                   <layout class="QGridLayout" name="gridLayout_5">
                    <item row="0" column="0">
@@ -226,7 +232,7 @@
                             </font>
                            </property>
                            <property name="text">
-                            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Minimum slope surface travel time determination:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Minimum slope surface for travel time determination:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                            </property>
                           </widget>
                          </item>
@@ -1678,22 +1684,16 @@
                     <layout class="QGridLayout" name="gridLayout_26">
                      <item row="0" column="0">
                       <widget class="QLabel" name="label_28">
-                       <property name="maximumSize">
-                        <size>
-                         <width>240</width>
-                         <height>16777215</height>
-                        </size>
-                       </property>
                        <property name="text">
                         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Watershed delineation:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                        </property>
                       </widget>
                      </item>
                      <item row="0" column="1">
-                      <widget class="QLineEdit" name="le_2_pg2_2">
+                      <widget class="QLineEdit" name="le_1_pg2">
                        <property name="minimumSize">
                         <size>
-                         <width>0</width>
+                         <width>360</width>
                          <height>24</height>
                         </size>
                        </property>
@@ -1791,7 +1791,7 @@
                       <widget class="QLineEdit" name="le_2_pg2">
                        <property name="minimumSize">
                         <size>
-                         <width>0</width>
+                         <width>360</width>
                          <height>24</height>
                         </size>
                        </property>
@@ -1882,7 +1882,7 @@
                       <widget class="QLineEdit" name="le_3_pg2">
                        <property name="minimumSize">
                         <size>
-                         <width>0</width>
+                         <width>360</width>
                          <height>24</height>
                         </size>
                        </property>
@@ -1953,7 +1953,7 @@
                       <widget class="QLineEdit" name="le_4_pg2">
                        <property name="minimumSize">
                         <size>
-                         <width>0</width>
+                         <width>360</width>
                          <height>24</height>
                         </size>
                        </property>
@@ -1983,7 +1983,7 @@
                       <widget class="QLineEdit" name="le_5_pg2">
                        <property name="minimumSize">
                         <size>
-                         <width>0</width>
+                         <width>360</width>
                          <height>24</height>
                         </size>
                        </property>
@@ -2046,7 +2046,7 @@
                      <item row="0" column="0">
                       <widget class="QLabel" name="label_74">
                        <property name="text">
-                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Flow accumulation drainage área (km²):&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Flow accumulation drainage area (km²):&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                        </property>
                       </widget>
                      </item>
@@ -2054,7 +2054,7 @@
                       <widget class="QLineEdit" name="le_6_pg2">
                        <property name="minimumSize">
                         <size>
-                         <width>0</width>
+                         <width>360</width>
                          <height>24</height>
                         </size>
                        </property>
@@ -2653,8 +2653,8 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>695</width>
-                 <height>479</height>
+                 <width>254</width>
+                 <height>64</height>
                 </rect>
                </property>
                <layout class="QGridLayout" name="gridLayout_30">
@@ -2702,8 +2702,8 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>695</width>
-                 <height>479</height>
+                 <width>545</width>
+                 <height>335</height>
                 </rect>
                </property>
                <layout class="QGridLayout" name="gridLayout_48">
