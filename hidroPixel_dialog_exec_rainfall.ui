@@ -173,7 +173,7 @@
                  <x>0</x>
                  <y>0</y>
                  <width>562</width>
-                 <height>388</height>
+                 <height>395</height>
                 </rect>
                </property>
                <layout class="QGridLayout" name="gridLayout_13">
@@ -525,7 +525,7 @@
                  <x>0</x>
                  <y>0</y>
                  <width>562</width>
-                 <height>418</height>
+                 <height>425</height>
                 </rect>
                </property>
                <layout class="QGridLayout" name="gridLayout_7">
@@ -1122,7 +1122,7 @@
                  <x>0</x>
                  <y>0</y>
                  <width>562</width>
-                 <height>418</height>
+                 <height>425</height>
                 </rect>
                </property>
                <layout class="QGridLayout" name="gridLayout_14">
@@ -1567,8 +1567,8 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>558</width>
-                 <height>411</height>
+                 <width>562</width>
+                 <height>425</height>
                 </rect>
                </property>
                <layout class="QGridLayout" name="gridLayout_30">
@@ -1616,8 +1616,8 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>558</width>
-                 <height>411</height>
+                 <width>562</width>
+                 <height>425</height>
                 </rect>
                </property>
                <layout class="QGridLayout" name="gridLayout_17">
@@ -1743,7 +1743,7 @@
                        </size>
                       </property>
                       <property name="toolTip">
-                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:700;&quot;&gt;Optional output.&lt;br/&gt;&lt;/span&gt;&lt;br/&gt;If selected, the user can specify a directory to save a raster file containing the watershed pixels ID.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:704;&quot;&gt;*Recommended output.&lt;br/&gt;&lt;/span&gt;&lt;br/&gt;If selected, the user can specify a directory to save a raster file containing the watershed pixels ID.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                       </property>
                       <property name="text">
                        <string/>
@@ -1805,7 +1805,7 @@
                       <item row="0" column="0" alignment="Qt::AlignLeft">
                        <widget class="QLabel" name="label_57">
                         <property name="text">
-                         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Map of watershed pixels ID:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Map of watershed pixels ID*:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                         </property>
                        </widget>
                       </item>
@@ -2807,13 +2807,10 @@
           </property>
           <property name="html">
            <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-hr { height: 1px; border-width: 0; }
-li.unchecked::marker { content: &quot;\2610&quot;; }
-li.checked::marker { content: &quot;\2612&quot;; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Segoe UI'; font-size:9pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="textInteractionFlags">
            <set>Qt::TextSelectableByMouse</set>
@@ -2895,6 +2892,85 @@ li.checked::marker { content: &quot;\2612&quot;; }
    </layout>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>le_3_pg1</tabstop>
+  <tabstop>tbtn_pg1_1</tabstop>
+  <tabstop>le_1_pg1</tabstop>
+  <tabstop>rb_1_pg1</tabstop>
+  <tabstop>rb_2_pg1</tabstop>
+  <tabstop>btn_read_pg1</tabstop>
+  <tabstop>btn_save_file_pg1</tabstop>
+  <tabstop>btn_help_pg1</tabstop>
+  <tabstop>btn_rain_int</tabstop>
+  <tabstop>le_1_pg_ri</tabstop>
+  <tabstop>tbtn_pg_r_1</tabstop>
+  <tabstop>le_2_pg_ri</tabstop>
+  <tabstop>tbtn_pg_r_2</tabstop>
+  <tabstop>le_3_pg_ri</tabstop>
+  <tabstop>tbtn_pg_r_3</tabstop>
+  <tabstop>le_4_pg_ri</tabstop>
+  <tabstop>tbtn_pg_r_4</tabstop>
+  <tabstop>btn_save_1_pg_ri</tabstop>
+  <tabstop>le_5_pg_ri</tabstop>
+  <tabstop>tbtn_pg_r_5</tabstop>
+  <tabstop>btn_save_2_pg_ri</tabstop>
+  <tabstop>btn_read_pg_ri</tabstop>
+  <tabstop>btn_save_file_pg_ri</tabstop>
+  <tabstop>btn_help_pg_ri</tabstop>
+  <tabstop>btn_input_data</tabstop>
+  <tabstop>le_1_pg2</tabstop>
+  <tabstop>tbtn_pg2_1</tabstop>
+  <tabstop>le_2_pg2</tabstop>
+  <tabstop>tbtn_pg2_2</tabstop>
+  <tabstop>le_3_pg2</tabstop>
+  <tabstop>tbtn_pg2_3</tabstop>
+  <tabstop>le_4_pg2</tabstop>
+  <tabstop>tbtn_pg2_4</tabstop>
+  <tabstop>btn_read_pg2</tabstop>
+  <tabstop>btn_save_file_pg2</tabstop>
+  <tabstop>btn_help_pg2</tabstop>
+  <tabstop>btn_data_va_tool</tabstop>
+  <tabstop>btn_run</tabstop>
+  <tabstop>ch_1_pg4</tabstop>
+  <tabstop>le_1_pg4</tabstop>
+  <tabstop>tbtn_pg4_1</tabstop>
+  <tabstop>ch_7_pg4</tabstop>
+  <tabstop>ch_2_pg4</tabstop>
+  <tabstop>le_2_pg4</tabstop>
+  <tabstop>tbtn_pg4_2</tabstop>
+  <tabstop>ch_8_pg4</tabstop>
+  <tabstop>ch_3_pg4</tabstop>
+  <tabstop>le_3_pg4</tabstop>
+  <tabstop>tbtn_pg4_3</tabstop>
+  <tabstop>ch_9_pg4</tabstop>
+  <tabstop>ch_4_pg4</tabstop>
+  <tabstop>le_4_pg4</tabstop>
+  <tabstop>tbtn_pg4_4</tabstop>
+  <tabstop>ch_10_pg4</tabstop>
+  <tabstop>ch_5_pg4</tabstop>
+  <tabstop>le_5_pg4</tabstop>
+  <tabstop>tbtn_pg4_5</tabstop>
+  <tabstop>ch_11_pg4</tabstop>
+  <tabstop>ch_6_pg4</tabstop>
+  <tabstop>le_6_pg4</tabstop>
+  <tabstop>tbtn_pg4_6</tabstop>
+  <tabstop>btn_read_pg4</tabstop>
+  <tabstop>btn_save_file_pg4</tabstop>
+  <tabstop>btn_run_2</tabstop>
+  <tabstop>btn_close_pg4</tabstop>
+  <tabstop>btn_help_pg4</tabstop>
+  <tabstop>btn_config</tabstop>
+  <tabstop>scrollArea</tabstop>
+  <tabstop>scrollArea_3</tabstop>
+  <tabstop>scrollArea_4</tabstop>
+  <tabstop>scrollArea_5</tabstop>
+  <tabstop>scrollArea_2</tabstop>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>te_logg</tabstop>
+  <tabstop>btn_cancel_log</tabstop>
+  <tabstop>btn_close_log</tabstop>
+  <tabstop>btn_help_log</tabstop>
+ </tabstops>
  <resources>
   <include location="resources.qrc"/>
  </resources>

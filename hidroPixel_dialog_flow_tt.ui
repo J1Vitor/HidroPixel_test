@@ -126,6 +126,12 @@
                 <height>450</height>
                </size>
               </property>
+              <property name="maximumSize">
+               <size>
+                <width>704</width>
+                <height>460</height>
+               </size>
+              </property>
               <property name="widgetResizable">
                <bool>true</bool>
               </property>
@@ -133,9 +139,9 @@
                <property name="geometry">
                 <rect>
                  <x>0</x>
-                 <y>-122</y>
-                 <width>683</width>
-                 <height>571</height>
+                 <y>-215</y>
+                 <width>712</width>
+                 <height>654</height>
                 </rect>
                </property>
                <layout class="QGridLayout" name="gridLayout_6">
@@ -277,7 +283,7 @@
                           </font>
                          </property>
                          <property name="text">
-                          <string>m / km</string>
+                          <string>m / m</string>
                          </property>
                         </widget>
                        </item>
@@ -854,6 +860,12 @@
                    </item>
                    <item row="2" column="0">
                     <widget class="QGroupBox" name="groupBox_4">
+                     <property name="maximumSize">
+                      <size>
+                       <width>16777215</width>
+                       <height>660</height>
+                      </size>
+                     </property>
                      <property name="title">
                       <string>Use regional curve parameters:</string>
                      </property>
@@ -870,7 +882,26 @@
                       <item row="0" column="0" rowspan="2">
                        <layout class="QGridLayout" name="gridLayout_66">
                         <item row="0" column="0">
-                         <widget class="QLabel" name="label_90">
+                         <widget class="QLabel" name="label_93">
+                          <property name="maximumSize">
+                           <size>
+                            <width>210</width>
+                            <height>16777215</height>
+                           </size>
+                          </property>
+                          <property name="text">
+                           <string/>
+                          </property>
+                          <property name="pixmap">
+                           <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/bacia_secao_trans2.png</pixmap>
+                          </property>
+                          <property name="scaledContents">
+                           <bool>false</bool>
+                          </property>
+                         </widget>
+                        </item>
+                        <item row="0" column="1">
+                         <widget class="QLabel" name="label_94">
                           <property name="text">
                            <string/>
                           </property>
@@ -887,7 +918,7 @@
                          <layout class="QGridLayout" name="gridLayout_64">
                           <item row="0" column="2">
                            <layout class="QGridLayout" name="gridLayout_63">
-                            <item row="0" column="1" alignment="Qt::AlignLeft">
+                            <item row="1" column="1" alignment="Qt::AlignLeft">
                              <widget class="QLineEdit" name="le_17_pg1">
                               <property name="maximumSize">
                                <size>
@@ -905,32 +936,7 @@
                               </property>
                              </widget>
                             </item>
-                            <item row="0" column="2">
-                             <spacer name="horizontalSpacer_16">
-                              <property name="orientation">
-                               <enum>Qt::Horizontal</enum>
-                              </property>
-                              <property name="sizeHint" stdset="0">
-                               <size>
-                                <width>40</width>
-                                <height>20</height>
-                               </size>
-                              </property>
-                             </spacer>
-                            </item>
-                            <item row="0" column="0">
-                             <widget class="QLabel" name="label_61">
-                              <property name="font">
-                               <font>
-                                <pointsize>9</pointsize>
-                               </font>
-                              </property>
-                              <property name="text">
-                               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;Coefficient d:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                              </property>
-                             </widget>
-                            </item>
-                            <item row="0" column="3">
+                            <item row="1" column="2">
                              <widget class="QLabel" name="label_91">
                               <property name="sizePolicy">
                                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -972,36 +978,36 @@
                               </property>
                              </widget>
                             </item>
-                           </layout>
-                          </item>
-                          <item row="0" column="0">
-                           <layout class="QGridLayout" name="gridLayout_60">
-                            <item row="0" column="0">
-                             <spacer name="horizontalSpacer_11">
-                              <property name="orientation">
-                               <enum>Qt::Horizontal</enum>
-                              </property>
-                              <property name="sizeHint" stdset="0">
-                               <size>
-                                <width>40</width>
-                                <height>20</height>
-                               </size>
-                              </property>
-                             </spacer>
-                            </item>
-                            <item row="0" column="1">
-                             <widget class="QLabel" name="label_39">
+                            <item row="1" column="0">
+                             <widget class="QLabel" name="label_61">
                               <property name="font">
                                <font>
                                 <pointsize>9</pointsize>
                                </font>
                               </property>
                               <property name="text">
-                               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;Coefficient c:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;Coefficient d:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                               </property>
                              </widget>
                             </item>
-                            <item row="0" column="2" alignment="Qt::AlignRight">
+                            <item row="0" column="1">
+                             <spacer name="verticalSpacer_12">
+                              <property name="orientation">
+                               <enum>Qt::Vertical</enum>
+                              </property>
+                              <property name="sizeHint" stdset="0">
+                               <size>
+                                <width>20</width>
+                                <height>40</height>
+                               </size>
+                              </property>
+                             </spacer>
+                            </item>
+                           </layout>
+                          </item>
+                          <item row="0" column="0">
+                           <layout class="QGridLayout" name="gridLayout_60">
+                            <item row="1" column="1" alignment="Qt::AlignRight">
                              <widget class="QLineEdit" name="le_16_pg1">
                               <property name="maximumSize">
                                <size>
@@ -1021,6 +1027,31 @@
                                <string/>
                               </property>
                              </widget>
+                            </item>
+                            <item row="1" column="0">
+                             <widget class="QLabel" name="label_39">
+                              <property name="font">
+                               <font>
+                                <pointsize>9</pointsize>
+                               </font>
+                              </property>
+                              <property name="text">
+                               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;Coefficient c:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                              </property>
+                             </widget>
+                            </item>
+                            <item row="0" column="1">
+                             <spacer name="verticalSpacer_9">
+                              <property name="orientation">
+                               <enum>Qt::Vertical</enum>
+                              </property>
+                              <property name="sizeHint" stdset="0">
+                               <size>
+                                <width>20</width>
+                                <height>40</height>
+                               </size>
+                              </property>
+                             </spacer>
                             </item>
                            </layout>
                           </item>
@@ -1065,19 +1096,6 @@
                              </widget>
                             </item>
                             <item row="0" column="2">
-                             <spacer name="horizontalSpacer_17">
-                              <property name="orientation">
-                               <enum>Qt::Horizontal</enum>
-                              </property>
-                              <property name="sizeHint" stdset="0">
-                               <size>
-                                <width>40</width>
-                                <height>20</height>
-                               </size>
-                              </property>
-                             </spacer>
-                            </item>
-                            <item row="0" column="3">
                              <widget class="QLabel" name="label_92">
                               <property name="sizePolicy">
                                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -1119,11 +1137,24 @@
                               </property>
                              </widget>
                             </item>
+                            <item row="1" column="1">
+                             <spacer name="verticalSpacer_11">
+                              <property name="orientation">
+                               <enum>Qt::Vertical</enum>
+                              </property>
+                              <property name="sizeHint" stdset="0">
+                               <size>
+                                <width>20</width>
+                                <height>40</height>
+                               </size>
+                              </property>
+                             </spacer>
+                            </item>
                            </layout>
                           </item>
                           <item row="0" column="0">
                            <layout class="QGridLayout" name="gridLayout_61">
-                            <item row="0" column="1">
+                            <item row="0" column="0">
                              <widget class="QLabel" name="label_40">
                               <property name="font">
                                <font>
@@ -1135,20 +1166,7 @@
                               </property>
                              </widget>
                             </item>
-                            <item row="0" column="0">
-                             <spacer name="horizontalSpacer_12">
-                              <property name="orientation">
-                               <enum>Qt::Horizontal</enum>
-                              </property>
-                              <property name="sizeHint" stdset="0">
-                               <size>
-                                <width>40</width>
-                                <height>20</height>
-                               </size>
-                              </property>
-                             </spacer>
-                            </item>
-                            <item row="0" column="2" alignment="Qt::AlignRight">
+                            <item row="0" column="1" alignment="Qt::AlignRight">
                              <widget class="QLineEdit" name="le_18_pg1">
                               <property name="maximumSize">
                                <size>
@@ -1165,6 +1183,19 @@
                                <string/>
                               </property>
                              </widget>
+                            </item>
+                            <item row="1" column="1">
+                             <spacer name="verticalSpacer_10">
+                              <property name="orientation">
+                               <enum>Qt::Vertical</enum>
+                              </property>
+                              <property name="sizeHint" stdset="0">
+                               <size>
+                                <width>20</width>
+                                <height>40</height>
+                               </size>
+                              </property>
+                             </spacer>
                             </item>
                            </layout>
                           </item>
@@ -1357,7 +1388,7 @@
                  <x>0</x>
                  <y>0</y>
                  <width>695</width>
-                 <height>920</height>
+                 <height>913</height>
                 </rect>
                </property>
                <layout class="QGridLayout" name="gridLayout_14">
@@ -1579,7 +1610,7 @@
                           <bool>true</bool>
                          </property>
                          <attribute name="horizontalHeaderVisible">
-                          <bool>true</bool>
+                          <bool>false</bool>
                          </attribute>
                          <attribute name="horizontalHeaderCascadingSectionResizes">
                           <bool>true</bool>
@@ -2315,7 +2346,7 @@
                               <bool>true</bool>
                              </property>
                              <attribute name="horizontalHeaderVisible">
-                              <bool>true</bool>
+                              <bool>false</bool>
                              </attribute>
                              <attribute name="horizontalHeaderCascadingSectionResizes">
                               <bool>true</bool>
@@ -2653,8 +2684,8 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>254</width>
-                 <height>64</height>
+                 <width>270</width>
+                 <height>61</height>
                 </rect>
                </property>
                <layout class="QGridLayout" name="gridLayout_30">
@@ -2702,8 +2733,8 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>545</width>
-                 <height>335</height>
+                 <width>556</width>
+                 <height>320</height>
                 </rect>
                </property>
                <layout class="QGridLayout" name="gridLayout_48">
@@ -3788,13 +3819,10 @@
             </property>
             <property name="html">
              <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-hr { height: 1px; border-width: 0; }
-li.unchecked::marker { content: &quot;\2610&quot;; }
-li.checked::marker { content: &quot;\2612&quot;; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Segoe UI'; font-size:9pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="textInteractionFlags">
              <set>Qt::TextSelectableByMouse</set>
@@ -3878,6 +3906,106 @@ li.checked::marker { content: &quot;\2612&quot;; }
    </layout>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>le_21_pg1</tabstop>
+  <tabstop>tbtn_pg1_1</tabstop>
+  <tabstop>le_1_pg1</tabstop>
+  <tabstop>le_3_pg1</tabstop>
+  <tabstop>le_4_pg1</tabstop>
+  <tabstop>le_5_pg1</tabstop>
+  <tabstop>le_9_pg1</tabstop>
+  <tabstop>le_6_pg1</tabstop>
+  <tabstop>le_10_pg1</tabstop>
+  <tabstop>le_7_pg1</tabstop>
+  <tabstop>le_11_pg1</tabstop>
+  <tabstop>le_8_pg1</tabstop>
+  <tabstop>le_12_pg1</tabstop>
+  <tabstop>le_14_pg1</tabstop>
+  <tabstop>le_15_pg1</tabstop>
+  <tabstop>groupBox_4</tabstop>
+  <tabstop>le_16_pg1</tabstop>
+  <tabstop>le_17_pg1</tabstop>
+  <tabstop>le_18_pg1</tabstop>
+  <tabstop>le_19_pg1</tabstop>
+  <tabstop>btn_read_pg1</tabstop>
+  <tabstop>btn_save_file_pg1</tabstop>
+  <tabstop>btn_help_pg1</tabstop>
+  <tabstop>btn_input_data</tabstop>
+  <tabstop>le_1_pg2</tabstop>
+  <tabstop>tbtn_pg2_1</tabstop>
+  <tabstop>le_2_pg2</tabstop>
+  <tabstop>tbtn_pg2_2</tabstop>
+  <tabstop>le_3_pg2</tabstop>
+  <tabstop>tbtn_pg2_3</tabstop>
+  <tabstop>le_4_pg2</tabstop>
+  <tabstop>tbtn_pg2_4</tabstop>
+  <tabstop>le_5_pg2</tabstop>
+  <tabstop>tbtn_pg2_5</tabstop>
+  <tabstop>le_6_pg2</tabstop>
+  <tabstop>tbtn_pg2_9</tabstop>
+  <tabstop>btn_read_t1</tabstop>
+  <tabstop>btn_save_file_t1</tabstop>
+  <tabstop>btn_help_t1</tabstop>
+  <tabstop>le_9_pg2</tabstop>
+  <tabstop>tbtn_pg2_6</tabstop>
+  <tabstop>btn_read_t2</tabstop>
+  <tabstop>btn_save_file_t2</tabstop>
+  <tabstop>btn_help_t2</tabstop>
+  <tabstop>le_11_pg2</tabstop>
+  <tabstop>btn_read_pg2</tabstop>
+  <tabstop>btn_save_file_pg2</tabstop>
+  <tabstop>btn_help_pg2</tabstop>
+  <tabstop>btn_data_va_tool</tabstop>
+  <tabstop>btn_run</tabstop>
+  <tabstop>ch_6_pg4</tabstop>
+  <tabstop>le_6_pg4</tabstop>
+  <tabstop>tbtn_pg4_6</tabstop>
+  <tabstop>ch_17_pg4</tabstop>
+  <tabstop>ch_7_pg4</tabstop>
+  <tabstop>le_7_pg4</tabstop>
+  <tabstop>tbtn_pg4_7</tabstop>
+  <tabstop>ch_18_pg4</tabstop>
+  <tabstop>ch_8_pg4</tabstop>
+  <tabstop>le_8_pg4</tabstop>
+  <tabstop>tbtn_pg4_8</tabstop>
+  <tabstop>ch_9_pg4</tabstop>
+  <tabstop>le_9_pg4</tabstop>
+  <tabstop>tbtn_pg4_9</tabstop>
+  <tabstop>ch_20_pg4</tabstop>
+  <tabstop>ch_10_pg4</tabstop>
+  <tabstop>le_10_pg4</tabstop>
+  <tabstop>tbtn_pg4_10</tabstop>
+  <tabstop>ch_21_pg4</tabstop>
+  <tabstop>ch_11_pg4</tabstop>
+  <tabstop>le_11_pg4</tabstop>
+  <tabstop>tbtn_pg4_11</tabstop>
+  <tabstop>ch_22_pg4</tabstop>
+  <tabstop>btn_read_pg4</tabstop>
+  <tabstop>btn_save_file_pg4</tabstop>
+  <tabstop>btn_run_2</tabstop>
+  <tabstop>btn_close_pg4</tabstop>
+  <tabstop>btn_help_pg4</tabstop>
+  <tabstop>tbw_1_pg2</tabstop>
+  <tabstop>btn_add_row_1</tabstop>
+  <tabstop>scrollArea_3</tabstop>
+  <tabstop>btn_add_row_2</tabstop>
+  <tabstop>scrollArea_2</tabstop>
+  <tabstop>tbw_2_pg2</tabstop>
+  <tabstop>scrollArea_4</tabstop>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>btn_clear_2</tabstop>
+  <tabstop>btn_del_row_2</tabstop>
+  <tabstop>le_10_pg2</tabstop>
+  <tabstop>btn_clear_1</tabstop>
+  <tabstop>btn_del_row_1</tabstop>
+  <tabstop>btn_config</tabstop>
+  <tabstop>le_8_pg2</tabstop>
+  <tabstop>scrollArea</tabstop>
+  <tabstop>te_logg</tabstop>
+  <tabstop>btn_cancel_log</tabstop>
+  <tabstop>btn_close_log</tabstop>
+  <tabstop>btn_help_log</tabstop>
+ </tabstops>
  <resources>
   <include location="resources.qrc"/>
  </resources>

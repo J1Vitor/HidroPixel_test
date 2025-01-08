@@ -114,6 +114,12 @@ rgb:213, 213, 213;</string>
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>btn_flow_trav</tabstop>
+  <tabstop>btn_exes_rain</tabstop>
+  <tabstop>btn_flow_rout</tabstop>
+  <tabstop>btn_help</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
