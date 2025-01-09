@@ -1,8 +1,6 @@
 <RCC>
   <qresource prefix="/plugins/hidroPixel/icons">
-    <file>icons/bacia_secao_trans2.png</file>
-    <file>icons/curva_regional.png</file>
-    <file>icons/curva_regional2.png</file>
+    <file>icons/curva_regional7.png</file>
     <file>icons/equation_regional_curve.png</file>
     <file>icons/equation_regional_curve2.png</file>
     <file>icons/folder_icon</file>

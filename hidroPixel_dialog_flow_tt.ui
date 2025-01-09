@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>791</width>
+    <width>775</width>
     <height>618</height>
    </rect>
   </property>
@@ -140,9 +140,9 @@
                <property name="geometry">
                 <rect>
                  <x>0</x>
-                 <y>0</y>
-                 <width>715</width>
-                 <height>655</height>
+                 <y>-207</y>
+                 <width>698</width>
+                 <height>656</height>
                 </rect>
                </property>
                <layout class="QGridLayout" name="gridLayout_62">
@@ -954,20 +954,10 @@
                            <string/>
                           </property>
                           <property name="pixmap">
-                           <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/curva_regional2.png</pixmap>
+                           <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/curva_regional7.png</pixmap>
                           </property>
                           <property name="scaledContents">
                            <bool>false</bool>
-                          </property>
-                         </widget>
-                        </item>
-                        <item row="0" column="1">
-                         <widget class="QLabel" name="label_94">
-                          <property name="text">
-                           <string/>
-                          </property>
-                          <property name="pixmap">
-                           <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/equation_regional_curve2.png</pixmap>
                           </property>
                          </widget>
                         </item>

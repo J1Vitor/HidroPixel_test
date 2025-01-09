@@ -255,7 +255,7 @@ class HidroPixel:
     def initGui(self):
         """Create the menu entries and toolbar icons inside the QGIS GUI."""
         # Armazena diretório do plugin
-        icon_path = self.diretorio_atual + '\icons\icon.png'
+        icon_path = self.diretorio_atual + '\icons\icon2.png'
 
         self.add_action(
             icon_path,
