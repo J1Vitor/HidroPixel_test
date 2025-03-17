@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>775</width>
-    <height>618</height>
+    <width>776</width>
+    <height>658</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,7 +15,7 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="1" column="0">
+    <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
        <number>0</number>
@@ -33,13 +33,6 @@
        <layout class="QGridLayout" name="gridLayout_3">
         <item row="0" column="0">
          <layout class="QGridLayout" name="gridLayout_45">
-          <item row="0" column="3">
-           <widget class="QPushButton" name="btn_run">
-            <property name="text">
-             <string>RUN</string>
-            </property>
-           </widget>
-          </item>
           <item row="0" column="0">
            <widget class="QPushButton" name="btn_config">
             <property name="text">
@@ -47,17 +40,24 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="1">
-           <widget class="QPushButton" name="btn_input_data">
-            <property name="text">
-             <string>INPUT DATA</string>
-            </property>
-           </widget>
-          </item>
           <item row="0" column="2">
            <widget class="QPushButton" name="btn_data_va_tool">
             <property name="text">
              <string>DATA VALIDATION TOOL</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="3">
+           <widget class="QPushButton" name="btn_run">
+            <property name="text">
+             <string>RUN</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QPushButton" name="btn_input_data">
+            <property name="text">
+             <string>INPUT DATA</string>
             </property>
            </widget>
           </item>
@@ -69,9 +69,41 @@
            <number>0</number>
           </property>
           <widget class="QWidget" name="pg1_config">
-           <layout class="QGridLayout" name="gridLayout_4">
+           <layout class="QGridLayout" name="gridLayout_62">
+            <item row="0" column="0">
+             <widget class="QLabel" name="label">
+              <property name="text">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-weight:700;&quot;&gt;Flow travel time: CONFIGURATION&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+             </widget>
+            </item>
             <item row="1" column="0">
              <layout class="QGridLayout" name="gridLayout_47">
+              <item row="0" column="2">
+               <widget class="QLineEdit" name="le_21_pg1">
+                <property name="clearButtonEnabled">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="3">
+               <widget class="QToolButton" name="tbtn_pg1_1">
+                <property name="text">
+                 <string>...</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="resources.qrc">
+                  <normaloff>:/plugins/hidroPixel/icons/icons/folder_icon</normaloff>:/plugins/hidroPixel/icons/icons/folder_icon</iconset>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QLabel" name="label_26">
+                <property name="text">
+                 <string>Select your working folder:</string>
+                </property>
+               </widget>
+              </item>
               <item row="0" column="0">
                <spacer name="horizontalSpacer_3">
                 <property name="orientation">
@@ -85,53 +117,18 @@
                 </property>
                </spacer>
               </item>
-              <item row="0" column="3">
-               <widget class="QToolButton" name="tbtn_pg1_1">
-                <property name="text">
-                 <string>...</string>
-                </property>
-                <property name="icon">
-                 <iconset resource="resources.qrc">
-                  <normaloff>:/plugins/hidroPixel/icons/icons/folder_icon</normaloff>:/plugins/hidroPixel/icons/icons/folder_icon</iconset>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="2">
-               <widget class="QLineEdit" name="le_21_pg1">
-                <property name="clearButtonEnabled">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="1">
-               <widget class="QLabel" name="label_26">
-                <property name="text">
-                 <string>Select your working folder:</string>
-                </property>
-               </widget>
-              </item>
              </layout>
-            </item>
-            <item row="0" column="0">
-             <widget class="QLabel" name="label">
-              <property name="text">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-weight:700;&quot;&gt;Flow travel time: CONFIGURATION&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-              </property>
-             </widget>
             </item>
             <item row="2" column="0">
              <widget class="QScrollArea" name="scrollArea">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+               <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
-              <property name="minimumSize">
-               <size>
-                <width>715</width>
-                <height>450</height>
-               </size>
+              <property name="horizontalScrollBarPolicy">
+               <enum>Qt::ScrollBarAsNeeded</enum>
               </property>
               <property name="widgetResizable">
                <bool>true</bool>
@@ -140,14 +137,20 @@
                <property name="geometry">
                 <rect>
                  <x>0</x>
-                 <y>-207</y>
-                 <width>698</width>
-                 <height>656</height>
+                 <y>0</y>
+                 <width>716</width>
+                 <height>649</height>
                 </rect>
                </property>
-               <layout class="QGridLayout" name="gridLayout_62">
+               <layout class="QGridLayout" name="gridLayout_20">
                 <item row="0" column="0">
                  <widget class="QGroupBox" name="groupBox">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
                   <property name="font">
                    <font>
                     <pointsize>10</pointsize>
@@ -159,161 +162,6 @@
                   <layout class="QGridLayout" name="gridLayout_5">
                    <item row="0" column="0">
                     <layout class="QGridLayout" name="gridLayout_7">
-                     <item row="0" column="0">
-                      <layout class="QGridLayout" name="gridLayout_8">
-                       <item row="2" column="0">
-                        <layout class="QGridLayout" name="gridLayout_18">
-                         <item row="0" column="0">
-                          <widget class="QLabel" name="label_5">
-                           <property name="font">
-                            <font>
-                             <pointsize>9</pointsize>
-                            </font>
-                           </property>
-                           <property name="text">
-                            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Diagonal step for distance computation:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                           </property>
-                          </widget>
-                         </item>
-                         <item row="0" column="1">
-                          <widget class="QLineEdit" name="le_4_pg1">
-                           <property name="maximumSize">
-                            <size>
-                             <width>80</width>
-                             <height>24</height>
-                            </size>
-                           </property>
-                           <property name="font">
-                            <font>
-                             <pointsize>9</pointsize>
-                            </font>
-                           </property>
-                           <property name="text">
-                            <string>1.4241</string>
-                           </property>
-                          </widget>
-                         </item>
-                        </layout>
-                       </item>
-                       <item row="1" column="0">
-                        <layout class="QGridLayout" name="gridLayout_17">
-                         <item row="0" column="0">
-                          <widget class="QLabel" name="label_4">
-                           <property name="font">
-                            <font>
-                             <pointsize>9</pointsize>
-                            </font>
-                           </property>
-                           <property name="text">
-                            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Orthogonal step for distance computation:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                           </property>
-                          </widget>
-                         </item>
-                         <item row="0" column="1">
-                          <widget class="QLineEdit" name="le_3_pg1">
-                           <property name="maximumSize">
-                            <size>
-                             <width>80</width>
-                             <height>24</height>
-                            </size>
-                           </property>
-                           <property name="font">
-                            <font>
-                             <pointsize>9</pointsize>
-                            </font>
-                           </property>
-                           <property name="text">
-                            <string>1</string>
-                           </property>
-                          </widget>
-                         </item>
-                        </layout>
-                       </item>
-                       <item row="0" column="0">
-                        <layout class="QGridLayout" name="gridLayout_9">
-                         <item row="0" column="0">
-                          <widget class="QLabel" name="label_2">
-                           <property name="font">
-                            <font>
-                             <pointsize>9</pointsize>
-                            </font>
-                           </property>
-                           <property name="text">
-                            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Minimum slope surface for travel time determination:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                           </property>
-                          </widget>
-                         </item>
-                         <item row="0" column="1">
-                          <widget class="QLineEdit" name="le_1_pg1">
-                           <property name="enabled">
-                            <bool>true</bool>
-                           </property>
-                           <property name="maximumSize">
-                            <size>
-                             <width>80</width>
-                             <height>24</height>
-                            </size>
-                           </property>
-                           <property name="font">
-                            <font>
-                             <pointsize>9</pointsize>
-                            </font>
-                           </property>
-                           <property name="text">
-                            <string/>
-                           </property>
-                          </widget>
-                         </item>
-                        </layout>
-                       </item>
-                      </layout>
-                     </item>
-                     <item row="0" column="1">
-                      <layout class="QVBoxLayout" name="verticalLayout_4">
-                       <item>
-                        <widget class="QLabel" name="label_6">
-                         <property name="minimumSize">
-                          <size>
-                           <width>50</width>
-                           <height>0</height>
-                          </size>
-                         </property>
-                         <property name="font">
-                          <font>
-                           <pointsize>9</pointsize>
-                          </font>
-                         </property>
-                         <property name="text">
-                          <string>m / m</string>
-                         </property>
-                        </widget>
-                       </item>
-                       <item>
-                        <widget class="QLabel" name="label_8">
-                         <property name="font">
-                          <font>
-                           <pointsize>9</pointsize>
-                          </font>
-                         </property>
-                         <property name="text">
-                          <string>dx</string>
-                         </property>
-                        </widget>
-                       </item>
-                       <item>
-                        <widget class="QLabel" name="label_9">
-                         <property name="font">
-                          <font>
-                           <pointsize>9</pointsize>
-                          </font>
-                         </property>
-                         <property name="text">
-                          <string>dx</string>
-                         </property>
-                        </widget>
-                       </item>
-                      </layout>
-                     </item>
                      <item row="0" column="2">
                       <layout class="QGridLayout" name="gridLayout_10">
                        <item row="1" column="0" alignment="Qt::AlignHCenter|Qt::AlignVCenter">
@@ -441,6 +289,161 @@
                        </item>
                       </layout>
                      </item>
+                     <item row="0" column="0">
+                      <layout class="QGridLayout" name="gridLayout_8">
+                       <item row="0" column="0">
+                        <layout class="QGridLayout" name="gridLayout_9">
+                         <item row="0" column="1">
+                          <widget class="QLineEdit" name="le_1_pg1">
+                           <property name="enabled">
+                            <bool>true</bool>
+                           </property>
+                           <property name="maximumSize">
+                            <size>
+                             <width>80</width>
+                             <height>24</height>
+                            </size>
+                           </property>
+                           <property name="font">
+                            <font>
+                             <pointsize>9</pointsize>
+                            </font>
+                           </property>
+                           <property name="text">
+                            <string/>
+                           </property>
+                          </widget>
+                         </item>
+                         <item row="0" column="0">
+                          <widget class="QLabel" name="label_2">
+                           <property name="font">
+                            <font>
+                             <pointsize>9</pointsize>
+                            </font>
+                           </property>
+                           <property name="text">
+                            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Minimum slope surface for travel time determination:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                           </property>
+                          </widget>
+                         </item>
+                        </layout>
+                       </item>
+                       <item row="2" column="0">
+                        <layout class="QGridLayout" name="gridLayout_18">
+                         <item row="0" column="0">
+                          <widget class="QLabel" name="label_5">
+                           <property name="font">
+                            <font>
+                             <pointsize>9</pointsize>
+                            </font>
+                           </property>
+                           <property name="text">
+                            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Diagonal step for distance computation:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                           </property>
+                          </widget>
+                         </item>
+                         <item row="0" column="1">
+                          <widget class="QLineEdit" name="le_4_pg1">
+                           <property name="maximumSize">
+                            <size>
+                             <width>80</width>
+                             <height>24</height>
+                            </size>
+                           </property>
+                           <property name="font">
+                            <font>
+                             <pointsize>9</pointsize>
+                            </font>
+                           </property>
+                           <property name="text">
+                            <string>1.4241</string>
+                           </property>
+                          </widget>
+                         </item>
+                        </layout>
+                       </item>
+                       <item row="1" column="0">
+                        <layout class="QGridLayout" name="gridLayout_17">
+                         <item row="0" column="0">
+                          <widget class="QLabel" name="label_4">
+                           <property name="font">
+                            <font>
+                             <pointsize>9</pointsize>
+                            </font>
+                           </property>
+                           <property name="text">
+                            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Orthogonal step for distance computation:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                           </property>
+                          </widget>
+                         </item>
+                         <item row="0" column="1">
+                          <widget class="QLineEdit" name="le_3_pg1">
+                           <property name="maximumSize">
+                            <size>
+                             <width>80</width>
+                             <height>24</height>
+                            </size>
+                           </property>
+                           <property name="font">
+                            <font>
+                             <pointsize>9</pointsize>
+                            </font>
+                           </property>
+                           <property name="text">
+                            <string>1</string>
+                           </property>
+                          </widget>
+                         </item>
+                        </layout>
+                       </item>
+                      </layout>
+                     </item>
+                     <item row="0" column="1">
+                      <layout class="QVBoxLayout" name="verticalLayout_4">
+                       <item>
+                        <widget class="QLabel" name="label_6">
+                         <property name="minimumSize">
+                          <size>
+                           <width>50</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <pointsize>9</pointsize>
+                          </font>
+                         </property>
+                         <property name="text">
+                          <string>m / m</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QLabel" name="label_8">
+                         <property name="font">
+                          <font>
+                           <pointsize>9</pointsize>
+                          </font>
+                         </property>
+                         <property name="text">
+                          <string>dx</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QLabel" name="label_9">
+                         <property name="font">
+                          <font>
+                           <pointsize>9</pointsize>
+                          </font>
+                         </property>
+                         <property name="text">
+                          <string>dx</string>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
                     </layout>
                    </item>
                   </layout>
@@ -448,63 +451,37 @@
                 </item>
                 <item row="1" column="0">
                  <widget class="QFrame" name="frame_2">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
                   <property name="frameShape">
                    <enum>QFrame::StyledPanel</enum>
                   </property>
                   <property name="frameShadow">
                    <enum>QFrame::Raised</enum>
                   </property>
-                  <layout class="QGridLayout" name="gridLayout_11">
-                   <item row="0" column="0">
-                    <widget class="QLabel" name="label_23">
-                     <property name="text">
-                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Flow direction code:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="0" column="1">
-                    <widget class="QLabel" name="label_24">
+                  <layout class="QGridLayout" name="gridLayout_68">
+                   <item row="2" column="0">
+                    <widget class="QWidget" name="widget" native="true">
                      <property name="sizePolicy">
-                      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                      <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
                        <horstretch>0</horstretch>
                        <verstretch>0</verstretch>
                       </sizepolicy>
                      </property>
-                     <property name="minimumSize">
-                      <size>
-                       <width>16</width>
-                       <height>16</height>
-                      </size>
-                     </property>
                      <property name="maximumSize">
                       <size>
-                       <width>16</width>
-                       <height>16</height>
+                       <width>360</width>
+                       <height>16777215</height>
                       </size>
                      </property>
-                     <property name="toolTip">
-                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add the flow direction code, according to the flow Direction input raster.. The value for each direction code might be an integer type and different from each other.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                     </property>
-                     <property name="whatsThis">
-                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add the description or function of the object&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                     </property>
-                     <property name="text">
-                      <string/>
-                     </property>
-                     <property name="pixmap">
-                      <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
-                     </property>
-                     <property name="scaledContents">
-                      <bool>true</bool>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="1" column="0" colspan="2">
-                    <widget class="QWidget" name="widget" native="true">
-                     <layout class="QGridLayout" name="gridLayout_6">
+                     <layout class="QGridLayout" name="gridLayout_11">
                       <item row="0" column="0">
-                       <layout class="QHBoxLayout" name="horizontalLayout_3">
-                        <item>
+                       <layout class="QGridLayout" name="gridLayout_6">
+                        <item row="0" column="0">
                          <widget class="QLabel" name="label_65">
                           <property name="text">
                            <string/>
@@ -514,159 +491,8 @@
                           </property>
                          </widget>
                         </item>
-                        <item>
-                         <layout class="QGridLayout" name="gridLayout_20">
-                          <item row="0" column="1">
-                           <layout class="QVBoxLayout" name="verticalLayout_9">
-                            <item>
-                             <layout class="QHBoxLayout" name="horizontalLayout_20">
-                              <item>
-                               <widget class="QLabel" name="label_21">
-                                <property name="text">
-                                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700;&quot;&gt;E&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                                </property>
-                               </widget>
-                              </item>
-                              <item>
-                               <widget class="QLineEdit" name="le_9_pg1">
-                                <property name="minimumSize">
-                                 <size>
-                                  <width>60</width>
-                                  <height>24</height>
-                                 </size>
-                                </property>
-                                <property name="maximumSize">
-                                 <size>
-                                  <width>60</width>
-                                  <height>24</height>
-                                 </size>
-                                </property>
-                               </widget>
-                              </item>
-                             </layout>
-                            </item>
-                            <item>
-                             <spacer name="verticalSpacer_16">
-                              <property name="orientation">
-                               <enum>Qt::Vertical</enum>
-                              </property>
-                              <property name="sizeHint" stdset="0">
-                               <size>
-                                <width>20</width>
-                                <height>40</height>
-                               </size>
-                              </property>
-                             </spacer>
-                            </item>
-                            <item>
-                             <layout class="QHBoxLayout" name="horizontalLayout_21">
-                              <item>
-                               <widget class="QLabel" name="label_15">
-                                <property name="text">
-                                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700;&quot;&gt;F&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                                </property>
-                               </widget>
-                              </item>
-                              <item>
-                               <widget class="QLineEdit" name="le_10_pg1">
-                                <property name="minimumSize">
-                                 <size>
-                                  <width>60</width>
-                                  <height>24</height>
-                                 </size>
-                                </property>
-                                <property name="maximumSize">
-                                 <size>
-                                  <width>60</width>
-                                  <height>24</height>
-                                 </size>
-                                </property>
-                               </widget>
-                              </item>
-                             </layout>
-                            </item>
-                            <item>
-                             <spacer name="verticalSpacer_17">
-                              <property name="orientation">
-                               <enum>Qt::Vertical</enum>
-                              </property>
-                              <property name="sizeHint" stdset="0">
-                               <size>
-                                <width>20</width>
-                                <height>40</height>
-                               </size>
-                              </property>
-                             </spacer>
-                            </item>
-                            <item>
-                             <layout class="QHBoxLayout" name="horizontalLayout_22">
-                              <item>
-                               <widget class="QLabel" name="label_17">
-                                <property name="text">
-                                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700;&quot;&gt;G&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                                </property>
-                               </widget>
-                              </item>
-                              <item>
-                               <widget class="QLineEdit" name="le_11_pg1">
-                                <property name="minimumSize">
-                                 <size>
-                                  <width>60</width>
-                                  <height>24</height>
-                                 </size>
-                                </property>
-                                <property name="maximumSize">
-                                 <size>
-                                  <width>60</width>
-                                  <height>24</height>
-                                 </size>
-                                </property>
-                               </widget>
-                              </item>
-                             </layout>
-                            </item>
-                            <item>
-                             <spacer name="verticalSpacer_18">
-                              <property name="orientation">
-                               <enum>Qt::Vertical</enum>
-                              </property>
-                              <property name="sizeHint" stdset="0">
-                               <size>
-                                <width>20</width>
-                                <height>40</height>
-                               </size>
-                              </property>
-                             </spacer>
-                            </item>
-                            <item>
-                             <layout class="QHBoxLayout" name="horizontalLayout_23">
-                              <item>
-                               <widget class="QLabel" name="label_18">
-                                <property name="text">
-                                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700;&quot;&gt;H&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                                </property>
-                               </widget>
-                              </item>
-                              <item>
-                               <widget class="QLineEdit" name="le_12_pg1">
-                                <property name="minimumSize">
-                                 <size>
-                                  <width>60</width>
-                                  <height>24</height>
-                                 </size>
-                                </property>
-                                <property name="maximumSize">
-                                 <size>
-                                  <width>60</width>
-                                  <height>24</height>
-                                 </size>
-                                </property>
-                               </widget>
-                              </item>
-                             </layout>
-                            </item>
-                           </layout>
-                          </item>
+                        <item row="0" column="1">
+                         <layout class="QGridLayout" name="gridLayout_4">
                           <item row="0" column="0">
                            <layout class="QVBoxLayout" name="verticalLayout_3">
                             <item>
@@ -703,8 +529,8 @@
                               </property>
                               <property name="sizeHint" stdset="0">
                                <size>
-                                <width>20</width>
-                                <height>40</height>
+                                <width>242</width>
+                                <height>13</height>
                                </size>
                               </property>
                              </spacer>
@@ -743,8 +569,8 @@
                               </property>
                               <property name="sizeHint" stdset="0">
                                <size>
-                                <width>20</width>
-                                <height>40</height>
+                                <width>242</width>
+                                <height>13</height>
                                </size>
                               </property>
                              </spacer>
@@ -783,8 +609,8 @@
                               </property>
                               <property name="sizeHint" stdset="0">
                                <size>
-                                <width>20</width>
-                                <height>40</height>
+                                <width>242</width>
+                                <height>13</height>
                                </size>
                               </property>
                              </spacer>
@@ -818,31 +644,235 @@
                             </item>
                            </layout>
                           </item>
+                          <item row="0" column="1">
+                           <layout class="QVBoxLayout" name="verticalLayout_9">
+                            <item>
+                             <layout class="QHBoxLayout" name="horizontalLayout_20">
+                              <item>
+                               <widget class="QLabel" name="label_21">
+                                <property name="text">
+                                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700;&quot;&gt;E&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <widget class="QLineEdit" name="le_9_pg1">
+                                <property name="minimumSize">
+                                 <size>
+                                  <width>60</width>
+                                  <height>24</height>
+                                 </size>
+                                </property>
+                                <property name="maximumSize">
+                                 <size>
+                                  <width>60</width>
+                                  <height>24</height>
+                                 </size>
+                                </property>
+                               </widget>
+                              </item>
+                             </layout>
+                            </item>
+                            <item>
+                             <spacer name="verticalSpacer_16">
+                              <property name="orientation">
+                               <enum>Qt::Vertical</enum>
+                              </property>
+                              <property name="sizeHint" stdset="0">
+                               <size>
+                                <width>239</width>
+                                <height>13</height>
+                               </size>
+                              </property>
+                             </spacer>
+                            </item>
+                            <item>
+                             <layout class="QHBoxLayout" name="horizontalLayout_21">
+                              <item>
+                               <widget class="QLabel" name="label_15">
+                                <property name="text">
+                                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700;&quot;&gt;F&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <widget class="QLineEdit" name="le_10_pg1">
+                                <property name="minimumSize">
+                                 <size>
+                                  <width>60</width>
+                                  <height>24</height>
+                                 </size>
+                                </property>
+                                <property name="maximumSize">
+                                 <size>
+                                  <width>60</width>
+                                  <height>24</height>
+                                 </size>
+                                </property>
+                               </widget>
+                              </item>
+                             </layout>
+                            </item>
+                            <item>
+                             <spacer name="verticalSpacer_17">
+                              <property name="orientation">
+                               <enum>Qt::Vertical</enum>
+                              </property>
+                              <property name="sizeHint" stdset="0">
+                               <size>
+                                <width>239</width>
+                                <height>13</height>
+                               </size>
+                              </property>
+                             </spacer>
+                            </item>
+                            <item>
+                             <layout class="QHBoxLayout" name="horizontalLayout_22">
+                              <item>
+                               <widget class="QLabel" name="label_17">
+                                <property name="text">
+                                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700;&quot;&gt;G&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <widget class="QLineEdit" name="le_11_pg1">
+                                <property name="minimumSize">
+                                 <size>
+                                  <width>60</width>
+                                  <height>24</height>
+                                 </size>
+                                </property>
+                                <property name="maximumSize">
+                                 <size>
+                                  <width>60</width>
+                                  <height>24</height>
+                                 </size>
+                                </property>
+                               </widget>
+                              </item>
+                             </layout>
+                            </item>
+                            <item>
+                             <spacer name="verticalSpacer_18">
+                              <property name="orientation">
+                               <enum>Qt::Vertical</enum>
+                              </property>
+                              <property name="sizeHint" stdset="0">
+                               <size>
+                                <width>239</width>
+                                <height>13</height>
+                               </size>
+                              </property>
+                             </spacer>
+                            </item>
+                            <item>
+                             <layout class="QHBoxLayout" name="horizontalLayout_23">
+                              <item>
+                               <widget class="QLabel" name="label_18">
+                                <property name="text">
+                                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:700;&quot;&gt;H&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                                </property>
+                               </widget>
+                              </item>
+                              <item>
+                               <widget class="QLineEdit" name="le_12_pg1">
+                                <property name="minimumSize">
+                                 <size>
+                                  <width>60</width>
+                                  <height>24</height>
+                                 </size>
+                                </property>
+                                <property name="maximumSize">
+                                 <size>
+                                  <width>60</width>
+                                  <height>24</height>
+                                 </size>
+                                </property>
+                               </widget>
+                              </item>
+                             </layout>
+                            </item>
+                           </layout>
+                          </item>
                          </layout>
                         </item>
                        </layout>
                       </item>
-                      <item row="0" column="1">
-                       <spacer name="horizontalSpacer_2">
-                        <property name="orientation">
-                         <enum>Qt::Horizontal</enum>
-                        </property>
-                        <property name="sizeHint" stdset="0">
-                         <size>
-                          <width>40</width>
-                          <height>20</height>
-                         </size>
-                        </property>
-                       </spacer>
-                      </item>
                      </layout>
                     </widget>
+                   </item>
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="label_23">
+                     <property name="text">
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Flow direction code:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="2">
+                    <widget class="QLabel" name="label_24">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>16</width>
+                       <height>16</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>16</width>
+                       <height>16</height>
+                      </size>
+                     </property>
+                     <property name="toolTip">
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add the flow direction code, according to the flow Direction input raster.. The value for each direction code might be an integer type and different from each other.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                     </property>
+                     <property name="whatsThis">
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add the description or function of the object&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                     </property>
+                     <property name="text">
+                      <string/>
+                     </property>
+                     <property name="pixmap">
+                      <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
+                     </property>
+                     <property name="scaledContents">
+                      <bool>true</bool>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="1">
+                    <spacer name="horizontalSpacer_4">
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>40</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                    </spacer>
                    </item>
                   </layout>
                  </widget>
                 </item>
                 <item row="2" column="0">
                  <widget class="QGroupBox" name="groupBox_3">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
                   <property name="font">
                    <font>
                     <pointsize>10</pointsize>
@@ -914,6 +944,82 @@
                        </property>
                        <property name="toolTip">
                         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add information of the maximum length for all river segments without cross sectional data&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                       <property name="whatsThis">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add the description or function of the object&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                       <property name="text">
+                        <string/>
+                       </property>
+                       <property name="pixmap">
+                        <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
+                       </property>
+                       <property name="scaledContents">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
+                   <item row="0" column="0">
+                    <layout class="QGridLayout" name="gridLayout_16">
+                     <item row="0" column="0">
+                      <widget class="QLabel" name="label_12">
+                       <property name="font">
+                        <font>
+                         <pointsize>9</pointsize>
+                        </font>
+                       </property>
+                       <property name="text">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Constant Manning roughness coefficient:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="1">
+                      <widget class="QLineEdit" name="le_14_pg1">
+                       <property name="maximumSize">
+                        <size>
+                         <width>80</width>
+                         <height>24</height>
+                        </size>
+                       </property>
+                       <property name="font">
+                        <font>
+                         <pointsize>9</pointsize>
+                        </font>
+                       </property>
+                       <property name="text">
+                        <string/>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="2">
+                      <widget class="QLabel" name="label_77">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>16</width>
+                         <height>16</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>16</width>
+                         <height>16</height>
+                        </size>
+                       </property>
+                       <property name="font">
+                        <font>
+                         <pointsize>9</pointsize>
+                        </font>
+                       </property>
+                       <property name="toolTip">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Adoption of a constant Manning roughness coefficient for all river segments without cross sectional data.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                        </property>
                        <property name="whatsThis">
                         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add the description or function of the object&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -1302,82 +1408,6 @@
                      </widget>
                     </widget>
                    </item>
-                   <item row="0" column="0">
-                    <layout class="QGridLayout" name="gridLayout_16">
-                     <item row="0" column="0">
-                      <widget class="QLabel" name="label_12">
-                       <property name="font">
-                        <font>
-                         <pointsize>9</pointsize>
-                        </font>
-                       </property>
-                       <property name="text">
-                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Constant Manning roughness coefficient:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="0" column="1">
-                      <widget class="QLineEdit" name="le_14_pg1">
-                       <property name="maximumSize">
-                        <size>
-                         <width>80</width>
-                         <height>24</height>
-                        </size>
-                       </property>
-                       <property name="font">
-                        <font>
-                         <pointsize>9</pointsize>
-                        </font>
-                       </property>
-                       <property name="text">
-                        <string/>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="0" column="2">
-                      <widget class="QLabel" name="label_77">
-                       <property name="sizePolicy">
-                        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                         <horstretch>0</horstretch>
-                         <verstretch>0</verstretch>
-                        </sizepolicy>
-                       </property>
-                       <property name="minimumSize">
-                        <size>
-                         <width>16</width>
-                         <height>16</height>
-                        </size>
-                       </property>
-                       <property name="maximumSize">
-                        <size>
-                         <width>16</width>
-                         <height>16</height>
-                        </size>
-                       </property>
-                       <property name="font">
-                        <font>
-                         <pointsize>9</pointsize>
-                        </font>
-                       </property>
-                       <property name="toolTip">
-                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Adoption of a constant Manning roughness coefficient for all river segments without cross sectional data.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                       </property>
-                       <property name="whatsThis">
-                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add the description or function of the object&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                       </property>
-                       <property name="text">
-                        <string/>
-                       </property>
-                       <property name="pixmap">
-                        <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
-                       </property>
-                       <property name="scaledContents">
-                        <bool>true</bool>
-                       </property>
-                      </widget>
-                     </item>
-                    </layout>
-                   </item>
                   </layout>
                  </widget>
                 </item>
@@ -1393,14 +1423,14 @@
                   <item row="0" column="0">
                    <widget class="QPushButton" name="btn_read_pg1">
                     <property name="text">
-                     <string>Read from file</string>
+                     <string>Read from project</string>
                     </property>
                    </widget>
                   </item>
                   <item row="0" column="1">
                    <widget class="QPushButton" name="btn_save_file_pg1">
                     <property name="text">
-                     <string>Save to file</string>
+                     <string>Save to project</string>
                     </property>
                    </widget>
                   </item>
@@ -1422,6 +1452,55 @@
              </widget>
             </item>
             <item row="1" column="0">
+             <layout class="QGridLayout" name="gridLayout_72">
+              <item row="0" column="0">
+               <spacer name="horizontalSpacer_5">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="0" column="1">
+               <widget class="QLabel" name="label_3">
+                <property name="text">
+                 <string>Current project</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="2">
+               <widget class="QLineEdit" name="le_12_pg2">
+                <property name="maximumSize">
+                 <size>
+                  <width>120</width>
+                  <height>24</height>
+                 </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <weight>75</weight>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="readOnly">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item row="2" column="0">
              <widget class="QScrollArea" name="scrollArea_2">
               <property name="widgetResizable">
                <bool>true</bool>
@@ -1430,1162 +1509,13 @@
                <property name="geometry">
                 <rect>
                  <x>0</x>
-                 <y>0</y>
-                 <width>695</width>
-                 <height>920</height>
+                 <y>-235</y>
+                 <width>697</width>
+                 <height>733</height>
                 </rect>
                </property>
                <layout class="QGridLayout" name="gridLayout_14">
-                <item row="1" column="0">
-                 <widget class="QFrame" name="frame_4">
-                  <property name="frameShape">
-                   <enum>QFrame::StyledPanel</enum>
-                  </property>
-                  <property name="frameShadow">
-                   <enum>QFrame::Raised</enum>
-                  </property>
-                  <layout class="QGridLayout" name="gridLayout_27">
-                   <item row="0" column="0">
-                    <layout class="QHBoxLayout" name="horizontalLayout_8">
-                     <item>
-                      <widget class="QLabel" name="label_37">
-                       <property name="text">
-                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Characteristics of RDN classes:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item>
-                      <widget class="QLabel" name="label_38">
-                       <property name="sizePolicy">
-                        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                         <horstretch>0</horstretch>
-                         <verstretch>0</verstretch>
-                        </sizepolicy>
-                       </property>
-                       <property name="minimumSize">
-                        <size>
-                         <width>16</width>
-                         <height>16</height>
-                        </size>
-                       </property>
-                       <property name="maximumSize">
-                        <size>
-                         <width>16</width>
-                         <height>16</height>
-                        </size>
-                       </property>
-                       <property name="toolTip">
-                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add the characteristics of the RDN classes. Read this information from a specific file or enter the data directly to the table.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                       </property>
-                       <property name="text">
-                        <string/>
-                       </property>
-                       <property name="pixmap">
-                        <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
-                       </property>
-                       <property name="scaledContents">
-                        <bool>true</bool>
-                       </property>
-                      </widget>
-                     </item>
-                    </layout>
-                   </item>
-                   <item row="1" column="0">
-                    <layout class="QGridLayout" name="gridLayout_38">
-                     <item row="0" column="0">
-                      <spacer name="horizontalSpacer_4">
-                       <property name="orientation">
-                        <enum>Qt::Horizontal</enum>
-                       </property>
-                       <property name="sizeHint" stdset="0">
-                        <size>
-                         <width>40</width>
-                         <height>20</height>
-                        </size>
-                       </property>
-                      </spacer>
-                     </item>
-                     <item row="0" column="1">
-                      <layout class="QGridLayout" name="gridLayout_33">
-                       <item row="2" column="0" alignment="Qt::AlignTop">
-                        <widget class="QPushButton" name="btn_clear_1">
-                         <property name="toolTip">
-                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Chose one line.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                         </property>
-                         <property name="text">
-                          <string>Clear all</string>
-                         </property>
-                        </widget>
-                       </item>
-                       <item row="0" column="0" alignment="Qt::AlignBottom">
-                        <widget class="QPushButton" name="btn_add_row_1">
-                         <property name="text">
-                          <string>Add row</string>
-                         </property>
-                        </widget>
-                       </item>
-                       <item row="1" column="0">
-                        <widget class="QPushButton" name="btn_del_row_1">
-                         <property name="toolTip">
-                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Chose one line.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                         </property>
-                         <property name="text">
-                          <string>Delete row</string>
-                         </property>
-                        </widget>
-                       </item>
-                      </layout>
-                     </item>
-                     <item row="0" column="2">
-                      <layout class="QGridLayout" name="gridLayout_35">
-                       <item row="0" column="0">
-                        <layout class="QGridLayout" name="gridLayout_56">
-                         <item row="0" column="1">
-                          <widget class="QLineEdit" name="le_8_pg2">
-                           <property name="minimumSize">
-                            <size>
-                             <width>220</width>
-                             <height>24</height>
-                            </size>
-                           </property>
-                           <property name="maximumSize">
-                            <size>
-                             <width>16777215</width>
-                             <height>24</height>
-                            </size>
-                           </property>
-                           <property name="readOnly">
-                            <bool>true</bool>
-                           </property>
-                           <property name="clearButtonEnabled">
-                            <bool>true</bool>
-                           </property>
-                          </widget>
-                         </item>
-                         <item row="0" column="0">
-                          <widget class="QLabel" name="label_67">
-                           <property name="text">
-                            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;File:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                           </property>
-                          </widget>
-                         </item>
-                        </layout>
-                       </item>
-                       <item row="3" column="0">
-                        <layout class="QGridLayout" name="gridLayout_34">
-                         <item row="0" column="1">
-                          <widget class="QPushButton" name="btn_save_file_t1">
-                           <property name="text">
-                            <string>Save to file</string>
-                           </property>
-                          </widget>
-                         </item>
-                         <item row="0" column="0">
-                          <widget class="QPushButton" name="btn_read_t1">
-                           <property name="text">
-                            <string>Read from file</string>
-                           </property>
-                          </widget>
-                         </item>
-                         <item row="0" column="2">
-                          <widget class="QPushButton" name="btn_help_t1">
-                           <property name="text">
-                            <string>Help</string>
-                           </property>
-                          </widget>
-                         </item>
-                        </layout>
-                       </item>
-                       <item row="1" column="0">
-                        <spacer name="verticalSpacer">
-                         <property name="orientation">
-                          <enum>Qt::Vertical</enum>
-                         </property>
-                         <property name="sizeHint" stdset="0">
-                          <size>
-                           <width>20</width>
-                           <height>40</height>
-                          </size>
-                         </property>
-                        </spacer>
-                       </item>
-                       <item row="2" column="0">
-                        <widget class="QTableWidget" name="tbw_1_pg2">
-                         <property name="minimumSize">
-                          <size>
-                           <width>420</width>
-                           <height>150</height>
-                          </size>
-                         </property>
-                         <property name="maximumSize">
-                          <size>
-                           <width>420</width>
-                           <height>150</height>
-                          </size>
-                         </property>
-                         <property name="autoScroll">
-                          <bool>false</bool>
-                         </property>
-                         <property name="showDropIndicator" stdset="0">
-                          <bool>true</bool>
-                         </property>
-                         <property name="dragEnabled">
-                          <bool>true</bool>
-                         </property>
-                         <property name="dragDropOverwriteMode">
-                          <bool>true</bool>
-                         </property>
-                         <property name="alternatingRowColors">
-                          <bool>true</bool>
-                         </property>
-                         <property name="textElideMode">
-                          <enum>Qt::ElideMiddle</enum>
-                         </property>
-                         <property name="showGrid">
-                          <bool>true</bool>
-                         </property>
-                         <property name="gridStyle">
-                          <enum>Qt::SolidLine</enum>
-                         </property>
-                         <property name="sortingEnabled">
-                          <bool>false</bool>
-                         </property>
-                         <property name="wordWrap">
-                          <bool>true</bool>
-                         </property>
-                         <attribute name="horizontalHeaderVisible">
-                          <bool>false</bool>
-                         </attribute>
-                         <attribute name="horizontalHeaderCascadingSectionResizes">
-                          <bool>true</bool>
-                         </attribute>
-                         <attribute name="horizontalHeaderMinimumSectionSize">
-                          <number>25</number>
-                         </attribute>
-                         <attribute name="horizontalHeaderDefaultSectionSize">
-                          <number>106</number>
-                         </attribute>
-                         <attribute name="horizontalHeaderHighlightSections">
-                          <bool>true</bool>
-                         </attribute>
-                         <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
-                          <bool>true</bool>
-                         </attribute>
-                         <attribute name="horizontalHeaderStretchLastSection">
-                          <bool>false</bool>
-                         </attribute>
-                         <attribute name="verticalHeaderVisible">
-                          <bool>false</bool>
-                         </attribute>
-                         <attribute name="verticalHeaderDefaultSectionSize">
-                          <number>30</number>
-                         </attribute>
-                         <row>
-                          <property name="text">
-                           <string>1</string>
-                          </property>
-                         </row>
-                         <column>
-                          <property name="text">
-                           <string>Segment</string>
-                          </property>
-                          <property name="font">
-                           <font>
-                            <pointsize>8</pointsize>
-                           </font>
-                          </property>
-                          <property name="textAlignment">
-                           <set>AlignLeading|AlignVCenter</set>
-                          </property>
-                         </column>
-                         <column>
-                          <property name="text">
-                           <string>Hydraulic radius (m)</string>
-                          </property>
-                          <property name="font">
-                           <font>
-                            <pointsize>8</pointsize>
-                           </font>
-                          </property>
-                          <property name="textAlignment">
-                           <set>AlignLeading|AlignVCenter</set>
-                          </property>
-                         </column>
-                         <column>
-                          <property name="text">
-                           <string>Manning</string>
-                          </property>
-                          <property name="font">
-                           <font>
-                            <pointsize>8</pointsize>
-                           </font>
-                          </property>
-                          <property name="textAlignment">
-                           <set>AlignLeading|AlignVCenter</set>
-                          </property>
-                         </column>
-                         <column>
-                          <property name="text">
-                           <string>Slope (m/m)</string>
-                          </property>
-                          <property name="font">
-                           <font>
-                            <pointsize>8</pointsize>
-                           </font>
-                          </property>
-                          <property name="textAlignment">
-                           <set>AlignLeading|AlignVCenter</set>
-                          </property>
-                         </column>
-                        </widget>
-                       </item>
-                      </layout>
-                     </item>
-                    </layout>
-                   </item>
-                  </layout>
-                 </widget>
-                </item>
-                <item row="0" column="0">
-                 <widget class="QFrame" name="frame_3">
-                  <property name="frameShape">
-                   <enum>QFrame::StyledPanel</enum>
-                  </property>
-                  <property name="frameShadow">
-                   <enum>QFrame::Raised</enum>
-                  </property>
-                  <layout class="QGridLayout" name="gridLayout_21">
-                   <item row="0" column="0">
-                    <layout class="QGridLayout" name="gridLayout_26">
-                     <item row="0" column="0">
-                      <widget class="QLabel" name="label_28">
-                       <property name="text">
-                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Watershed delineation:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="0" column="1">
-                      <widget class="QLineEdit" name="le_1_pg2">
-                       <property name="minimumSize">
-                        <size>
-                         <width>360</width>
-                         <height>24</height>
-                        </size>
-                       </property>
-                       <property name="maximumSize">
-                        <size>
-                         <width>360</width>
-                         <height>24</height>
-                        </size>
-                       </property>
-                       <property name="clearButtonEnabled">
-                        <bool>true</bool>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="0" column="2">
-                      <widget class="QToolButton" name="tbtn_pg2_1">
-                       <property name="text">
-                        <string>...</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="0" column="3">
-                      <widget class="QLabel" name="label_27">
-                       <property name="sizePolicy">
-                        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                         <horstretch>0</horstretch>
-                         <verstretch>0</verstretch>
-                        </sizepolicy>
-                       </property>
-                       <property name="minimumSize">
-                        <size>
-                         <width>16</width>
-                         <height>16</height>
-                        </size>
-                       </property>
-                       <property name="maximumSize">
-                        <size>
-                         <width>16</width>
-                         <height>16</height>
-                        </size>
-                       </property>
-                       <property name="toolTip">
-                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add the watershed delineation. The file must be a raster type (geotiff).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                       </property>
-                       <property name="text">
-                        <string/>
-                       </property>
-                       <property name="pixmap">
-                        <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
-                       </property>
-                       <property name="scaledContents">
-                        <bool>true</bool>
-                       </property>
-                      </widget>
-                     </item>
-                    </layout>
-                   </item>
-                   <item row="1" column="0">
-                    <layout class="QGridLayout" name="gridLayout_22">
-                     <item row="0" column="3">
-                      <widget class="QLabel" name="label_33">
-                       <property name="sizePolicy">
-                        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                         <horstretch>0</horstretch>
-                         <verstretch>0</verstretch>
-                        </sizepolicy>
-                       </property>
-                       <property name="minimumSize">
-                        <size>
-                         <width>16</width>
-                         <height>16</height>
-                        </size>
-                       </property>
-                       <property name="maximumSize">
-                        <size>
-                         <width>16</width>
-                         <height>16</height>
-                        </size>
-                       </property>
-                       <property name="toolTip">
-                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add the digital elevation model. The file must be a raster type (geotiff).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                       </property>
-                       <property name="text">
-                        <string/>
-                       </property>
-                       <property name="pixmap">
-                        <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
-                       </property>
-                       <property name="scaledContents">
-                        <bool>true</bool>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="0" column="1">
-                      <widget class="QLineEdit" name="le_2_pg2">
-                       <property name="minimumSize">
-                        <size>
-                         <width>360</width>
-                         <height>24</height>
-                        </size>
-                       </property>
-                       <property name="maximumSize">
-                        <size>
-                         <width>360</width>
-                         <height>24</height>
-                        </size>
-                       </property>
-                       <property name="clearButtonEnabled">
-                        <bool>true</bool>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="0" column="0">
-                      <widget class="QLabel" name="label_29">
-                       <property name="text">
-                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Digital Elevation Model (DEM):&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="0" column="2">
-                      <widget class="QToolButton" name="tbtn_pg2_2">
-                       <property name="text">
-                        <string>...</string>
-                       </property>
-                      </widget>
-                     </item>
-                    </layout>
-                   </item>
-                   <item row="2" column="0">
-                    <layout class="QGridLayout" name="gridLayout_23">
-                     <item row="0" column="3">
-                      <widget class="QLabel" name="label_34">
-                       <property name="sizePolicy">
-                        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                         <horstretch>0</horstretch>
-                         <verstretch>0</verstretch>
-                        </sizepolicy>
-                       </property>
-                       <property name="minimumSize">
-                        <size>
-                         <width>16</width>
-                         <height>16</height>
-                        </size>
-                       </property>
-                       <property name="maximumSize">
-                        <size>
-                         <width>16</width>
-                         <height>16</height>
-                        </size>
-                       </property>
-                       <property name="toolTip">
-                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add the flow direction matrix, according to the provided flow direction code. The file must be a raster type (geotiff).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                       </property>
-                       <property name="text">
-                        <string/>
-                       </property>
-                       <property name="pixmap">
-                        <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
-                       </property>
-                       <property name="scaledContents">
-                        <bool>true</bool>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="0" column="0">
-                      <widget class="QLabel" name="label_30">
-                       <property name="maximumSize">
-                        <size>
-                         <width>16777215</width>
-                         <height>24</height>
-                        </size>
-                       </property>
-                       <property name="text">
-                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Flow direction:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="0" column="2">
-                      <widget class="QToolButton" name="tbtn_pg2_3">
-                       <property name="text">
-                        <string>...</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="0" column="1">
-                      <widget class="QLineEdit" name="le_3_pg2">
-                       <property name="minimumSize">
-                        <size>
-                         <width>360</width>
-                         <height>24</height>
-                        </size>
-                       </property>
-                       <property name="maximumSize">
-                        <size>
-                         <width>360</width>
-                         <height>24</height>
-                        </size>
-                       </property>
-                       <property name="clearButtonEnabled">
-                        <bool>true</bool>
-                       </property>
-                      </widget>
-                     </item>
-                    </layout>
-                   </item>
-                   <item row="3" column="0">
-                    <layout class="QGridLayout" name="gridLayout_24">
-                     <item row="0" column="0">
-                      <widget class="QLabel" name="label_31">
-                       <property name="text">
-                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;River Drainage Network (RDN):&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="0" column="2">
-                      <widget class="QToolButton" name="tbtn_pg2_4">
-                       <property name="text">
-                        <string>...</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="0" column="3">
-                      <widget class="QLabel" name="label_35">
-                       <property name="sizePolicy">
-                        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                         <horstretch>0</horstretch>
-                         <verstretch>0</verstretch>
-                        </sizepolicy>
-                       </property>
-                       <property name="minimumSize">
-                        <size>
-                         <width>16</width>
-                         <height>16</height>
-                        </size>
-                       </property>
-                       <property name="maximumSize">
-                        <size>
-                         <width>16</width>
-                         <height>16</height>
-                        </size>
-                       </property>
-                       <property name="toolTip">
-                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add the River Drainage Network (RDN). The file must be a raster type (geotiff).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                       </property>
-                       <property name="text">
-                        <string/>
-                       </property>
-                       <property name="pixmap">
-                        <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
-                       </property>
-                       <property name="scaledContents">
-                        <bool>true</bool>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="0" column="1">
-                      <widget class="QLineEdit" name="le_4_pg2">
-                       <property name="minimumSize">
-                        <size>
-                         <width>360</width>
-                         <height>24</height>
-                        </size>
-                       </property>
-                       <property name="maximumSize">
-                        <size>
-                         <width>360</width>
-                         <height>24</height>
-                        </size>
-                       </property>
-                       <property name="clearButtonEnabled">
-                        <bool>true</bool>
-                       </property>
-                      </widget>
-                     </item>
-                    </layout>
-                   </item>
-                   <item row="4" column="0">
-                    <layout class="QGridLayout" name="gridLayout_25">
-                     <item row="0" column="0">
-                      <widget class="QLabel" name="label_32">
-                       <property name="text">
-                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;RDN segmentation into classes:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="0" column="1">
-                      <widget class="QLineEdit" name="le_5_pg2">
-                       <property name="minimumSize">
-                        <size>
-                         <width>360</width>
-                         <height>24</height>
-                        </size>
-                       </property>
-                       <property name="maximumSize">
-                        <size>
-                         <width>360</width>
-                         <height>24</height>
-                        </size>
-                       </property>
-                       <property name="clearButtonEnabled">
-                        <bool>true</bool>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="0" column="2">
-                      <widget class="QToolButton" name="tbtn_pg2_5">
-                       <property name="text">
-                        <string>...</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="0" column="3">
-                      <widget class="QLabel" name="label_36">
-                       <property name="sizePolicy">
-                        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                         <horstretch>0</horstretch>
-                         <verstretch>0</verstretch>
-                        </sizepolicy>
-                       </property>
-                       <property name="minimumSize">
-                        <size>
-                         <width>16</width>
-                         <height>16</height>
-                        </size>
-                       </property>
-                       <property name="maximumSize">
-                        <size>
-                         <width>16</width>
-                         <height>16</height>
-                        </size>
-                       </property>
-                       <property name="toolTip">
-                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add the RDN classes. The file must be a raster type (geotiff).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                       </property>
-                       <property name="text">
-                        <string/>
-                       </property>
-                       <property name="pixmap">
-                        <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
-                       </property>
-                       <property name="scaledContents">
-                        <bool>true</bool>
-                       </property>
-                      </widget>
-                     </item>
-                    </layout>
-                   </item>
-                   <item row="5" column="0">
-                    <layout class="QGridLayout" name="gridLayout_70">
-                     <item row="0" column="0">
-                      <widget class="QLabel" name="label_74">
-                       <property name="text">
-                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Flow accumulation drainage area (km²):&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="0" column="1">
-                      <widget class="QLineEdit" name="le_6_pg2">
-                       <property name="minimumSize">
-                        <size>
-                         <width>360</width>
-                         <height>24</height>
-                        </size>
-                       </property>
-                       <property name="maximumSize">
-                        <size>
-                         <width>360</width>
-                         <height>24</height>
-                        </size>
-                       </property>
-                       <property name="clearButtonEnabled">
-                        <bool>true</bool>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="0" column="2">
-                      <widget class="QToolButton" name="tbtn_pg2_9">
-                       <property name="text">
-                        <string>...</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="0" column="3">
-                      <widget class="QLabel" name="label_75">
-                       <property name="sizePolicy">
-                        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                         <horstretch>0</horstretch>
-                         <verstretch>0</verstretch>
-                        </sizepolicy>
-                       </property>
-                       <property name="minimumSize">
-                        <size>
-                         <width>16</width>
-                         <height>16</height>
-                        </size>
-                       </property>
-                       <property name="maximumSize">
-                        <size>
-                         <width>16</width>
-                         <height>16</height>
-                        </size>
-                       </property>
-                       <property name="toolTip">
-                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add your flow accumulation drainage area matrix. The file must be a raster type (geotiff).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                       </property>
-                       <property name="text">
-                        <string/>
-                       </property>
-                       <property name="pixmap">
-                        <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
-                       </property>
-                       <property name="scaledContents">
-                        <bool>true</bool>
-                       </property>
-                      </widget>
-                     </item>
-                    </layout>
-                   </item>
-                  </layout>
-                 </widget>
-                </item>
-                <item row="2" column="0">
-                 <spacer name="verticalSpacer_4">
-                  <property name="orientation">
-                   <enum>Qt::Vertical</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>20</width>
-                    <height>40</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-                <item row="4" column="0">
-                 <widget class="QFrame" name="frame_5">
-                  <property name="minimumSize">
-                   <size>
-                    <width>0</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                  <property name="frameShape">
-                   <enum>QFrame::StyledPanel</enum>
-                  </property>
-                  <property name="frameShadow">
-                   <enum>QFrame::Raised</enum>
-                  </property>
-                  <layout class="QGridLayout" name="gridLayout_49">
-                   <item row="0" column="0" colspan="2">
-                    <layout class="QVBoxLayout" name="verticalLayout_7">
-                     <item>
-                      <layout class="QHBoxLayout" name="horizontalLayout_13">
-                       <item>
-                        <widget class="QLabel" name="label_41">
-                         <property name="text">
-                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Manning roughness coeficient for each LULC: &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                         </property>
-                        </widget>
-                       </item>
-                       <item>
-                        <widget class="QLabel" name="label_42">
-                         <property name="sizePolicy">
-                          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                           <horstretch>0</horstretch>
-                           <verstretch>0</verstretch>
-                          </sizepolicy>
-                         </property>
-                         <property name="minimumSize">
-                          <size>
-                           <width>16</width>
-                           <height>16</height>
-                          </size>
-                         </property>
-                         <property name="maximumSize">
-                          <size>
-                           <width>16</width>
-                           <height>16</height>
-                          </size>
-                         </property>
-                         <property name="toolTip">
-                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add the Manning roughness and K coefficients (shallow concentrated flow) for each LULC. Read this information from a specific file or enter the data directly to the table.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                         </property>
-                         <property name="text">
-                          <string/>
-                         </property>
-                         <property name="pixmap">
-                          <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
-                         </property>
-                         <property name="scaledContents">
-                          <bool>true</bool>
-                         </property>
-                        </widget>
-                       </item>
-                      </layout>
-                     </item>
-                     <item>
-                      <layout class="QHBoxLayout" name="horizontalLayout_16">
-                       <item>
-                        <layout class="QGridLayout" name="gridLayout_39">
-                         <item row="1" column="1">
-                          <widget class="QPushButton" name="btn_del_row_2">
-                           <property name="toolTip">
-                            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Chose one line.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                           </property>
-                           <property name="text">
-                            <string>Delete row</string>
-                           </property>
-                          </widget>
-                         </item>
-                         <item row="0" column="1" alignment="Qt::AlignBottom">
-                          <widget class="QPushButton" name="btn_add_row_2">
-                           <property name="text">
-                            <string>Add row</string>
-                           </property>
-                          </widget>
-                         </item>
-                         <item row="2" column="1" alignment="Qt::AlignTop">
-                          <widget class="QPushButton" name="btn_clear_2">
-                           <property name="text">
-                            <string>Clear all</string>
-                           </property>
-                          </widget>
-                         </item>
-                         <item row="1" column="0">
-                          <spacer name="horizontalSpacer_7">
-                           <property name="orientation">
-                            <enum>Qt::Horizontal</enum>
-                           </property>
-                           <property name="sizeType">
-                            <enum>QSizePolicy::Fixed</enum>
-                           </property>
-                           <property name="sizeHint" stdset="0">
-                            <size>
-                             <width>140</width>
-                             <height>20</height>
-                            </size>
-                           </property>
-                          </spacer>
-                         </item>
-                        </layout>
-                       </item>
-                       <item>
-                        <layout class="QGridLayout" name="gridLayout_28">
-                         <item row="0" column="0">
-                          <layout class="QGridLayout" name="gridLayout_37">
-                           <item row="0" column="0">
-                            <layout class="QGridLayout" name="gridLayout_40">
-                             <item row="0" column="0">
-                              <widget class="QLabel" name="label_66">
-                               <property name="text">
-                                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;File:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                               </property>
-                              </widget>
-                             </item>
-                             <item row="0" column="1">
-                              <widget class="QLineEdit" name="le_10_pg2">
-                               <property name="minimumSize">
-                                <size>
-                                 <width>220</width>
-                                 <height>24</height>
-                                </size>
-                               </property>
-                               <property name="maximumSize">
-                                <size>
-                                 <width>16777215</width>
-                                 <height>24</height>
-                                </size>
-                               </property>
-                               <property name="readOnly">
-                                <bool>true</bool>
-                               </property>
-                               <property name="clearButtonEnabled">
-                                <bool>true</bool>
-                               </property>
-                              </widget>
-                             </item>
-                            </layout>
-                           </item>
-                           <item row="1" column="0">
-                            <widget class="QTableWidget" name="tbw_2_pg2">
-                             <property name="minimumSize">
-                              <size>
-                               <width>420</width>
-                               <height>150</height>
-                              </size>
-                             </property>
-                             <property name="maximumSize">
-                              <size>
-                               <width>420</width>
-                               <height>150</height>
-                              </size>
-                             </property>
-                             <property name="autoScroll">
-                              <bool>false</bool>
-                             </property>
-                             <property name="alternatingRowColors">
-                              <bool>true</bool>
-                             </property>
-                             <property name="selectionMode">
-                              <enum>QAbstractItemView::ExtendedSelection</enum>
-                             </property>
-                             <property name="textElideMode">
-                              <enum>Qt::ElideMiddle</enum>
-                             </property>
-                             <property name="showGrid">
-                              <bool>true</bool>
-                             </property>
-                             <property name="gridStyle">
-                              <enum>Qt::SolidLine</enum>
-                             </property>
-                             <property name="sortingEnabled">
-                              <bool>false</bool>
-                             </property>
-                             <property name="wordWrap">
-                              <bool>true</bool>
-                             </property>
-                             <property name="cornerButtonEnabled">
-                              <bool>true</bool>
-                             </property>
-                             <attribute name="horizontalHeaderVisible">
-                              <bool>false</bool>
-                             </attribute>
-                             <attribute name="horizontalHeaderCascadingSectionResizes">
-                              <bool>true</bool>
-                             </attribute>
-                             <attribute name="horizontalHeaderMinimumSectionSize">
-                              <number>24</number>
-                             </attribute>
-                             <attribute name="horizontalHeaderDefaultSectionSize">
-                              <number>106</number>
-                             </attribute>
-                             <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
-                              <bool>false</bool>
-                             </attribute>
-                             <attribute name="verticalHeaderVisible">
-                              <bool>false</bool>
-                             </attribute>
-                             <attribute name="verticalHeaderDefaultSectionSize">
-                              <number>30</number>
-                             </attribute>
-                             <row>
-                              <property name="text">
-                               <string>1</string>
-                              </property>
-                             </row>
-                             <column>
-                              <property name="text">
-                               <string>Class ID</string>
-                              </property>
-                              <property name="textAlignment">
-                               <set>AlignLeading|AlignVCenter</set>
-                              </property>
-                             </column>
-                             <column>
-                              <property name="text">
-                               <string>Class Name</string>
-                              </property>
-                              <property name="textAlignment">
-                               <set>AlignLeading|AlignVCenter</set>
-                              </property>
-                             </column>
-                             <column>
-                              <property name="text">
-                               <string>Manning</string>
-                              </property>
-                              <property name="textAlignment">
-                               <set>AlignLeading|AlignVCenter</set>
-                              </property>
-                             </column>
-                             <column>
-                              <property name="text">
-                               <string>Coefficient K</string>
-                              </property>
-                              <property name="textAlignment">
-                               <set>AlignLeading|AlignVCenter</set>
-                              </property>
-                             </column>
-                            </widget>
-                           </item>
-                          </layout>
-                         </item>
-                         <item row="1" column="0">
-                          <layout class="QGridLayout" name="gridLayout_41">
-                           <item row="0" column="2">
-                            <widget class="QPushButton" name="btn_help_t2">
-                             <property name="text">
-                              <string>Help</string>
-                             </property>
-                            </widget>
-                           </item>
-                           <item row="0" column="1">
-                            <widget class="QPushButton" name="btn_save_file_t2">
-                             <property name="text">
-                              <string>Save to file</string>
-                             </property>
-                            </widget>
-                           </item>
-                           <item row="0" column="0">
-                            <widget class="QPushButton" name="btn_read_t2">
-                             <property name="text">
-                              <string>Read from file</string>
-                             </property>
-                            </widget>
-                           </item>
-                          </layout>
-                         </item>
-                        </layout>
-                       </item>
-                      </layout>
-                     </item>
-                    </layout>
-                   </item>
-                  </layout>
-                 </widget>
-                </item>
-                <item row="3" column="0">
-                 <widget class="QFrame" name="frame_7">
-                  <property name="frameShape">
-                   <enum>QFrame::StyledPanel</enum>
-                  </property>
-                  <property name="frameShadow">
-                   <enum>QFrame::Raised</enum>
-                  </property>
-                  <layout class="QGridLayout" name="gridLayout_12">
-                   <item row="0" column="0">
-                    <layout class="QHBoxLayout" name="horizontalLayout_25">
-                     <item>
-                      <widget class="QLabel" name="label_68">
-                       <property name="text">
-                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Land use /land cover (LULC) map:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item>
-                      <layout class="QGridLayout" name="gridLayout_59">
-                       <item row="0" column="0">
-                        <spacer name="horizontalSpacer_9">
-                         <property name="orientation">
-                          <enum>Qt::Horizontal</enum>
-                         </property>
-                         <property name="sizeHint" stdset="0">
-                          <size>
-                           <width>40</width>
-                           <height>20</height>
-                          </size>
-                         </property>
-                        </spacer>
-                       </item>
-                       <item row="0" column="1">
-                        <widget class="QLineEdit" name="le_9_pg2">
-                         <property name="minimumSize">
-                          <size>
-                           <width>220</width>
-                           <height>24</height>
-                          </size>
-                         </property>
-                         <property name="maximumSize">
-                          <size>
-                           <width>220</width>
-                           <height>24</height>
-                          </size>
-                         </property>
-                         <property name="clearButtonEnabled">
-                          <bool>true</bool>
-                         </property>
-                        </widget>
-                       </item>
-                       <item row="0" column="2">
-                        <widget class="QToolButton" name="tbtn_pg2_6">
-                         <property name="text">
-                          <string>...</string>
-                         </property>
-                        </widget>
-                       </item>
-                       <item row="0" column="3">
-                        <widget class="QLabel" name="label_69">
-                         <property name="sizePolicy">
-                          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                           <horstretch>0</horstretch>
-                           <verstretch>0</verstretch>
-                          </sizepolicy>
-                         </property>
-                         <property name="minimumSize">
-                          <size>
-                           <width>16</width>
-                           <height>16</height>
-                          </size>
-                         </property>
-                         <property name="maximumSize">
-                          <size>
-                           <width>16</width>
-                           <height>16</height>
-                          </size>
-                         </property>
-                         <property name="toolTip">
-                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;Add the Land Use Land Cover (LULC) map. The file must be a raster type (geotiff).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                         </property>
-                         <property name="text">
-                          <string/>
-                         </property>
-                         <property name="pixmap">
-                          <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
-                         </property>
-                         <property name="scaledContents">
-                          <bool>true</bool>
-                         </property>
-                        </widget>
-                       </item>
-                      </layout>
-                     </item>
-                    </layout>
-                   </item>
-                  </layout>
-                 </widget>
-                </item>
-                <item row="5" column="0">
+                <item row="6" column="0">
                  <widget class="QFrame" name="frame_8">
                   <property name="frameShape">
                    <enum>QFrame::StyledPanel</enum>
@@ -2685,19 +1615,1049 @@
                   </layout>
                  </widget>
                 </item>
-                <item row="6" column="0">
+                <item row="0" column="0">
+                 <widget class="QFrame" name="frame_3">
+                  <property name="frameShape">
+                   <enum>QFrame::StyledPanel</enum>
+                  </property>
+                  <property name="frameShadow">
+                   <enum>QFrame::Raised</enum>
+                  </property>
+                  <layout class="QGridLayout" name="gridLayout_21">
+                   <item row="0" column="0">
+                    <layout class="QGridLayout" name="gridLayout_26">
+                     <item row="0" column="2">
+                      <widget class="QToolButton" name="tbtn_pg2_1">
+                       <property name="text">
+                        <string>...</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="3">
+                      <widget class="QLabel" name="label_27">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>16</width>
+                         <height>16</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>16</width>
+                         <height>16</height>
+                        </size>
+                       </property>
+                       <property name="toolTip">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add the watershed delineation. The file must be a raster type (geotiff).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                       <property name="text">
+                        <string/>
+                       </property>
+                       <property name="pixmap">
+                        <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
+                       </property>
+                       <property name="scaledContents">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="1">
+                      <widget class="QComboBox" name="cb_1_pg2"/>
+                     </item>
+                     <item row="0" column="0">
+                      <widget class="QLabel" name="label_28">
+                       <property name="text">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Watershed delineation:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
+                   <item row="1" column="0">
+                    <layout class="QGridLayout" name="gridLayout_22">
+                     <item row="0" column="0">
+                      <widget class="QLabel" name="label_29">
+                       <property name="text">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Digital Elevation Model (DEM):&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="3">
+                      <widget class="QLabel" name="label_33">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>16</width>
+                         <height>16</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>16</width>
+                         <height>16</height>
+                        </size>
+                       </property>
+                       <property name="toolTip">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add the digital elevation model. The file must be a raster type (geotiff).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                       <property name="text">
+                        <string/>
+                       </property>
+                       <property name="pixmap">
+                        <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
+                       </property>
+                       <property name="scaledContents">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="2">
+                      <widget class="QToolButton" name="tbtn_pg2_2">
+                       <property name="text">
+                        <string>...</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="1">
+                      <widget class="QComboBox" name="cb_2_pg2"/>
+                     </item>
+                    </layout>
+                   </item>
+                   <item row="2" column="0">
+                    <layout class="QGridLayout" name="gridLayout_23">
+                     <item row="0" column="1">
+                      <widget class="QComboBox" name="cb_3_pg2"/>
+                     </item>
+                     <item row="0" column="3">
+                      <widget class="QLabel" name="label_34">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>16</width>
+                         <height>16</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>16</width>
+                         <height>16</height>
+                        </size>
+                       </property>
+                       <property name="toolTip">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add the flow direction matrix, according to the provided flow direction code. The file must be a raster type (geotiff).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                       <property name="text">
+                        <string/>
+                       </property>
+                       <property name="pixmap">
+                        <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
+                       </property>
+                       <property name="scaledContents">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="0">
+                      <widget class="QLabel" name="label_30">
+                       <property name="maximumSize">
+                        <size>
+                         <width>16777215</width>
+                         <height>24</height>
+                        </size>
+                       </property>
+                       <property name="text">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Flow direction:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="2">
+                      <widget class="QToolButton" name="tbtn_pg2_3">
+                       <property name="text">
+                        <string>...</string>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
+                   <item row="3" column="0">
+                    <layout class="QGridLayout" name="gridLayout_24">
+                     <item row="0" column="2">
+                      <widget class="QToolButton" name="tbtn_pg2_4">
+                       <property name="text">
+                        <string>...</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="1">
+                      <widget class="QComboBox" name="cb_4_pg2"/>
+                     </item>
+                     <item row="0" column="0">
+                      <widget class="QLabel" name="label_31">
+                       <property name="text">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;River Drainage Network (RDN):&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="3">
+                      <widget class="QLabel" name="label_35">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>16</width>
+                         <height>16</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>16</width>
+                         <height>16</height>
+                        </size>
+                       </property>
+                       <property name="toolTip">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add the River Drainage Network (RDN). The file must be a raster type (geotiff).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                       <property name="text">
+                        <string/>
+                       </property>
+                       <property name="pixmap">
+                        <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
+                       </property>
+                       <property name="scaledContents">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
+                   <item row="4" column="0">
+                    <layout class="QGridLayout" name="gridLayout_25">
+                     <item row="0" column="3">
+                      <widget class="QLabel" name="label_36">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>16</width>
+                         <height>16</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>16</width>
+                         <height>16</height>
+                        </size>
+                       </property>
+                       <property name="toolTip">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add the RDN classes. The file must be a raster type (geotiff).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                       <property name="text">
+                        <string/>
+                       </property>
+                       <property name="pixmap">
+                        <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
+                       </property>
+                       <property name="scaledContents">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="0">
+                      <widget class="QLabel" name="label_32">
+                       <property name="text">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;RDN segmentation into classes:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="1">
+                      <widget class="QComboBox" name="cb_5_pg2"/>
+                     </item>
+                     <item row="0" column="2">
+                      <widget class="QToolButton" name="tbtn_pg2_5">
+                       <property name="text">
+                        <string>...</string>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
+                   <item row="5" column="0">
+                    <layout class="QGridLayout" name="gridLayout_70">
+                     <item row="0" column="2">
+                      <widget class="QToolButton" name="tbtn_pg2_9">
+                       <property name="text">
+                        <string>...</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="0">
+                      <widget class="QLabel" name="label_74">
+                       <property name="text">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Flow accumulation drainage area (km²):&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="3">
+                      <widget class="QLabel" name="label_75">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>16</width>
+                         <height>16</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>16</width>
+                         <height>16</height>
+                        </size>
+                       </property>
+                       <property name="toolTip">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add your flow accumulation drainage area matrix. The file must be a raster type (geotiff).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                       <property name="text">
+                        <string/>
+                       </property>
+                       <property name="pixmap">
+                        <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
+                       </property>
+                       <property name="scaledContents">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="1">
+                      <widget class="QComboBox" name="cb_6_pg2"/>
+                     </item>
+                    </layout>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+                <item row="2" column="0">
+                 <widget class="QFrame" name="frame_4">
+                  <property name="frameShape">
+                   <enum>QFrame::StyledPanel</enum>
+                  </property>
+                  <property name="frameShadow">
+                   <enum>QFrame::Raised</enum>
+                  </property>
+                  <layout class="QGridLayout" name="gridLayout_27">
+                   <item row="0" column="0">
+                    <layout class="QHBoxLayout" name="horizontalLayout_8">
+                     <item>
+                      <widget class="QLabel" name="label_37">
+                       <property name="text">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Characteristics of RDN classes:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QLabel" name="label_38">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>16</width>
+                         <height>16</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>16</width>
+                         <height>16</height>
+                        </size>
+                       </property>
+                       <property name="toolTip">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add the characteristics of the RDN classes. Read this information from a specific file or enter the data directly to the table.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                       <property name="text">
+                        <string/>
+                       </property>
+                       <property name="pixmap">
+                        <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
+                       </property>
+                       <property name="scaledContents">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
+                   <item row="1" column="0">
+                    <layout class="QGridLayout" name="gridLayout_38">
+                     <item row="0" column="0">
+                      <layout class="QGridLayout" name="gridLayout_33">
+                       <item row="1" column="1">
+                        <widget class="QPushButton" name="btn_del_row_1">
+                         <property name="toolTip">
+                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Chose one line.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                         </property>
+                         <property name="text">
+                          <string>Delete row</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="2" column="1" alignment="Qt::AlignTop">
+                        <widget class="QPushButton" name="btn_clear_1">
+                         <property name="toolTip">
+                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Chose one line.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                         </property>
+                         <property name="text">
+                          <string>Clear all</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="0" column="1" alignment="Qt::AlignBottom">
+                        <widget class="QPushButton" name="btn_add_row_1">
+                         <property name="text">
+                          <string>Add row</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="1" column="0">
+                        <spacer name="horizontalSpacer_2">
+                         <property name="orientation">
+                          <enum>Qt::Horizontal</enum>
+                         </property>
+                         <property name="sizeType">
+                          <enum>QSizePolicy::Fixed</enum>
+                         </property>
+                         <property name="sizeHint" stdset="0">
+                          <size>
+                           <width>80</width>
+                           <height>20</height>
+                          </size>
+                         </property>
+                        </spacer>
+                       </item>
+                      </layout>
+                     </item>
+                     <item row="0" column="1">
+                      <layout class="QGridLayout" name="gridLayout_35">
+                       <item row="0" column="0">
+                        <layout class="QGridLayout" name="gridLayout_56">
+                         <item row="0" column="1">
+                          <widget class="QLineEdit" name="le_8_pg2">
+                           <property name="minimumSize">
+                            <size>
+                             <width>220</width>
+                             <height>24</height>
+                            </size>
+                           </property>
+                           <property name="maximumSize">
+                            <size>
+                             <width>16777215</width>
+                             <height>24</height>
+                            </size>
+                           </property>
+                           <property name="readOnly">
+                            <bool>true</bool>
+                           </property>
+                           <property name="clearButtonEnabled">
+                            <bool>true</bool>
+                           </property>
+                          </widget>
+                         </item>
+                         <item row="0" column="0">
+                          <widget class="QLabel" name="label_67">
+                           <property name="text">
+                            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;File:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                           </property>
+                          </widget>
+                         </item>
+                        </layout>
+                       </item>
+                       <item row="3" column="0">
+                        <layout class="QGridLayout" name="gridLayout_34">
+                         <item row="0" column="1">
+                          <widget class="QPushButton" name="btn_save_file_t1">
+                           <property name="text">
+                            <string>Save to file</string>
+                           </property>
+                          </widget>
+                         </item>
+                         <item row="0" column="0">
+                          <widget class="QPushButton" name="btn_read_t1">
+                           <property name="text">
+                            <string>Read from file</string>
+                           </property>
+                          </widget>
+                         </item>
+                         <item row="0" column="2">
+                          <widget class="QPushButton" name="btn_help_t1">
+                           <property name="text">
+                            <string>Help</string>
+                           </property>
+                          </widget>
+                         </item>
+                        </layout>
+                       </item>
+                       <item row="1" column="0">
+                        <spacer name="verticalSpacer">
+                         <property name="orientation">
+                          <enum>Qt::Vertical</enum>
+                         </property>
+                         <property name="sizeHint" stdset="0">
+                          <size>
+                           <width>20</width>
+                           <height>40</height>
+                          </size>
+                         </property>
+                        </spacer>
+                       </item>
+                       <item row="2" column="0">
+                        <widget class="QTableWidget" name="tbw_1_pg2">
+                         <property name="layoutDirection">
+                          <enum>Qt::LeftToRight</enum>
+                         </property>
+                         <property name="autoFillBackground">
+                          <bool>false</bool>
+                         </property>
+                         <property name="horizontalScrollBarPolicy">
+                          <enum>Qt::ScrollBarAlwaysOff</enum>
+                         </property>
+                         <property name="autoScroll">
+                          <bool>true</bool>
+                         </property>
+                         <property name="autoScrollMargin">
+                          <number>20</number>
+                         </property>
+                         <property name="showDropIndicator" stdset="0">
+                          <bool>true</bool>
+                         </property>
+                         <property name="dragEnabled">
+                          <bool>true</bool>
+                         </property>
+                         <property name="dragDropOverwriteMode">
+                          <bool>true</bool>
+                         </property>
+                         <property name="alternatingRowColors">
+                          <bool>true</bool>
+                         </property>
+                         <property name="textElideMode">
+                          <enum>Qt::ElideMiddle</enum>
+                         </property>
+                         <property name="showGrid">
+                          <bool>true</bool>
+                         </property>
+                         <property name="gridStyle">
+                          <enum>Qt::SolidLine</enum>
+                         </property>
+                         <property name="sortingEnabled">
+                          <bool>false</bool>
+                         </property>
+                         <property name="wordWrap">
+                          <bool>true</bool>
+                         </property>
+                         <attribute name="horizontalHeaderVisible">
+                          <bool>true</bool>
+                         </attribute>
+                         <attribute name="horizontalHeaderCascadingSectionResizes">
+                          <bool>true</bool>
+                         </attribute>
+                         <attribute name="horizontalHeaderMinimumSectionSize">
+                          <number>35</number>
+                         </attribute>
+                         <attribute name="horizontalHeaderDefaultSectionSize">
+                          <number>130</number>
+                         </attribute>
+                         <attribute name="horizontalHeaderHighlightSections">
+                          <bool>true</bool>
+                         </attribute>
+                         <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
+                          <bool>true</bool>
+                         </attribute>
+                         <attribute name="horizontalHeaderStretchLastSection">
+                          <bool>false</bool>
+                         </attribute>
+                         <attribute name="verticalHeaderVisible">
+                          <bool>false</bool>
+                         </attribute>
+                         <attribute name="verticalHeaderMinimumSectionSize">
+                          <number>5</number>
+                         </attribute>
+                         <attribute name="verticalHeaderDefaultSectionSize">
+                          <number>5</number>
+                         </attribute>
+                         <row>
+                          <property name="text">
+                           <string>1</string>
+                          </property>
+                         </row>
+                         <column>
+                          <property name="text">
+                           <string>Segment</string>
+                          </property>
+                          <property name="font">
+                           <font>
+                            <pointsize>8</pointsize>
+                           </font>
+                          </property>
+                          <property name="textAlignment">
+                           <set>AlignLeading|AlignVCenter</set>
+                          </property>
+                         </column>
+                         <column>
+                          <property name="text">
+                           <string>Hydraulic radius (m)</string>
+                          </property>
+                          <property name="font">
+                           <font>
+                            <pointsize>8</pointsize>
+                           </font>
+                          </property>
+                          <property name="textAlignment">
+                           <set>AlignLeading|AlignVCenter</set>
+                          </property>
+                         </column>
+                         <column>
+                          <property name="text">
+                           <string>Manning</string>
+                          </property>
+                          <property name="font">
+                           <font>
+                            <pointsize>8</pointsize>
+                           </font>
+                          </property>
+                          <property name="textAlignment">
+                           <set>AlignLeading|AlignVCenter</set>
+                          </property>
+                         </column>
+                         <column>
+                          <property name="text">
+                           <string>Slope (m/m)</string>
+                          </property>
+                          <property name="font">
+                           <font>
+                            <pointsize>8</pointsize>
+                           </font>
+                          </property>
+                          <property name="textAlignment">
+                           <set>AlignLeading|AlignVCenter</set>
+                          </property>
+                         </column>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                    </layout>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+                <item row="4" column="0">
+                 <widget class="QFrame" name="frame_7">
+                  <property name="frameShape">
+                   <enum>QFrame::StyledPanel</enum>
+                  </property>
+                  <property name="frameShadow">
+                   <enum>QFrame::Raised</enum>
+                  </property>
+                  <layout class="QGridLayout" name="gridLayout_12">
+                   <item row="0" column="0">
+                    <layout class="QHBoxLayout" name="horizontalLayout_25">
+                     <item>
+                      <widget class="QLabel" name="label_68">
+                       <property name="text">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Land use /land cover (LULC) map:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <layout class="QGridLayout" name="gridLayout_59">
+                       <item row="0" column="0">
+                        <widget class="QComboBox" name="cb_7_pg2"/>
+                       </item>
+                       <item row="0" column="2">
+                        <widget class="QLabel" name="label_69">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                           <horstretch>0</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="minimumSize">
+                          <size>
+                           <width>16</width>
+                           <height>16</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>16</width>
+                           <height>16</height>
+                          </size>
+                         </property>
+                         <property name="toolTip">
+                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;Add the Land Use Land Cover (LULC) map. The file must be a raster type (geotiff).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                         </property>
+                         <property name="text">
+                          <string/>
+                         </property>
+                         <property name="pixmap">
+                          <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
+                         </property>
+                         <property name="scaledContents">
+                          <bool>true</bool>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="0" column="1">
+                        <widget class="QToolButton" name="tbtn_pg2_6">
+                         <property name="text">
+                          <string>...</string>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                    </layout>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+                <item row="3" column="0">
+                 <spacer name="verticalSpacer_4">
+                  <property name="orientation">
+                   <enum>Qt::Vertical</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>20</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="5" column="0">
+                 <widget class="QFrame" name="frame_5">
+                  <property name="minimumSize">
+                   <size>
+                    <width>0</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="frameShape">
+                   <enum>QFrame::StyledPanel</enum>
+                  </property>
+                  <property name="frameShadow">
+                   <enum>QFrame::Raised</enum>
+                  </property>
+                  <layout class="QGridLayout" name="gridLayout_49">
+                   <item row="0" column="0" colspan="2">
+                    <layout class="QVBoxLayout" name="verticalLayout_7">
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_13">
+                       <item>
+                        <widget class="QLabel" name="label_41">
+                         <property name="text">
+                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Manning roughness coeficient for each LULC: &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QLabel" name="label_42">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                           <horstretch>0</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="minimumSize">
+                          <size>
+                           <width>16</width>
+                           <height>16</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>16</width>
+                           <height>16</height>
+                          </size>
+                         </property>
+                         <property name="toolTip">
+                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add the Manning roughness and K coefficients (shallow concentrated flow) for each LULC. Read this information from a specific file or enter the data directly to the table.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                         </property>
+                         <property name="text">
+                          <string/>
+                         </property>
+                         <property name="pixmap">
+                          <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
+                         </property>
+                         <property name="scaledContents">
+                          <bool>true</bool>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_16">
+                       <item>
+                        <layout class="QGridLayout" name="gridLayout_39">
+                         <item row="1" column="1">
+                          <widget class="QPushButton" name="btn_del_row_2">
+                           <property name="toolTip">
+                            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Chose one line.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                           </property>
+                           <property name="text">
+                            <string>Delete row</string>
+                           </property>
+                          </widget>
+                         </item>
+                         <item row="2" column="1" alignment="Qt::AlignTop">
+                          <widget class="QPushButton" name="btn_clear_2">
+                           <property name="text">
+                            <string>Clear all</string>
+                           </property>
+                          </widget>
+                         </item>
+                         <item row="0" column="1" alignment="Qt::AlignBottom">
+                          <widget class="QPushButton" name="btn_add_row_2">
+                           <property name="text">
+                            <string>Add row</string>
+                           </property>
+                          </widget>
+                         </item>
+                         <item row="1" column="0">
+                          <spacer name="horizontalSpacer_7">
+                           <property name="orientation">
+                            <enum>Qt::Horizontal</enum>
+                           </property>
+                           <property name="sizeType">
+                            <enum>QSizePolicy::Fixed</enum>
+                           </property>
+                           <property name="sizeHint" stdset="0">
+                            <size>
+                             <width>80</width>
+                             <height>20</height>
+                            </size>
+                           </property>
+                          </spacer>
+                         </item>
+                        </layout>
+                       </item>
+                       <item>
+                        <layout class="QGridLayout" name="gridLayout_28">
+                         <item row="0" column="0">
+                          <layout class="QGridLayout" name="gridLayout_37">
+                           <item row="0" column="0">
+                            <layout class="QGridLayout" name="gridLayout_40">
+                             <item row="0" column="0">
+                              <widget class="QLabel" name="label_66">
+                               <property name="text">
+                                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;File:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                               </property>
+                              </widget>
+                             </item>
+                             <item row="0" column="1">
+                              <widget class="QLineEdit" name="le_10_pg2">
+                               <property name="minimumSize">
+                                <size>
+                                 <width>220</width>
+                                 <height>24</height>
+                                </size>
+                               </property>
+                               <property name="maximumSize">
+                                <size>
+                                 <width>16777215</width>
+                                 <height>24</height>
+                                </size>
+                               </property>
+                               <property name="readOnly">
+                                <bool>true</bool>
+                               </property>
+                               <property name="clearButtonEnabled">
+                                <bool>true</bool>
+                               </property>
+                              </widget>
+                             </item>
+                            </layout>
+                           </item>
+                           <item row="1" column="0">
+                            <widget class="QTableWidget" name="tbw_2_pg2">
+                             <property name="layoutDirection">
+                              <enum>Qt::LeftToRight</enum>
+                             </property>
+                             <property name="horizontalScrollBarPolicy">
+                              <enum>Qt::ScrollBarAlwaysOff</enum>
+                             </property>
+                             <property name="autoScroll">
+                              <bool>true</bool>
+                             </property>
+                             <property name="alternatingRowColors">
+                              <bool>true</bool>
+                             </property>
+                             <property name="selectionMode">
+                              <enum>QAbstractItemView::ExtendedSelection</enum>
+                             </property>
+                             <property name="textElideMode">
+                              <enum>Qt::ElideMiddle</enum>
+                             </property>
+                             <property name="verticalScrollMode">
+                              <enum>QAbstractItemView::ScrollPerItem</enum>
+                             </property>
+                             <property name="horizontalScrollMode">
+                              <enum>QAbstractItemView::ScrollPerItem</enum>
+                             </property>
+                             <property name="showGrid">
+                              <bool>true</bool>
+                             </property>
+                             <property name="gridStyle">
+                              <enum>Qt::SolidLine</enum>
+                             </property>
+                             <property name="sortingEnabled">
+                              <bool>true</bool>
+                             </property>
+                             <property name="wordWrap">
+                              <bool>true</bool>
+                             </property>
+                             <property name="cornerButtonEnabled">
+                              <bool>true</bool>
+                             </property>
+                             <attribute name="horizontalHeaderVisible">
+                              <bool>true</bool>
+                             </attribute>
+                             <attribute name="horizontalHeaderCascadingSectionResizes">
+                              <bool>true</bool>
+                             </attribute>
+                             <attribute name="horizontalHeaderDefaultSectionSize">
+                              <number>125</number>
+                             </attribute>
+                             <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
+                              <bool>true</bool>
+                             </attribute>
+                             <attribute name="verticalHeaderVisible">
+                              <bool>false</bool>
+                             </attribute>
+                             <attribute name="verticalHeaderMinimumSectionSize">
+                              <number>5</number>
+                             </attribute>
+                             <attribute name="verticalHeaderDefaultSectionSize">
+                              <number>5</number>
+                             </attribute>
+                             <row>
+                              <property name="text">
+                               <string>1</string>
+                              </property>
+                             </row>
+                             <column>
+                              <property name="text">
+                               <string>Class ID</string>
+                              </property>
+                              <property name="textAlignment">
+                               <set>AlignLeading|AlignVCenter</set>
+                              </property>
+                             </column>
+                             <column>
+                              <property name="text">
+                               <string>Class Name</string>
+                              </property>
+                              <property name="textAlignment">
+                               <set>AlignLeading|AlignVCenter</set>
+                              </property>
+                             </column>
+                             <column>
+                              <property name="text">
+                               <string>Manning</string>
+                              </property>
+                              <property name="textAlignment">
+                               <set>AlignLeading|AlignVCenter</set>
+                              </property>
+                             </column>
+                             <column>
+                              <property name="text">
+                               <string>Coefficient K</string>
+                              </property>
+                              <property name="textAlignment">
+                               <set>AlignLeading|AlignVCenter</set>
+                              </property>
+                             </column>
+                            </widget>
+                           </item>
+                          </layout>
+                         </item>
+                         <item row="1" column="0">
+                          <layout class="QGridLayout" name="gridLayout_41">
+                           <item row="0" column="2">
+                            <widget class="QPushButton" name="btn_help_t2">
+                             <property name="text">
+                              <string>Help</string>
+                             </property>
+                            </widget>
+                           </item>
+                           <item row="0" column="1">
+                            <widget class="QPushButton" name="btn_save_file_t2">
+                             <property name="text">
+                              <string>Save to file</string>
+                             </property>
+                            </widget>
+                           </item>
+                           <item row="0" column="0">
+                            <widget class="QPushButton" name="btn_read_t2">
+                             <property name="text">
+                              <string>Read from file</string>
+                             </property>
+                            </widget>
+                           </item>
+                          </layout>
+                         </item>
+                        </layout>
+                       </item>
+                      </layout>
+                     </item>
+                    </layout>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+                <item row="7" column="0">
                  <layout class="QGridLayout" name="gridLayout_44">
                   <item row="0" column="1">
                    <widget class="QPushButton" name="btn_save_file_pg2">
                     <property name="text">
-                     <string>Save to file</string>
+                     <string>Save to project</string>
                     </property>
                    </widget>
                   </item>
                   <item row="0" column="0">
                    <widget class="QPushButton" name="btn_read_pg2">
                     <property name="text">
-                     <string>Read from file</string>
+                     <string>Read from project</string>
                     </property>
                    </widget>
                   </item>
@@ -2710,6 +2670,19 @@
                   </item>
                  </layout>
                 </item>
+                <item row="1" column="0">
+                 <spacer name="verticalSpacer_19">
+                  <property name="orientation">
+                   <enum>Qt::Vertical</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>20</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
                </layout>
               </widget>
              </widget>
@@ -2718,7 +2691,7 @@
           </widget>
           <widget class="QWidget" name="pg3_data_val_tool">
            <layout class="QGridLayout" name="gridLayout_29">
-            <item row="1" column="0">
+            <item row="2" column="0">
              <widget class="QScrollArea" name="scrollArea_3">
               <property name="widgetResizable">
                <bool>true</bool>
@@ -2728,8 +2701,8 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>254</width>
-                 <height>64</height>
+                 <width>714</width>
+                 <height>498</height>
                 </rect>
                </property>
                <layout class="QGridLayout" name="gridLayout_30">
@@ -2763,11 +2736,67 @@
               </property>
              </widget>
             </item>
+            <item row="1" column="0">
+             <layout class="QGridLayout" name="gridLayout_79">
+              <item row="0" column="0">
+               <spacer name="horizontalSpacer_11">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="0" column="2">
+               <widget class="QLineEdit" name="lineEdit_3">
+                <property name="maximumSize">
+                 <size>
+                  <width>120</width>
+                  <height>24</height>
+                 </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <weight>75</weight>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="readOnly">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QLabel" name="label_50">
+                <property name="text">
+                 <string>Current project</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
            </layout>
           </widget>
           <widget class="QWidget" name="pg4_run">
            <layout class="QGridLayout" name="gridLayout_32">
-            <item row="1" column="0">
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_48">
+              <property name="text">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-weight:700;&quot;&gt;Flow travel time: RUN&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
              <widget class="QScrollArea" name="scrollArea_4">
               <property name="widgetResizable">
                <bool>true</bool>
@@ -2777,8 +2806,8 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>545</width>
-                 <height>335</height>
+                 <width>714</width>
+                 <height>498</height>
                 </rect>
                </property>
                <layout class="QGridLayout" name="gridLayout_48">
@@ -3786,14 +3815,14 @@
                   <item>
                    <widget class="QPushButton" name="btn_read_pg4">
                     <property name="text">
-                     <string>Read from file</string>
+                     <string>Read from project</string>
                     </property>
                    </widget>
                   </item>
                   <item>
                    <widget class="QPushButton" name="btn_save_file_pg4">
                     <property name="text">
-                     <string>Save to file</string>
+                     <string>Save to project</string>
                     </property>
                    </widget>
                   </item>
@@ -3833,12 +3862,54 @@
               </widget>
              </widget>
             </item>
-            <item row="0" column="0">
-             <widget class="QLabel" name="label_48">
-              <property name="text">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-weight:700;&quot;&gt;Flow travel time: RUN&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-              </property>
-             </widget>
+            <item row="1" column="0">
+             <layout class="QGridLayout" name="gridLayout_80">
+              <item row="0" column="0">
+               <spacer name="horizontalSpacer_12">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="0" column="2">
+               <widget class="QLineEdit" name="le_12_pg4">
+                <property name="maximumSize">
+                 <size>
+                  <width>120</width>
+                  <height>24</height>
+                 </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <weight>75</weight>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="readOnly">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QLabel" name="label_51">
+                <property name="text">
+                 <string>Current project</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </item>
            </layout>
           </widget>
@@ -3863,13 +3934,10 @@
             </property>
             <property name="html">
              <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-hr { height: 1px; border-width: 0; }
-li.unchecked::marker { content: &quot;\2610&quot;; }
-li.checked::marker { content: &quot;\2612&quot;; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Segoe UI'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Segoe UI'; font-size:9pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="textInteractionFlags">
              <set>Qt::TextSelectableByMouse</set>
@@ -3978,22 +4046,15 @@ li.checked::marker { content: &quot;\2612&quot;; }
   <tabstop>btn_save_file_pg1</tabstop>
   <tabstop>btn_help_pg1</tabstop>
   <tabstop>btn_input_data</tabstop>
-  <tabstop>le_1_pg2</tabstop>
   <tabstop>tbtn_pg2_1</tabstop>
-  <tabstop>le_2_pg2</tabstop>
   <tabstop>tbtn_pg2_2</tabstop>
-  <tabstop>le_3_pg2</tabstop>
   <tabstop>tbtn_pg2_3</tabstop>
-  <tabstop>le_4_pg2</tabstop>
   <tabstop>tbtn_pg2_4</tabstop>
-  <tabstop>le_5_pg2</tabstop>
   <tabstop>tbtn_pg2_5</tabstop>
-  <tabstop>le_6_pg2</tabstop>
   <tabstop>tbtn_pg2_9</tabstop>
   <tabstop>btn_read_t1</tabstop>
   <tabstop>btn_save_file_t1</tabstop>
   <tabstop>btn_help_t1</tabstop>
-  <tabstop>le_9_pg2</tabstop>
   <tabstop>tbtn_pg2_6</tabstop>
   <tabstop>btn_read_t2</tabstop>
   <tabstop>btn_save_file_t2</tabstop>
@@ -4039,7 +4100,6 @@ li.checked::marker { content: &quot;\2612&quot;; }
   <tabstop>scrollArea_2</tabstop>
   <tabstop>tbw_2_pg2</tabstop>
   <tabstop>scrollArea_4</tabstop>
-  <tabstop>tabWidget</tabstop>
   <tabstop>btn_clear_2</tabstop>
   <tabstop>btn_del_row_2</tabstop>
   <tabstop>le_10_pg2</tabstop>

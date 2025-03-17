@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>633</width>
-    <height>560</height>
+    <width>645</width>
+    <height>550</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -101,7 +101,7 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>571</width>
+                 <width>583</width>
                  <height>396</height>
                 </rect>
                </property>
@@ -526,14 +526,14 @@
                   <item>
                    <widget class="QPushButton" name="btn_read_pg1">
                     <property name="text">
-                     <string>Read from file</string>
+                     <string>Read from project</string>
                     </property>
                    </widget>
                   </item>
                   <item>
                    <widget class="QPushButton" name="btn_save_file_pg1">
                     <property name="text">
-                     <string>Save to file</string>
+                     <string>Save to project</string>
                     </property>
                    </widget>
                   </item>
@@ -627,6 +627,40 @@
              </widget>
             </item>
             <item row="1" column="0">
+             <layout class="QGridLayout" name="gridLayout_34">
+              <item row="0" column="0">
+               <spacer name="horizontalSpacer_13">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="0" column="1">
+               <widget class="QLabel" name="label_2">
+                <property name="text">
+                 <string>Current project</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="2">
+               <widget class="QLineEdit" name="le_6_pg2">
+                <property name="maximumSize">
+                 <size>
+                  <width>120</width>
+                  <height>24</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item row="2" column="0">
              <widget class="QScrollArea" name="scrollArea_2">
               <property name="widgetResizable">
                <bool>true</bool>
@@ -636,8 +670,8 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>571</width>
-                 <height>426</height>
+                 <width>583</width>
+                 <height>398</height>
                 </rect>
                </property>
                <layout class="QGridLayout" name="gridLayout_14">
@@ -645,45 +679,13 @@
                  <layout class="QVBoxLayout" name="verticalLayout_2">
                   <item>
                    <layout class="QGridLayout" name="gridLayout_22">
-                    <item row="1" column="2">
-                     <widget class="QToolButton" name="tbtn_pg2_1">
-                      <property name="toolTip">
-                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add the watershed delineation. The file must be a raster type (geotiff).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                      </property>
-                      <property name="text">
-                       <string>...</string>
-                      </property>
-                     </widget>
+                    <item row="1" column="1">
+                     <widget class="QComboBox" name="cb_1_pg2"/>
                     </item>
                     <item row="1" column="0">
                      <widget class="QLabel" name="label_29">
                       <property name="text">
                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Watershed delineation:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="1" column="1">
-                     <widget class="QLineEdit" name="le_1_pg2">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="minimumSize">
-                       <size>
-                        <width>60</width>
-                        <height>24</height>
-                       </size>
-                      </property>
-                      <property name="maximumSize">
-                       <size>
-                        <width>360</width>
-                        <height>24</height>
-                       </size>
-                      </property>
-                      <property name="clearButtonEnabled">
-                       <bool>true</bool>
                       </property>
                      </widget>
                     </item>
@@ -721,6 +723,16 @@
                       </property>
                      </widget>
                     </item>
+                    <item row="1" column="2">
+                     <widget class="QToolButton" name="tbtn_pg2_1">
+                      <property name="toolTip">
+                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add the watershed delineation. The file must be a raster type (geotiff).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                      </property>
+                      <property name="text">
+                       <string>...</string>
+                      </property>
+                     </widget>
+                    </item>
                    </layout>
                   </item>
                   <item>
@@ -738,6 +750,19 @@
                   </item>
                   <item>
                    <layout class="QGridLayout" name="gridLayout_21">
+                    <item row="0" column="1">
+                     <widget class="QComboBox" name="cb_2_pg2"/>
+                    </item>
+                    <item row="0" column="2">
+                     <widget class="QToolButton" name="tbtn_pg2_2">
+                      <property name="toolTip">
+                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                      </property>
+                      <property name="text">
+                       <string>...</string>
+                      </property>
+                     </widget>
+                    </item>
                     <item row="0" column="3">
                      <widget class="QLabel" name="label_27">
                       <property name="sizePolicy">
@@ -779,41 +804,6 @@
                       </property>
                      </widget>
                     </item>
-                    <item row="0" column="1">
-                     <widget class="QLineEdit" name="le_2_pg2">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="minimumSize">
-                       <size>
-                        <width>60</width>
-                        <height>24</height>
-                       </size>
-                      </property>
-                      <property name="maximumSize">
-                       <size>
-                        <width>360</width>
-                        <height>24</height>
-                       </size>
-                      </property>
-                      <property name="clearButtonEnabled">
-                       <bool>true</bool>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="0" column="2">
-                     <widget class="QToolButton" name="tbtn_pg2_2">
-                      <property name="toolTip">
-                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                      </property>
-                      <property name="text">
-                       <string>...</string>
-                      </property>
-                     </widget>
-                    </item>
                    </layout>
                   </item>
                   <item>
@@ -831,6 +821,16 @@
                   </item>
                   <item>
                    <layout class="QGridLayout" name="gridLayout_24">
+                    <item row="0" column="0">
+                     <widget class="QLabel" name="label_31">
+                      <property name="text">
+                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Flow travel time:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="1">
+                     <widget class="QComboBox" name="cb_3_pg2"/>
+                    </item>
                     <item row="0" column="2">
                      <widget class="QToolButton" name="tbtn_pg2_3">
                       <property name="text">
@@ -868,38 +868,6 @@
                        <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
                       </property>
                       <property name="scaledContents">
-                       <bool>true</bool>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="0" column="0">
-                     <widget class="QLabel" name="label_31">
-                      <property name="text">
-                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Flow travel time:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="0" column="1">
-                     <widget class="QLineEdit" name="le_3_pg2">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="minimumSize">
-                       <size>
-                        <width>60</width>
-                        <height>24</height>
-                       </size>
-                      </property>
-                      <property name="maximumSize">
-                       <size>
-                        <width>360</width>
-                        <height>24</height>
-                       </size>
-                      </property>
-                      <property name="clearButtonEnabled">
                        <bool>true</bool>
                       </property>
                      </widget>
@@ -1071,7 +1039,7 @@
                        </size>
                       </property>
                       <property name="toolTip">
-                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add the file contaning the total excess rainfall per pixel (mm)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add the file contaning the total excess rainfall per pixel (mm).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                       </property>
                       <property name="text">
                        <string/>
@@ -1118,6 +1086,13 @@
                     <layout class="QGridLayout" name="gridLayout_12">
                      <item row="0" column="0">
                       <layout class="QGridLayout" name="gridLayout_28">
+                       <item row="1" column="0">
+                        <widget class="QLabel" name="label_30">
+                         <property name="text">
+                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Watershed into classes:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                         </property>
+                        </widget>
+                       </item>
                        <item row="1" column="2">
                         <widget class="QToolButton" name="tbtn_pg2_6">
                          <property name="toolTip">
@@ -1128,42 +1103,8 @@
                          </property>
                         </widget>
                        </item>
-                       <item row="1" column="0">
-                        <widget class="QLabel" name="label_30">
-                         <property name="text">
-                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Watershed into classes:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                         </property>
-                        </widget>
-                       </item>
                        <item row="1" column="1">
-                        <widget class="QLineEdit" name="le_6_pg2">
-                         <property name="sizePolicy">
-                          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                           <horstretch>0</horstretch>
-                           <verstretch>0</verstretch>
-                          </sizepolicy>
-                         </property>
-                         <property name="minimumSize">
-                          <size>
-                           <width>60</width>
-                           <height>24</height>
-                          </size>
-                         </property>
-                         <property name="maximumSize">
-                          <size>
-                           <width>360</width>
-                           <height>24</height>
-                          </size>
-                         </property>
-                         <property name="font">
-                          <font>
-                           <pointsize>8</pointsize>
-                          </font>
-                         </property>
-                         <property name="clearButtonEnabled">
-                          <bool>true</bool>
-                         </property>
-                        </widget>
+                        <widget class="QComboBox" name="cb_4_pg2"/>
                        </item>
                        <item row="1" column="3">
                         <widget class="QLabel" name="label_40">
@@ -1222,14 +1163,14 @@
                     <item row="0" column="0">
                      <widget class="QPushButton" name="btn_read_pg2">
                       <property name="text">
-                       <string>Read from file</string>
+                       <string>Read from project</string>
                       </property>
                      </widget>
                     </item>
                     <item row="0" column="1">
                      <widget class="QPushButton" name="btn_save_file_pg2">
                       <property name="text">
-                       <string>Save to file</string>
+                       <string>Save to project</string>
                       </property>
                      </widget>
                     </item>
@@ -1252,7 +1193,14 @@
           </widget>
           <widget class="QWidget" name="pg3_data_val_tool">
            <layout class="QGridLayout" name="gridLayout_29">
-            <item row="1" column="0">
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_47">
+              <property name="text">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:700;&quot;&gt;Flow routing: DATA VALIDATION TOOL&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
              <widget class="QScrollArea" name="scrollArea_3">
               <property name="widgetResizable">
                <bool>true</bool>
@@ -1262,8 +1210,8 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>571</width>
-                 <height>426</height>
+                 <width>583</width>
+                 <height>398</height>
                 </rect>
                </property>
                <layout class="QGridLayout" name="gridLayout_30">
@@ -1290,12 +1238,39 @@
               </widget>
              </widget>
             </item>
-            <item row="0" column="0">
-             <widget class="QLabel" name="label_47">
-              <property name="text">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:700;&quot;&gt;Flow routing: DATA VALIDATION TOOL&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-              </property>
-             </widget>
+            <item row="1" column="0">
+             <layout class="QGridLayout" name="gridLayout_36">
+              <item row="0" column="0">
+               <spacer name="horizontalSpacer_15">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="0" column="1">
+               <widget class="QLabel" name="label_8">
+                <property name="text">
+                 <string>Current project</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="2">
+               <widget class="QLineEdit" name="lineEdit_3">
+                <property name="maximumSize">
+                 <size>
+                  <width>120</width>
+                  <height>24</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </item>
            </layout>
           </widget>
@@ -1308,7 +1283,7 @@
               </property>
              </widget>
             </item>
-            <item row="1" column="0">
+            <item row="2" column="0">
              <widget class="QScrollArea" name="scrollArea_4">
               <property name="widgetResizable">
                <bool>true</bool>
@@ -1317,8 +1292,8 @@
                <property name="geometry">
                 <rect>
                  <x>0</x>
-                 <y>-20</y>
-                 <width>554</width>
+                 <y>0</y>
+                 <width>566</width>
                  <height>456</height>
                 </rect>
                </property>
@@ -2773,14 +2748,14 @@
                   <item>
                    <widget class="QPushButton" name="btn_read_pg4">
                     <property name="text">
-                     <string>Read from file</string>
+                     <string>Read from project</string>
                     </property>
                    </widget>
                   </item>
                   <item>
                    <widget class="QPushButton" name="btn_save_file_pg4">
                     <property name="text">
-                     <string>Save to file</string>
+                     <string>Save to project</string>
                     </property>
                    </widget>
                   </item>
@@ -2819,6 +2794,40 @@
                </layout>
               </widget>
              </widget>
+            </item>
+            <item row="1" column="0">
+             <layout class="QGridLayout" name="gridLayout_35">
+              <item row="0" column="0">
+               <spacer name="horizontalSpacer_14">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="0" column="1">
+               <widget class="QLabel" name="label_4">
+                <property name="text">
+                 <string>Current project</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="2">
+               <widget class="QLineEdit" name="le_8_pg4">
+                <property name="maximumSize">
+                 <size>
+                  <width>120</width>
+                  <height>24</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </item>
            </layout>
           </widget>
@@ -2940,18 +2949,14 @@ p, li { white-space: pre-wrap; }
   <tabstop>btn_save_file_pg1</tabstop>
   <tabstop>btn_help_pg1</tabstop>
   <tabstop>btn_input_data</tabstop>
-  <tabstop>le_1_pg2</tabstop>
   <tabstop>tbtn_pg2_1</tabstop>
-  <tabstop>le_2_pg2</tabstop>
   <tabstop>tbtn_pg2_2</tabstop>
-  <tabstop>le_3_pg2</tabstop>
   <tabstop>tbtn_pg2_3</tabstop>
   <tabstop>le_4_pg2</tabstop>
   <tabstop>tbtn_pg2_4</tabstop>
   <tabstop>le_5_pg2</tabstop>
   <tabstop>tbtn_pg2_5</tabstop>
   <tabstop>groupBox_2</tabstop>
-  <tabstop>le_6_pg2</tabstop>
   <tabstop>tbtn_pg2_6</tabstop>
   <tabstop>btn_read_pg2</tabstop>
   <tabstop>btn_save_file_pg2</tabstop>
