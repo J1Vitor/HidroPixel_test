@@ -518,28 +518,28 @@ class HidroPixel:
                     "-------------------------------------------------\n")
                 arquivo_txt.write("Watershed delineation:\n")
                 arquivo_txt.write(
-                    f"={self.lista_rasters_dir[self.dlg_flow_tt.cb_1_pg2.currentIndex()]}\n")
+                    f"={self.dlg_flow_tt.cb_1_pg2.currentText()}\n")
                 arquivo_txt.write("\nDigital elevation model:\n")
                 arquivo_txt.write(
-                    f"={self.lista_rasters_dir[self.dlg_flow_tt.cb_2_pg2.currentIndex()]}\n")
+                    f"={self.dlg_flow_tt.cb_2_pg2.currentText()}\n")
                 arquivo_txt.write("\nFlow direction:\n")
                 arquivo_txt.write(
-                    f"={self.lista_rasters_dir[self.dlg_flow_tt.cb_3_pg2.currentIndex()]}\n")
+                    f"={self.dlg_flow_tt.cb_3_pg2.currentText()}\n")
                 arquivo_txt.write("\nRiver drainage network (RDN):\n")
                 arquivo_txt.write(
-                    f"={self.lista_rasters_dir[self.dlg_flow_tt.cb_4_pg2.currentIndex()]}\n")
+                    f"={self.dlg_flow_tt.cb_4_pg2.currentText()}\n")
                 arquivo_txt.write("\nRDN segmentation into classes:\n")
                 arquivo_txt.write(
-                    f"={self.lista_rasters_dir[self.dlg_flow_tt.cb_5_pg2.currentIndex()]}\n")
+                    f"={self.dlg_flow_tt.cb_5_pg2.currentText()}\n")
                 arquivo_txt.write("\nDrainage area (km²):\n")
                 arquivo_txt.write(
-                    f"={self.lista_rasters_dir[self.dlg_flow_tt.cb_6_pg2.currentIndex()]}\n")
+                    f"={self.dlg_flow_tt.cb_6_pg2.currentText()}\n")
                 arquivo_txt.write("\nCharacteristics of RDN classes:\n")
                 arquivo_txt.write(
                     f"={self.dlg_flow_tt.le_8_pg2.text()}\n")
                 arquivo_txt.write("\nLand use or land cover (LULC) map:\n")
                 arquivo_txt.write(
-                    f"={self.lista_rasters_dir[self.dlg_flow_tt.le_7_pg2.currentIndex()]}\n")
+                    f"={self.dlg_flow_tt.cb_7_pg2.currentText()}\n")
                 arquivo_txt.write(
                     "\nManning roughness coefficient for each LULC:\n")
                 arquivo_txt.write(
@@ -2510,7 +2510,7 @@ class HidroPixel:
 
         LULC_file = direct_temp + r'\LULC.rst'
         self.leh_geotiff_escreve_ascii(
-            self.lista_rasters_dir[self.dlg_flow_tt.le_9_pg2.currentIndex()], LULC_file, 'int')
+            self.lista_rasters_dir[self.dlg_flow_tt.le_7_pg2.currentIndex()], LULC_file, 'int')
 
         # Escreve arquivo txt com os diretórios e nome dos inputs enviados pelo user
         direct_in_files = direct_temp + r'\input_files_config_flow_tt.txt'
@@ -3052,15 +3052,13 @@ class HidroPixel:
         lista_rasters = [None]
         self.lista_rasters_dir = []
         nomes_usados = set()
-        dir_usados = set()
         for layer_tree in layer_tree_layers:
             layer = layer_tree.layer()
             if layer.type() == QgsMapLayer.RasterLayer:
                 nome = layer.name()
-                dir_name = layer.source()
+                dir = layer.source()
                 if nome not in nomes_usados:
-                    dir_usados.add()
-                    self.lista_rasters_dir.append(dir_name)
+                    self.lista_rasters_dir.append(dir)
                     nomes_usados.add(nome)
                     lista_rasters.append(nome)
 

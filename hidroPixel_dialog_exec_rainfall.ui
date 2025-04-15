@@ -6,15 +6,9 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>673</width>
-    <height>557</height>
+    <width>639</width>
+    <height>550</height>
    </rect>
-  </property>
-  <property name="sizePolicy">
-   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-    <horstretch>0</horstretch>
-    <verstretch>0</verstretch>
-   </sizepolicy>
   </property>
   <property name="minimumSize">
    <size>
@@ -22,8 +16,26 @@
     <height>550</height>
    </size>
   </property>
+  <property name="cursor">
+   <cursorShape>ArrowCursor</cursorShape>
+  </property>
+  <property name="mouseTracking">
+   <bool>false</bool>
+  </property>
+  <property name="tabletTracking">
+   <bool>false</bool>
+  </property>
+  <property name="focusPolicy">
+   <enum>Qt::ClickFocus</enum>
+  </property>
   <property name="windowTitle">
    <string>Excess Rainfall</string>
+  </property>
+  <property name="locale">
+   <locale language="English" country="UnitedStates"/>
+  </property>
+  <property name="windowFilePath">
+   <string notr="true"/>
   </property>
   <widget class="QWidget" name="centralwidget">
    <property name="sizePolicy">
@@ -54,14 +66,14 @@
           <item row="0" column="1">
            <widget class="QPushButton" name="btn_rain_int">
             <property name="text">
-             <string>RAINFALL INTERPOLATION</string>
+             <string notr="true">RAINFALL INTERPOLATION</string>
             </property>
            </widget>
           </item>
           <item row="0" column="3">
            <widget class="QPushButton" name="btn_data_va_tool">
             <property name="text">
-             <string>DATA VALIDATION TOOL</string>
+             <string notr="true">DATA VALIDATION TOOL</string>
             </property>
            </widget>
           </item>
@@ -69,12 +81,12 @@
            <widget class="QPushButton" name="btn_input_data">
             <property name="maximumSize">
              <size>
-              <width>100</width>
+              <width>80</width>
               <height>16777215</height>
              </size>
             </property>
             <property name="text">
-             <string>INPUT DATA</string>
+             <string notr="true">INPUT DATA</string>
             </property>
            </widget>
           </item>
@@ -87,7 +99,7 @@
              </size>
             </property>
             <property name="text">
-             <string>RUN</string>
+             <string notr="true">RUN</string>
             </property>
            </widget>
           </item>
@@ -100,7 +112,7 @@
              </size>
             </property>
             <property name="text">
-             <string>CONFIGURATION</string>
+             <string notr="true">CONFIGURATION</string>
             </property>
            </widget>
           </item>
@@ -108,12 +120,6 @@
         </item>
         <item row="1" column="0">
          <widget class="QStackedWidget" name="pages_exc_rain">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
           <property name="minimumSize">
            <size>
             <width>574</width>
@@ -190,8 +196,8 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>611</width>
-                 <height>395</height>
+                 <width>577</width>
+                 <height>388</height>
                 </rect>
                </property>
                <layout class="QGridLayout" name="gridLayout_13">
@@ -208,8 +214,26 @@
                     <layout class="QGridLayout" name="gridLayout_5">
                      <item row="2" column="0">
                       <layout class="QGridLayout" name="gridLayout_8">
+                       <property name="topMargin">
+                        <number>5</number>
+                       </property>
+                       <property name="bottomMargin">
+                        <number>3</number>
+                       </property>
+                       <property name="verticalSpacing">
+                        <number>0</number>
+                       </property>
                        <item row="1" column="0">
                         <layout class="QVBoxLayout" name="verticalLayout_3">
+                         <property name="spacing">
+                          <number>0</number>
+                         </property>
+                         <property name="topMargin">
+                          <number>0</number>
+                         </property>
+                         <property name="bottomMargin">
+                          <number>0</number>
+                         </property>
                          <item>
                           <layout class="QHBoxLayout" name="horizontalLayout_8">
                            <item>
@@ -386,6 +410,9 @@
                            <height>10</height>
                           </size>
                          </property>
+                         <property name="toolTipDuration">
+                          <number>-1</number>
+                         </property>
                          <property name="text">
                           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Rainfall defination:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                          </property>
@@ -482,21 +509,21 @@
                     <item>
                      <widget class="QPushButton" name="btn_read_pg1">
                       <property name="text">
-                       <string>Read from project</string>
+                       <string notr="true">Read from project</string>
                       </property>
                      </widget>
                     </item>
                     <item>
                      <widget class="QPushButton" name="btn_save_file_pg1">
                       <property name="text">
-                       <string>Save to project</string>
+                       <string notr="true">Save to project</string>
                       </property>
                      </widget>
                     </item>
                     <item>
                      <widget class="QPushButton" name="btn_help_pg1">
                       <property name="text">
-                       <string>Help</string>
+                       <string notr="true">Help</string>
                       </property>
                      </widget>
                     </item>
@@ -579,8 +606,8 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>570</width>
-                 <height>397</height>
+                 <width>577</width>
+                 <height>390</height>
                 </rect>
                </property>
                <layout class="QGridLayout" name="gridLayout_7">
@@ -605,21 +632,21 @@
                   <item row="0" column="0">
                    <widget class="QPushButton" name="btn_read_pg_ri">
                     <property name="text">
-                     <string>Read from project</string>
+                     <string notr="true">Read from project</string>
                     </property>
                    </widget>
                   </item>
                   <item row="0" column="1">
                    <widget class="QPushButton" name="btn_save_file_pg_ri">
                     <property name="text">
-                     <string>Save to project</string>
+                     <string notr="true">Save to project</string>
                     </property>
                    </widget>
                   </item>
                   <item row="0" column="2">
                    <widget class="QPushButton" name="btn_help_pg_ri">
                     <property name="text">
-                     <string>Help</string>
+                     <string notr="true">Help</string>
                     </property>
                    </widget>
                   </item>
@@ -630,7 +657,20 @@
                   <item>
                    <layout class="QGridLayout" name="gridLayout_37">
                     <item row="1" column="1">
-                     <widget class="QComboBox" name="cb_1_pg_ri"/>
+                     <widget class="QComboBox" name="cb_1_pg_ri">
+                      <property name="minimumSize">
+                       <size>
+                        <width>60</width>
+                        <height>20</height>
+                       </size>
+                      </property>
+                      <property name="maximumSize">
+                       <size>
+                        <width>265</width>
+                        <height>24</height>
+                       </size>
+                      </property>
+                     </widget>
                     </item>
                     <item row="1" column="3">
                      <widget class="QLabel" name="label_34">
@@ -711,7 +751,7 @@
                       <property name="minimumSize">
                        <size>
                         <width>60</width>
-                        <height>24</height>
+                        <height>20</height>
                        </size>
                       </property>
                       <property name="maximumSize">
@@ -818,7 +858,7 @@
                       <property name="minimumSize">
                        <size>
                         <width>60</width>
-                        <height>24</height>
+                        <height>20</height>
                        </size>
                       </property>
                       <property name="maximumSize">
@@ -937,14 +977,14 @@
                            </property>
                            <property name="minimumSize">
                             <size>
-                             <width>60</width>
-                             <height>24</height>
+                             <width>200</width>
+                             <height>20</height>
                             </size>
                            </property>
                            <property name="maximumSize">
                             <size>
                              <width>360</width>
-                             <height>24</height>
+                             <height>20</height>
                             </size>
                            </property>
                            <property name="font">
@@ -970,14 +1010,14 @@
                            </property>
                            <property name="minimumSize">
                             <size>
-                             <width>60</width>
-                             <height>24</height>
+                             <width>200</width>
+                             <height>20</height>
                             </size>
                            </property>
                            <property name="maximumSize">
                             <size>
                              <width>360</width>
-                             <height>24</height>
+                             <height>20</height>
                             </size>
                            </property>
                            <property name="font">
@@ -1154,8 +1194,8 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>570</width>
-                 <height>397</height>
+                 <width>577</width>
+                 <height>390</height>
                 </rect>
                </property>
                <layout class="QGridLayout" name="gridLayout_14">
@@ -1214,7 +1254,20 @@
                         </widget>
                        </item>
                        <item row="0" column="1">
-                        <widget class="QComboBox" name="cb_1_pg2"/>
+                        <widget class="QComboBox" name="cb_1_pg2">
+                         <property name="minimumSize">
+                          <size>
+                           <width>265</width>
+                           <height>20</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>265</width>
+                           <height>24</height>
+                          </size>
+                         </property>
+                        </widget>
                        </item>
                        <item row="0" column="2">
                         <widget class="QToolButton" name="tbtn_pg2_1">
@@ -1264,7 +1317,20 @@
                         </widget>
                        </item>
                        <item row="1" column="1">
-                        <widget class="QComboBox" name="cb_1_pg2_2"/>
+                        <widget class="QComboBox" name="cb_2_pg2">
+                         <property name="minimumSize">
+                          <size>
+                           <width>265</width>
+                           <height>20</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>265</width>
+                           <height>24</height>
+                          </size>
+                         </property>
+                        </widget>
                        </item>
                        <item row="1" column="3">
                         <widget class="QLabel" name="label_33">
@@ -1378,13 +1444,13 @@
                          </property>
                          <property name="minimumSize">
                           <size>
-                           <width>60</width>
-                           <height>24</height>
+                           <width>265</width>
+                           <height>20</height>
                           </size>
                          </property>
                          <property name="maximumSize">
                           <size>
-                           <width>360</width>
+                           <width>265</width>
                            <height>24</height>
                           </size>
                          </property>
@@ -1430,13 +1496,13 @@
                          </property>
                          <property name="minimumSize">
                           <size>
-                           <width>60</width>
-                           <height>24</height>
+                           <width>265</width>
+                           <height>20</height>
                           </size>
                          </property>
                          <property name="maximumSize">
                           <size>
-                           <width>360</width>
+                           <width>265</width>
                            <height>24</height>
                           </size>
                          </property>
@@ -1498,21 +1564,21 @@
                   <item row="0" column="2">
                    <widget class="QPushButton" name="btn_help_pg2">
                     <property name="text">
-                     <string>Help</string>
+                     <string notr="true">Help</string>
                     </property>
                    </widget>
                   </item>
                   <item row="0" column="1">
                    <widget class="QPushButton" name="btn_save_file_pg2">
                     <property name="text">
-                     <string>Save to project</string>
+                     <string notr="true">Save to project</string>
                     </property>
                    </widget>
                   </item>
                   <item row="0" column="0">
                    <widget class="QPushButton" name="btn_read_pg2">
                     <property name="text">
-                     <string>Read from project</string>
+                     <string notr="true">Read from project</string>
                     </property>
                    </widget>
                   </item>
@@ -1603,8 +1669,8 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>570</width>
-                 <height>397</height>
+                 <width>577</width>
+                 <height>390</height>
                 </rect>
                </property>
                <layout class="QGridLayout" name="gridLayout_30">
@@ -1657,7 +1723,7 @@
                </widget>
               </item>
               <item row="0" column="2">
-               <widget class="QLineEdit" name="le_5_pg2_3">
+               <widget class="QLineEdit" name="le_1_pg3">
                 <property name="maximumSize">
                  <size>
                   <width>120</width>
@@ -1692,8 +1758,8 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>611</width>
-                 <height>397</height>
+                 <width>577</width>
+                 <height>390</height>
                 </rect>
                </property>
                <layout class="QGridLayout" name="gridLayout_17">
@@ -1702,27 +1768,27 @@
                   <item>
                    <widget class="QPushButton" name="btn_read_pg4">
                     <property name="text">
-                     <string>Read from project</string>
+                     <string notr="true">Read from project</string>
                     </property>
                    </widget>
                   </item>
                   <item>
                    <widget class="QPushButton" name="btn_save_file_pg4">
                     <property name="text">
-                     <string>Save to project</string>
+                     <string notr="true">Save to project</string>
                     </property>
                    </widget>
                   </item>
                   <item>
                    <widget class="QPushButton" name="btn_run_2">
                     <property name="enabled">
-                     <bool>false</bool>
+                     <bool>true</bool>
                     </property>
                     <property name="styleSheet">
                      <string notr="true"/>
                     </property>
                     <property name="text">
-                     <string>Run</string>
+                     <string notr="true">Run</string>
                     </property>
                    </widget>
                   </item>
@@ -1732,14 +1798,14 @@
                      <string notr="true"/>
                     </property>
                     <property name="text">
-                     <string>Close</string>
+                     <string notr="true">Close</string>
                     </property>
                    </widget>
                   </item>
                   <item>
                    <widget class="QPushButton" name="btn_help_pg4">
                     <property name="text">
-                     <string>Help</string>
+                     <string notr="true">Help</string>
                     </property>
                    </widget>
                   </item>
@@ -1870,7 +1936,7 @@
                         <property name="maximumSize">
                          <size>
                           <width>167</width>
-                          <height>24</height>
+                          <height>20</height>
                          </size>
                         </property>
                         <property name="clearButtonEnabled">
@@ -1881,7 +1947,7 @@
                       <item row="0" column="0" alignment="Qt::AlignLeft">
                        <widget class="QLabel" name="label_57">
                         <property name="text">
-                         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Map of watershed pixels ID*:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Map of watershed pixels ID:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                         </property>
                        </widget>
                       </item>
@@ -2359,7 +2425,7 @@
                        </size>
                       </property>
                       <property name="toolTip">
-                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:700;&quot;&gt;Optional output.&lt;br/&gt;&lt;/span&gt;&lt;br/&gt;If selected, the user can specify a directory to save a raster file containing the total rainfall (mm).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:704;&quot;&gt;*Recommended output.&lt;br/&gt;&lt;/span&gt;&lt;br/&gt;If selected, the user can specify a directory to save a raster file containing the total rainfall (mm).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                       </property>
                       <property name="text">
                        <string/>
@@ -2374,6 +2440,9 @@
                     </item>
                     <item>
                      <widget class="QCheckBox" name="ch_4_pg4">
+                      <property name="enabled">
+                       <bool>false</bool>
+                      </property>
                       <property name="sizePolicy">
                        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                         <horstretch>0</horstretch>
@@ -2382,6 +2451,9 @@
                       </property>
                       <property name="text">
                        <string/>
+                      </property>
+                      <property name="checked">
+                       <bool>true</bool>
                       </property>
                      </widget>
                     </item>
@@ -2422,7 +2494,7 @@
                       <item row="0" column="0">
                        <widget class="QLabel" name="label_72">
                         <property name="text">
-                         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Map of total rainfall (mm):&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Map of total rainfall (mm)*:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                         </property>
                        </widget>
                       </item>
@@ -2552,6 +2624,9 @@
                     </item>
                     <item>
                      <widget class="QCheckBox" name="ch_5_pg4">
+                      <property name="enabled">
+                       <bool>false</bool>
+                      </property>
                       <property name="sizePolicy">
                        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                         <horstretch>0</horstretch>
@@ -2560,6 +2635,9 @@
                       </property>
                       <property name="text">
                        <string/>
+                      </property>
+                      <property name="checked">
+                       <bool>true</bool>
                       </property>
                      </widget>
                     </item>
@@ -2730,6 +2808,9 @@
                     </item>
                     <item>
                      <widget class="QCheckBox" name="ch_6_pg4">
+                      <property name="enabled">
+                       <bool>false</bool>
+                      </property>
                       <property name="sizePolicy">
                        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                         <horstretch>0</horstretch>
@@ -2738,6 +2819,9 @@
                       </property>
                       <property name="text">
                        <string/>
+                      </property>
+                      <property name="checked">
+                       <bool>true</bool>
                       </property>
                      </widget>
                     </item>
@@ -2881,7 +2965,7 @@
                </widget>
               </item>
               <item row="0" column="2">
-               <widget class="QLineEdit" name="le_5_pg2_2">
+               <widget class="QLineEdit" name="le_7_pg4">
                 <property name="maximumSize">
                  <size>
                   <width>120</width>
