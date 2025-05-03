@@ -128,21 +128,13 @@ class HidroPixel:
 
         # inicia instânica das diferentes routinas do plugin Hidropixel
         self.dlg_flow_tt = uic.loadUi(ui_file)
-        self.dlg_flow_tt.setWindowModality(Qt.ApplicationModal)
         self.dlg_exc_rain = uic.loadUi(ui_file1)
-        self.dlg_exc_rain.setWindowModality(Qt.ApplicationModal)
         self.dlg_flow_rout = uic.loadUi(ui_file2)
-        self.dlg_flow_rout.setWindowModality(Qt.ApplicationModal)
         self.dlg_rain_interpl_run = uic.loadUi(ui_file3)
-        self.dlg_rain_interpl_run.setWindowModality(Qt.ApplicationModal)
         self.dlg_about = uic.loadUi(ui_file4)
-        self.dlg_about.setWindowModality(Qt.ApplicationModal)
         self.dlg_save_project_flow_tt = uic.loadUi(ui_file5)
-        self.dlg_save_project_flow_tt.setWindowModality(Qt.ApplicationModal)
         self.dlg_save_project_exc_rain = uic.loadUi(ui_file6)
-        self.dlg_save_project_exc_rain.setWindowModality(Qt.ApplicationModal)
         self.dlg_save_project_flow_rout = uic.loadUi(ui_file7)
-        self.dlg_save_project_flow_rout.setWindowModality(Qt.ApplicationModal)
 
         # Cria outras variáveis necessárias
         self.save_result = None
@@ -194,7 +186,7 @@ class HidroPixel:
         self.output4_flow_rout = ''
         self.output5_flow_rout = ''
         self.highlighted_style = "background-color: rgb(173, 216, 230)"
-        self.lista_rasters_dir = []
+        self.lista_rasters_dir = [None]
 
     # noinspection PyMethodMayBeStatic
     def tr(self, message):
@@ -336,36 +328,30 @@ class HidroPixel:
         while True:  # Loop até que o usuário selecione um arquivo ou cancele
 
             # Janela de diálogo com o Usuário
-            if file_type == "raster".lower():
+            if file_type == "raster":
                 file_, _ = QFileDialog.getOpenFileName(
-                    None, caption="Select a file!", directory=directory, filter="GeoTIFF (*.tif)", options=options)
+                    None, "Select a file!", directory, "GeoTIFF (*.tif)", options=options)
+                if not file_:
+                    QMessageBox.warning(
+                        None, "No file selected", "Wait! You did not select any file.")
+                    return None
 
-                # Verificar se algum arquivo foi selecionado
-                if file_:
+                # Se o raster não estiver no projeto, adiciona
+                if file_ not in [layer.source() for layer in QgsProject.instance().mapLayers().values()]:
+                    layer = QgsRasterLayer(
+                        file_, os.path.basename(file_), "gdal")
+                    QgsProject.instance().addMapLayer(layer)
 
-                    # Seleciona apenas basename
-                    file_name = os.path.basename(file_)
+                # Recarrega os combos
+                self.carrega_rasters()
 
-                    # Verifica se o arquivo selecionado esta no projeto atual, se nao, adiciona
-                    if file_name not in [layer.source() for layer in QgsProject.instance().mapLayers().values()]:
-                        layer = QgsRasterLayer(
-                            file_, file_.split("/")[-1], "gdal")
-                        QgsProject.instance().addMapLayer(layer)
-
-                    # Atualiza lista com os arquivos no combo box
-                    self.carrega_rasters()
-
-                    # Adiciona o arquivo selecionado ao combobox
-                    combobox.setCurrentIndex(1)
-
-                    return file_
-
-                else:
-                    result = "Wait! You did not select any file."
-                    reply = QMessageBox.warning(
-                        None, "No file selected", result, QMessageBox.Ok)
-                    if reply == QMessageBox.Ok:
-                        break
+                # Agora, seleciona no combo o novo raster
+                nome = os.path.basename(file_)
+                # Combobox guarda apenas nomes, então:
+                idx = combobox.findText(nome)
+                if idx != -1:
+                    combobox.setCurrentIndex(idx)
+                return file_
 
             elif file_type == "text".lower():
                 file_, _ = QFileDialog.getOpenFileName(
@@ -440,6 +426,7 @@ class HidroPixel:
             function == 2: Excess rainfall;
             function == 3: Flow routing
         """
+
         with open(file_name, 'w', encoding='utf-8') as arquivo_txt:
 
             if function == 1:
@@ -500,7 +487,7 @@ class HidroPixel:
                     f"={self.dlg_flow_tt.le_15_pg1.text()}\n")
                 arquivo_txt.write("Group Box is checked:\n")
                 arquivo_txt.write(
-                    f"={self.dlg_flow_tt.groupBox_4.isChecked()}\n")
+                    f"={self.dlg_flow_tt.groupBox_3.isChecked()}\n")
                 arquivo_txt.write(
                     f"Coefficient c = {self.dlg_flow_tt.le_16_pg1.text()}\n")
                 arquivo_txt.write(
@@ -539,7 +526,7 @@ class HidroPixel:
                     f"={self.dlg_flow_tt.le_8_pg2.text()}\n")
                 arquivo_txt.write("\nLand use or land cover (LULC) map:\n")
                 arquivo_txt.write(
-                    f"={self.lista_rasters_dir[self.dlg_flow_tt.le_7_pg2.currentIndex()]}\n")
+                    f"={self.lista_rasters_dir[self.dlg_flow_tt.cb_7_pg2.currentIndex()]}\n")
                 arquivo_txt.write(
                     "\nManning roughness coefficient for each LULC:\n")
                 arquivo_txt.write(
@@ -554,7 +541,7 @@ class HidroPixel:
                     "-------------------------------------------------\n")
                 arquivo_txt.write("Slope relative to downstream pixel:\n")
                 arquivo_txt.write(
-                    f"={self.dlg_flow_tt.le_6_pg4.currentText()}\n")
+                    f"={self.dlg_flow_tt.le_6_pg4.text()}\n")
                 arquivo_txt.write("Selected:\n")
                 arquivo_txt.write(
                     f"={self.dlg_flow_tt.ch_6_pg4.isChecked()}\n")
@@ -564,7 +551,7 @@ class HidroPixel:
                 arquivo_txt.write(
                     "All river segments with similar hydrologic conditions:\n")
                 arquivo_txt.write(
-                    f"={self.dlg_flow_tt.le_7_pg4.currentText()}\n")
+                    f"={self.dlg_flow_tt.le_7_pg4.text()}\n")
                 arquivo_txt.write("Selected:\n")
                 arquivo_txt.write(
                     f"={self.dlg_flow_tt.ch_7_pg4.isChecked()}\n")
@@ -573,14 +560,14 @@ class HidroPixel:
                 arquivo_txt.write(
                     "Hydraulic radius, roughness and slope for all river segments:\n")
                 arquivo_txt.write(
-                    f"={self.dlg_flow_tt.le_8_pg4.currentText()}\n")
+                    f"={self.dlg_flow_tt.le_8_pg4.text()}\n")
                 arquivo_txt.write("Selected:\n")
                 arquivo_txt.write(
                     f"={self.dlg_flow_tt.ch_8_pg4.isChecked()}\n")
                 arquivo_txt.write(
                     "River cross-sectional area calculated by regional curves (m²):\n")
                 arquivo_txt.write(
-                    f"={self.dlg_flow_tt.le_9_pg4.currentText()}\n")
+                    f"={self.dlg_flow_tt.le_9_pg4.text()}\n")
                 arquivo_txt.write("Selected:\n")
                 arquivo_txt.write(
                     f"={self.dlg_flow_tt.ch_9_pg4.isChecked()}\n")
@@ -590,7 +577,7 @@ class HidroPixel:
                 arquivo_txt.write(
                     "River cross-sectional area calculated by regional curves (m):\n")
                 arquivo_txt.write(
-                    f"={self.dlg_flow_tt.le_10_pg4.currentText()}\n")
+                    f"={self.dlg_flow_tt.le_10_pg4.text()}\n")
                 arquivo_txt.write("Selected:\n")
                 arquivo_txt.write(
                     f"={self.dlg_flow_tt.ch_10_pg4.isChecked()}\n")
@@ -599,7 +586,7 @@ class HidroPixel:
                     f"={self.dlg_flow_tt.ch_21_pg4.isChecked()}\n")
                 arquivo_txt.write("Flow travel time (min):\n")
                 arquivo_txt.write(
-                    f"={self.dlg_flow_tt.le_11_pg4.currentText()}\n")
+                    f"={self.dlg_flow_tt.le_11_pg4.text()}\n")
                 arquivo_txt.write("Selected:\n")
                 arquivo_txt.write(
                     f"={self.dlg_flow_tt.ch_11_pg4.isChecked()}\n")
@@ -609,13 +596,13 @@ class HidroPixel:
 
             if function == 2:
                 # Define valor do projeto na GUI
-                self.dlg_save_project_exc_rain.le_6_pg_ri.setText(
+                self.dlg_exc_rain.le_6_pg_ri.setText(
                     self.dlg_save_project_exc_rain.le_1_pg1.text())
-                self.dlg_save_project_exc_rain.le_5_pg2.setText(
+                self.dlg_exc_rain.le_5_pg2.setText(
                     self.dlg_save_project_exc_rain.le_1_pg1.text())
-                self.dlg_save_project_exc_rain.le_1_pg3.setText(
+                self.dlg_exc_rain.le_1_pg3.setText(
                     self.dlg_save_project_exc_rain.le_1_pg1.text())
-                self.dlg_save_project_exc_rain.le_7_pg4.setText(
+                self.dlg_exc_rain.le_7_pg4.setText(
                     self.dlg_save_project_exc_rain.le_1_pg1.text())
 
                 # Seção: Excess Rainfall - Configuration page (Função 2, Página 1)
@@ -626,7 +613,7 @@ class HidroPixel:
                     "-------------------------------------------------\n")
                 arquivo_txt.write("Initial abstraction parameter (λ):\n")
                 arquivo_txt.write(
-                    f"={self.dlg_exc_rain.le_1_pg1.currentText()}\n")
+                    f"={self.dlg_exc_rain.le_1_pg1.text()}\n")
                 arquivo_txt.write("Rainfall definition:\n")
                 arquivo_txt.write("    Areal averaged:\n")
                 arquivo_txt.write(
@@ -641,7 +628,7 @@ class HidroPixel:
                     "-------------------------------------------------\n")
                 arquivo_txt.write("Watershed delineation:\n")
                 arquivo_txt.write(
-                    f"={self.dlg_exc_rain.cb_1_pg_ri.currentText()}\n")
+                    f"={self.lista_rasters_dir[self.dlg_exc_rain.cb_1_pg_ri.currentIndex()]}\n")
                 arquivo_txt.write("Rain gauges metadata:\n")
                 arquivo_txt.write(
                     f"={self.dlg_exc_rain.le_2_pg_ri.text()}\n")
@@ -661,10 +648,10 @@ class HidroPixel:
                     "-------------------------------------------------\n")
                 arquivo_txt.write("Watershed delineation:\n")
                 arquivo_txt.write(
-                    f"={self.dlg_exc_rain.cb_1_pg2.currentText()}\n")
+                    f"={self.lista_rasters_dir[self.dlg_exc_rain.cb_1_pg2.currentIndex()]}\n")
                 arquivo_txt.write("Map of curve-number:\n")
                 arquivo_txt.write(
-                    f"={self.dlg_exc_rain.cb_2_pg2.currentText()}\n")
+                    f"={self.lista_rasters_dir[self.dlg_exc_rain.cb_2_pg2.currentIndex()]}\n")
                 if self.dlg_exc_rain.rb_1_pg1.isChecked():
                     arquivo_txt.write("Areal averaged rainfall:\n")
                     arquivo_txt.write(
@@ -732,13 +719,16 @@ class HidroPixel:
                     f"={self.dlg_exc_rain.ch_6_pg4.isChecked()}\n")
 
             if function == 3:
+
                 # Define valor do projeto na GUI
 
-                self.dlg_save_project_flow_rout.le_6_pg2.setText(
+                self.dlg_flow_rout.le_6_pg2.setText(
                     self.dlg_save_project_flow_rout.le_1_pg1.text())
-                self.dlg_save_project_flow_rout.le_1_pg3.setText(
+
+                self.dlg_flow_rout.le_1_pg3.setText(
                     self.dlg_save_project_flow_rout.le_1_pg1.text())
-                self.dlg_save_project_flow_rout.le_8_pg4.setText(
+
+                self.dlg_flow_rout.le_8_pg4.setText(
                     self.dlg_save_project_flow_rout.le_1_pg1.text())
 
                 # Seção: Flow Routing - Configuration page (Função 3, Página 1)
@@ -767,19 +757,19 @@ class HidroPixel:
                     "-------------------------------------------------\n")
                 arquivo_txt.write("Watershed delineation:\n")
                 arquivo_txt.write(
-                    f"={self.dlg_flow_rout.cb_1_pg2.currentText()}\n")
+                    f"={self.lista_rasters_dir[self.dlg_flow_rout.cb_1_pg2.currentIndex()]}\n")
                 arquivo_txt.write("Numbering of watershed pixels:\n")
-                # arquivo_txt.write(
-                #     f"={self.dlg_flow_rout.cb_2_pg2.currentText()}\n")
+                arquivo_txt.write(
+                    f"={self.dlg_flow_rout.cb_2_pg2.currentText()}\n")
                 arquivo_txt.write("Flow travel time:\n")
                 arquivo_txt.write(
-                    f"={self.dlg_flow_rout.cb_3_pg2.currentText()}\n")
+                    f"={self.lista_rasters_dir[self.dlg_flow_rout.cb_3_pg2.currentIndex()]}\n")
                 arquivo_txt.write("Excess hyetographs per pixel:\n")
                 arquivo_txt.write(
                     f"={self.dlg_flow_rout.le_4_pg2.text()}\n")
                 arquivo_txt.write("Total excess rainfall per pixel (mm):\n")
                 arquivo_txt.write(
-                    f"={self.dlg_flow_rout.le_5_pg2.text()}\n")
+                    f"={self.lista_rasters_dir[self.dlg_flow_rout.cb_5_pg2.currentIndex()]}\n")
                 arquivo_txt.write(
                     "Hydrograph estimation for different watershed classes:\n")
                 arquivo_txt.write("Selected:\n")
@@ -865,7 +855,7 @@ class HidroPixel:
                     arquivo_txt.write(
                         f"={self.dlg_flow_rout.le_7_pg4.text()}\n")
 
-    def read_from_file(self, function, page, directory):
+    def read_from_project(self, function, directory):
         '''Obtem as informações a partir projeto .hpx enviado pelo usuário
         Function: Indica qual função a página pertence
                 function == 1: Flow travel time;
@@ -876,340 +866,306 @@ class HidroPixel:
         while True:
             options = QFileDialog.Options()
             file_, _ = QFileDialog.getOpenFileName(
-                None, caption="Select a file!", directory=directory, filter="Text Files (*.txt)", options=options)
+                None, caption="Select a file!", directory=directory, filter="Hidropixel project (*.hpx)", options=options)
 
             if file_:
                 if function == 1:
+                    # Ler as informações da página 1: configuration
+                    with open(file_, 'r', encoding='utf-8') as arquivo_txt:
+                        # Armazena as informações do arquivo enviado em uma lista
+                        cabecalho = arquivo_txt.readline().split(":")[1]
+                        values = []
+                        for line in arquivo_txt:
+                            if '=' in line:
+                                value_ = line.split("=")[1].strip()
+                                values.append(value_)
 
-                    if page == 1:
-                        # Ler as informações da página 1: configuration
-                        with open(file_, 'r', encoding='utf-8') as arquivo_txt:
-                            # Armazena as informações do arquivo enviado em uma lista
-                            values = []
-                            for line in arquivo_txt:
-                                if '=' in line:
-                                    value_ = line.split("=")[1].strip()
-                                    values.append(value_)
+                    # Adiciona as informações lidas nas suas respectivas
+                    self.dlg_flow_tt.le_12_pg2.setText(
+                        cabecalho)
+                    self.dlg_flow_tt.le_1_pg3.setText(
+                        cabecalho)
+                    self.dlg_flow_tt.le_12_pg4.setText(
+                        cabecalho)
 
-                        # Adiciona as informações lidas nas suas respectivas
+                    # General informations
+                    self.dlg_flow_tt.le_1_pg1.setText(str(values[0]))
+                    self.dlg_flow_tt.le_3_pg1.setText(str(values[1]))
+                    self.dlg_flow_tt.le_4_pg1.setText(str(values[2]))
 
-                        # General informations
-                        self.dlg_flow_tt.le_1_pg1.setText(str(values[0]))
-                        self.dlg_flow_tt.le_3_pg1.setText(str(values[1]))
-                        self.dlg_flow_tt.le_4_pg1.setText(str(values[2]))
+                    # Flow dir
+                    self.dlg_flow_tt.le_5_pg1.setText(str(values[3]))
+                    self.dlg_flow_tt.le_6_pg1.setText(str(values[4]))
+                    self.dlg_flow_tt.le_7_pg1.setText(str(values[5]))
+                    self.dlg_flow_tt.le_8_pg1.setText(str(values[6]))
+                    self.dlg_flow_tt.le_9_pg1.setText(str(values[7]))
+                    self.dlg_flow_tt.le_10_pg1.setText(str(values[8]))
+                    self.dlg_flow_tt.le_11_pg1.setText(str(values[9]))
+                    self.dlg_flow_tt.le_12_pg1.setText(str(values[10]))
 
-                        # Flow dir
-                        self.dlg_flow_tt.le_5_pg1.setText(str(values[3]))
-                        self.dlg_flow_tt.le_6_pg1.setText(str(values[4]))
-                        self.dlg_flow_tt.le_7_pg1.setText(str(values[5]))
-                        self.dlg_flow_tt.le_8_pg1.setText(str(values[6]))
-                        self.dlg_flow_tt.le_9_pg1.setText(str(values[7]))
-                        self.dlg_flow_tt.le_10_pg1.setText(str(values[8]))
-                        self.dlg_flow_tt.le_11_pg1.setText(str(values[9]))
-                        self.dlg_flow_tt.le_12_pg1.setText(str(values[10]))
+                    # River channels without cross sectional data
+                    self.dlg_flow_tt.le_14_pg1.setText(str(values[11]))
+                    self.dlg_flow_tt.le_15_pg1.setText(str(values[12]))
 
-                        # River channels without cross sectional data
-                        self.dlg_flow_tt.le_14_pg1.setText(str(values[11]))
-                        self.dlg_flow_tt.le_15_pg1.setText(str(values[12]))
+                    # Regional curve
+                    self.dlg_flow_tt.groupBox_3.setChecked(
+                        str(values[13]) == 'True')
+                    self.dlg_flow_tt.le_16_pg1.setText(str(values[14]))
+                    self.dlg_flow_tt.le_17_pg1.setText(str(values[15]))
+                    self.dlg_flow_tt.le_18_pg1.setText(str(values[16]))
+                    self.dlg_flow_tt.le_19_pg1.setText(str(values[17]))
 
-                        # Regional curve
-                        self.dlg_flow_tt.groupBox_4.setChecked(
-                            str(values[13]) == 'True')
-                        self.dlg_flow_tt.le_16_pg1.setText(str(values[14]))
-                        self.dlg_flow_tt.le_17_pg1.setText(str(values[15]))
-                        self.dlg_flow_tt.le_18_pg1.setText(str(values[16]))
-                        self.dlg_flow_tt.le_19_pg1.setText(str(values[17]))
-                        break
+                    # Input data
 
-                    elif page == 2:
-                        # Ler o arquivo da página 2: input dat
-                        with open(file_, 'r', encoding='utf-8') as arquivo_txt:
-                            # Armazenará os valores das linhas
-                            values = []
-                            for line in arquivo_txt:
-                                if '=' in line:
-                                    # Substitui o identificador =por uma string fazia e retira os espaços da linha
-                                    value = line.replace('=', '').strip()
-                                    values.append(value)
+                    # Adiciona as informações lidas à seus respectivos campos
+                    self.dlg_flow_tt.cb_1_pg2.setCurrentText(
+                        os.path.basename(str(values[18])))
+                    self.dlg_flow_tt.cb_2_pg2.setCurrentText(
+                        os.path.basename(str(values[19])))
+                    self.dlg_flow_tt.cb_3_pg2.setCurrentText(
+                        os.path.basename(str(values[20])))
+                    self.dlg_flow_tt.cb_4_pg2.setCurrentText(
+                        os.path.basename(str(values[21])))
+                    self.dlg_flow_tt.cb_5_pg2.setCurrentText(
+                        os.path.basename(str(values[22])))
+                    self.dlg_flow_tt.cb_6_pg2.setCurrentText(
+                        os.path.basename(str(values[23])))
 
-                        # Adiciona as informações lidas à seus respectivos campos
-                        self.dlg_flow_tt.le_1_pg2.setText(str(values[0]))
-                        self.dlg_flow_tt.le_2_pg2.setText(str(values[1]))
-                        self.dlg_flow_tt.le_3_pg2.setText(str(values[2]))
-                        self.dlg_flow_tt.le_4_pg2.setText(str(values[3]))
-                        self.dlg_flow_tt.le_5_pg2.setText(str(values[4]))
-                        self.dlg_flow_tt.le_6_pg2.setText(str(values[5]))
+                    # Atribui os valores do arquivo enviado a tabela em questão
+                    self.dlg_flow_tt.le_8_pg2.setText(str(values[24]))
+                    self.read_tb_from_file_2(
+                        self.dlg_flow_tt.tbw_1_pg2, values[24], 1, 2)
 
-                        # Atribui os valores do arquivo enviado a tabela em questão
-                        self.dlg_flow_tt.le_8_pg2.setText(str(values[6]))
-                        self.read_tb_from_file_2(
-                            self.dlg_flow_tt.tbw_1_pg2, values[6], 1, 2)
+                    self.dlg_flow_tt.cb_7_pg2.setCurrentText(
+                        os.path.basename(str(values[25])))
 
-                        self.dlg_flow_tt.le_9_pg2.setText(str(values[7]))
+                    # Atribui os valores do arquivo enviado a tabela em questão
+                    self.dlg_flow_tt.le_10_pg2.setText(str(values[26]))
+                    self.read_tb_from_file_2(
+                        self.dlg_flow_tt.tbw_2_pg2, values[26], 1, 1)
 
-                        # Atribui os valores do arquivo enviado a tabela em questão
-                        self.dlg_flow_tt.le_10_pg2.setText(str(values[8]))
-                        self.read_tb_from_file_2(
-                            self.dlg_flow_tt.tbw_2_pg2, values[8], 1, 1)
+                    self.dlg_flow_tt.le_11_pg2.setText(str(values[27]))
 
-                        self.dlg_flow_tt.le_11_pg2.setText(str(values[9]))
+                    # Ler arquivos página 4 - run
+                    # Adiciona as informações lidas à seus respectivos campos
+                    self.dlg_flow_tt.le_6_pg4.setText(str(values[28]))
+                    self.dlg_flow_tt.ch_6_pg4.setChecked(
+                        str(values[29]) == 'True')
+                    self.dlg_flow_tt.ch_17_pg4.setChecked(
+                        str(values[30]) == 'True')
 
-                        break
+                    self.dlg_flow_tt.le_7_pg4.setText(str(values[31]))
+                    self.dlg_flow_tt.ch_7_pg4.setChecked(
+                        str(values[32]) == 'True')
+                    self.dlg_flow_tt.ch_18_pg4.setChecked(
+                        str(values[33]) == 'True')
 
-                    elif page == 4:
-                        # Ler arquivos página 4
-                        with open(file_, 'r', encoding='utf-8') as arquivo_txt:
-                            # Armazenará os valores das linhas
-                            values = []
-                            for line in arquivo_txt:
-                                if '=' in line:
-                                    # Substitui o identificador =por uma string fazia e retira os espaços da linha
-                                    value = line.replace('=', '').strip()
-                                    values.append(value)
+                    self.dlg_flow_tt.le_8_pg4.setText(str(values[34]))
+                    self.dlg_flow_tt.ch_8_pg4.setChecked(
+                        str(values[35]) == 'True')
 
-                        # Adiciona as informações lidas à seus respectivos campos
-                        self.dlg_flow_tt.le_6_pg4.setText(str(values[0]))
-                        self.dlg_flow_tt.ch_6_pg4.setChecked(
-                            str(values[1]) == 'True')
-                        self.dlg_flow_tt.ch_17_pg4.setChecked(
-                            str(values[2]) == 'True')
+                    self.dlg_flow_tt.le_9_pg4.setText(str(values[36]))
+                    self.dlg_flow_tt.ch_9_pg4.setChecked(
+                        str(values[37]) == 'True')
+                    self.dlg_flow_tt.ch_20_pg4.setChecked(
+                        str(values[38]) == 'True')
 
-                        self.dlg_flow_tt.le_7_pg4.setText(str(values[3]))
-                        self.dlg_flow_tt.ch_7_pg4.setChecked(
-                            str(values[4]) == 'True')
-                        self.dlg_flow_tt.ch_18_pg4.setChecked(
-                            str(values[5]) == 'True')
+                    self.dlg_flow_tt.le_10_pg4.setText(str(values[39]))
+                    self.dlg_flow_tt.ch_10_pg4.setChecked(
+                        str(values[40]) == 'True')
+                    self.dlg_flow_tt.ch_21_pg4.setChecked(
+                        str(values[41]) == 'True')
 
-                        self.dlg_flow_tt.le_8_pg4.setText(str(values[6]))
-                        self.dlg_flow_tt.ch_8_pg4.setChecked(
-                            str(values[7]) == 'True')
-
-                        self.dlg_flow_tt.le_9_pg4.setText(str(values[8]))
-                        self.dlg_flow_tt.ch_9_pg4.setChecked(
-                            str(values[9]) == 'True')
-                        self.dlg_flow_tt.ch_20_pg4.setChecked(
-                            str(values[10]) == 'True')
-
-                        self.dlg_flow_tt.le_10_pg4.setText(str(values[11]))
-                        self.dlg_flow_tt.ch_10_pg4.setChecked(
-                            str(values[12]) == 'True')
-                        self.dlg_flow_tt.ch_21_pg4.setChecked(
-                            str(values[13]) == 'True')
-
-                        self.dlg_flow_tt.le_11_pg4.setText(str(values[14]))
-                        self.dlg_flow_tt.ch_11_pg4.setChecked(
-                            str(values[15]) == 'True')
-                        self.dlg_flow_tt.ch_22_pg4.setChecked(
-                            str(values[16]) == 'True')
-                        break
+                    self.dlg_flow_tt.le_11_pg4.setText(str(values[42]))
+                    self.dlg_flow_tt.ch_11_pg4.setChecked(
+                        str(values[43]) == 'True')
+                    self.dlg_flow_tt.ch_22_pg4.setChecked(
+                        str(values[44]) == 'True')
+                    break
 
                 elif function == 2:
-                    # Lê os arquivos da primeira página
-                    if page == 1:
-                        with open(file_, 'r', encoding='utf-8') as arquivo_txt:
-                            # Armazenará os valores das linhas
-                            values = []
-                            for line in arquivo_txt:
-                                if '=' in line:
-                                    # Substitui o identificador = por uma string fazia e retira os espaços da linha
-                                    value = line.replace('=', '').strip()
-                                    values.append(value)
-                        self.dlg_exc_rain.le_1_pg1.setText(str(values[0]))
-                        self.dlg_exc_rain.rb_1_pg1.setChecked(
-                            str(values[1]) == 'True')
-                        self.dlg_exc_rain.rb_2_pg1.setChecked(
-                            str(values[1]) == 'True')
-                        break
+                    # Lê os dados do arquivo e extrai as linhas que contenham o caractere "="
+                    with open(file_, 'r', encoding='utf-8') as arquivo_txt:
+                        cabecalho = arquivo_txt.readline().split(":")[1]
+                        values = []
+                        for line in arquivo_txt:
+                            if '=' in line:
+                                # Remove o caractere "=" e espaços em branco no início/fim da linha
+                                value = line.replace('=', '').strip()
+                                values.append(value)
 
-                    # Lê informações página rainfall interpolation
-                    elif page == 2:
-                        with open(file_, 'r', encoding='utf-8') as arquivo_txt:
-                            # Armazenará os valores das linhas
-                            values = []
-                            for line in arquivo_txt:
-                                if '=' in line:
-                                    # Substitui o identificador =por uma string fazia e retira os espaços da linha
-                                    value = line.replace('=', '').strip()
-                                    values.append(value)
+                    self.dlg_exc_rain.le_6_pg_ri.setText(
+                        cabecalho)
+                    self.dlg_exc_rain.le_5_pg2.setText(
+                        cabecalho)
+                    self.dlg_exc_rain.le_1_pg3.setText(
+                        cabecalho)
+                    self.dlg_exc_rain.le_7_pg4.setText(
+                        cabecalho)
 
-                        self.dlg_exc_rain.le_1_pg_ri.setText(str(values[0]))
-                        self.dlg_exc_rain.le_2_pg_ri.setText(str(values[1]))
-                        self.dlg_exc_rain.le_3_pg_ri.setText(str(values[2]))
-                        self.dlg_exc_rain.le_4_pg_ri.setText(str(values[3]))
-                        self.dlg_exc_rain.le_5_pg_ri.setText(str(values[4]))
-                        break
+                    # Seção: Excess Rainfall - Configuration page
+                    self.dlg_exc_rain.le_1_pg1.setText(str(values[0]))
+                    self.dlg_exc_rain.rb_1_pg1.setChecked(
+                        str(values[1]) == 'True')
+                    self.dlg_exc_rain.rb_2_pg1.setChecked(
+                        str(values[2]) == 'True')
 
-                    # Lê os arquivos da segunda página
-                    elif page == 3:
-                        with open(file_, 'r', encoding='utf-8') as arquivo_txt:
-                            # Armazenará os valores das linhas
-                            values = []
-                            for line in arquivo_txt:
-                                if '=' in line:
-                                    # Substitui o identificador =por uma string fazia e retira os espaços da linha
-                                    value = line.replace('=', '').strip()
-                                    values.append(value)
+                    # Seção: Excess Rainfall - Rainfall interpolation
+                    self.dlg_exc_rain.cb_1_pg_ri.setCurrentText(
+                        os.path.basename(str(values[3])))
+                    self.dlg_exc_rain.le_2_pg_ri.setText(
+                        os.path.basename(str(values[4])))
+                    self.dlg_exc_rain.le_3_pg_ri.setText(
+                        os.path.basename(str(values[5])))
+                    self.dlg_exc_rain.le_4_pg_ri.setText(
+                        os.path.basename(str(values[6])))
+                    self.dlg_exc_rain.le_5_pg_ri.setText(
+                        os.path.basename(str(values[7])))
 
-                        self.dlg_exc_rain.le_1_pg2.setText(str(values[0]))
-                        self.dlg_exc_rain.le_2_pg2.setText(str(values[1]))
-                        if self.dlg_exc_rain.rb_1_pg1.isChecked():
-                            self.dlg_exc_rain.le_3_pg2.setText(str(values[2]))
-                        if self.dlg_exc_rain.rb_2_pg1.isChecked():
-                            self.dlg_exc_rain.le_4_pg2.setText(str(values[2]))
+                    # Seção: Excess Rainfall - Input Data
+                    self.dlg_exc_rain.cb_1_pg2.setCurrentText(
+                        os.path.basename(str(values[8])))
+                    self.dlg_exc_rain.cb_2_pg2.setCurrentText(
+                        os.path.basename(str(values[9])))
+                    # Se o rb_1_pg1 estiver marcado, usa um campo; senão, usa o outro
+                    if self.dlg_exc_rain.rb_1_pg1.isChecked():
+                        self.dlg_exc_rain.le_3_pg2.setText(str(values[10]))
+                    else:
+                        self.dlg_exc_rain.le_4_pg2.setText(str(values[10]))
 
-                        break
+                    # Seção: Excess Rainfall - Run page
+                    self.dlg_exc_rain.le_1_pg4.setText(str(values[11]))
+                    self.dlg_exc_rain.ch_1_pg4.setChecked(
+                        str(values[12]) == 'True')
+                    self.dlg_exc_rain.ch_7_pg4.setChecked(
+                        str(values[13]) == 'True')
 
-                    # elif page == 4 and file_ != '':
+                    self.dlg_exc_rain.le_2_pg4.setText(str(values[14]))
+                    self.dlg_exc_rain.ch_2_pg4.setChecked(
+                        str(values[15]) == 'True')
+                    self.dlg_exc_rain.ch_8_pg4.setChecked(
+                        str(values[16]) == 'True')
 
-                    # Lê os arquivos da quarta página
-                    elif page == 5:
-                        with open(file_, 'r', encoding='utf-8') as arquivo_txt:
-                            # Armazenará os valores das linhas
-                            values = []
-                            for line in arquivo_txt:
-                                if '=' in line:
-                                    # Substitui o identificador =por uma string fazia e retira os espaços da linha
-                                    value = line.replace('=', '').strip()
-                                    values.append(value)
-                        self.dlg_exc_rain.le_1_pg4.setText(str(values[0]))
-                        self.dlg_exc_rain.ch_1_pg4.setChecked(
-                            str(values[1]) == 'True')
-                        self.dlg_exc_rain.ch_7_pg4.setChecked(
-                            str(values[2]) == 'True')
+                    self.dlg_exc_rain.le_3_pg4.setText(str(values[17]))
+                    self.dlg_exc_rain.ch_3_pg4.setChecked(
+                        str(values[18]) == 'True')
+                    self.dlg_exc_rain.ch_9_pg4.setChecked(
+                        str(values[19]) == 'True')
 
-                        self.dlg_exc_rain.le_2_pg4.setText(str(values[3]))
-                        self.dlg_exc_rain.ch_2_pg4.setChecked(
-                            str(values[4]) == 'True')
-                        self.dlg_exc_rain.ch_8_pg4.setChecked(
-                            str(values[5]) == 'True')
+                    self.dlg_exc_rain.le_4_pg4.setText(str(values[20]))
+                    self.dlg_exc_rain.ch_4_pg4.setChecked(
+                        str(values[21]) == 'True')
+                    self.dlg_exc_rain.ch_10_pg4.setChecked(
+                        str(values[22]) == 'True')
 
-                        self.dlg_exc_rain.le_3_pg4.setText(str(values[6]))
-                        self.dlg_exc_rain.ch_3_pg4.setChecked(
-                            str(values[7]) == 'True')
-                        self.dlg_exc_rain.ch_9_pg4.setChecked(
-                            str(values[8]) == 'True')
+                    self.dlg_exc_rain.le_5_pg4.setText(str(values[23]))
+                    self.dlg_exc_rain.ch_5_pg4.setChecked(
+                        str(values[24]) == 'True')
+                    self.dlg_exc_rain.ch_11_pg4.setChecked(
+                        str(values[25]) == 'True')
 
-                        self.dlg_exc_rain.le_4_pg4.setText(str(values[9]))
-                        self.dlg_exc_rain.ch_4_pg4.setChecked(
-                            str(values[10]) == 'True')
-                        self.dlg_exc_rain.ch_10_pg4.setChecked(
-                            str(values[11]) == 'True')
-
-                        self.dlg_exc_rain.le_5_pg4.setText(str(values[12]))
-                        self.dlg_exc_rain.ch_5_pg4.setChecked(
-                            str(values[13]) == 'True')
-                        self.dlg_exc_rain.ch_11_pg4.setChecked(
-                            str(values[14]) == 'True')
-
-                        self.dlg_exc_rain.le_6_pg4.setText(str(values[15]))
-                        self.dlg_exc_rain.ch_6_pg4.setChecked(
-                            str(values[16]) == 'True')
-
-                        break
+                    self.dlg_exc_rain.le_6_pg4.setText(str(values[26]))
+                    self.dlg_exc_rain.ch_6_pg4.setChecked(
+                        str(values[27]) == 'True')
+                    break
 
                 elif function == 3:
                     # Lê os arquivos da primeira página
-                    if page == 1:
-                        with open(file_, 'r', encoding='utf-8') as arquivo_txt:
-                            # Armazenará os valores das linhas
-                            values = []
-                            for line in arquivo_txt:
-                                if '=' in line:
-                                    # Substitui o identificador =por uma string fazia e retira os espaços da linha
-                                    value = line.replace('=', '').strip()
-                                    values.append(value)
-                        self.dlg_flow_rout.rb_2_pg1.setChecked(
-                            str(values[0]) == 'True')
-                        self.dlg_flow_rout.rb_3_pg1.setChecked(
-                            str(values[1]) == 'True')
-                        self.dlg_flow_rout.le_5_pg1.setText(str(values[2]))
-                        self.dlg_flow_rout.le_2_pg1.setText(str(values[3]))
-                        break
+                    with open(file_, 'r', encoding='utf-8') as arquivo_txt:
+                        cabecalho = arquivo_txt.readline().split(":")[1]
+                        # Armazenará os valores das linhas
+                        values = []
+                        for line in arquivo_txt:
+                            if '=' in line:
+                                # Substitui o identificador =por uma string fazia e retira os espaços da linha
+                                value = line.replace('=', '').strip()
+                                values.append(value)
+
+                        self.dlg_flow_rout.le_6_pg2.setText(
+                            cabecalho)
+
+                        self.dlg_flow_rout.le_1_pg3.setText(
+                            cabecalho)
+
+                        self.dlg_flow_rout.le_8_pg4.setText(
+                            cabecalho)
+
+                    self.dlg_flow_rout.rb_2_pg1.setChecked(
+                        str(values[0]) == 'True')
+                    self.dlg_flow_rout.rb_3_pg1.setChecked(
+                        str(values[1]) == 'True')
+                    self.dlg_flow_rout.le_5_pg1.setText(str(values[2]))
+                    self.dlg_flow_rout.le_2_pg1.setText(str(values[3]))
 
                     # Lê os arquivos da segunda página
-                    elif page == 2:
-                        with open(file_, 'r', encoding='utf-8') as arquivo_txt:
-                            # Armazenará os valores das linhas
-                            values = []
-                            for line in arquivo_txt:
-                                if '=' in line:
-                                    # Substitui o identificador =por uma string fazia e retira os espaços da linha
-                                    value = line.replace('=', '').strip()
-                                    values.append(value)
-
-                        self.dlg_flow_rout.le_1_pg2.setText(str(values[0]))
-                        self.dlg_flow_rout.le_2_pg2.setText(str(values[1]))
-                        self.dlg_flow_rout.le_3_pg2.setText(str(values[2]))
-                        self.dlg_flow_rout.le_4_pg2.setText(str(values[3]))
-                        self.dlg_flow_rout.le_5_pg2.setText(str(values[4]))
-                        self.dlg_flow_rout.groupBox_2.setChecked(
-                            str(values[5]) == "True")
-                        self.dlg_flow_rout.le_6_pg2.setText(str(values[6]))
-                        break
+                    self.dlg_flow_rout.cb_1_pg2.setCurrentText(
+                        os.path.basename(str(values[4])))
+                    self.dlg_flow_rout.cb_2_pg2.setCurrentText(
+                        os.path.basename(str(values[5])))
+                    self.dlg_flow_rout.cb_3_pg2.setCurrentText(
+                        os.path.basename(str(values[6])))
+                    self.dlg_flow_rout.le_4_pg2.setText(str(values[7]))
+                    self.dlg_flow_rout.cb_5_pg2.setCurrentText(
+                        os.path.basename(str(values[8])))
+                    self.dlg_flow_rout.groupBox_2.setChecked(
+                        str(values[9]) == "True")
+                    self.dlg_flow_rout.cb_4_pg2.setCurrentText(
+                        os.path.basename(str(values[10])))
 
                     # Lê os arquivos da quarta página
-                    elif page == 4:
-                        with open(file_, 'r', encoding='utf-8') as arquivo_txt:
-                            # Armazenará os valores das linhas
-                            values = []
-                            for line in arquivo_txt:
-                                if '=' in line:
-                                    # Substitui o identificador =por uma string fazia e retira os espaços da linha
-                                    value = line.replace('=', '').strip()
-                                    values.append(value)
 
-                        # Output1
-                        self.dlg_flow_rout.le_1_pg4.setText(str(values[0]))
-                        self.dlg_flow_rout.ch_1_pg4.setChecked(
-                            str(values[1]) == 'True')
-                        self.dlg_flow_rout.ch_7_pg4.setChecked(
-                            str(values[2]) == 'True')
-                        # Escolha da unidade (m³/a ou L/s)
-                        self.dlg_flow_rout.rb_1_pg4.setChecked(
-                            str(values[3]) == 'True')
-                        self.dlg_flow_rout.rb_2_pg4.setChecked(
-                            str(values[4]) == 'True')
-                        # Output2
-                        self.dlg_flow_rout.le_2_pg4.setText(str(values[5]))
-                        self.dlg_flow_rout.ch_2_pg4.setChecked(
-                            str(values[6]) == 'True')
-                        self.dlg_flow_rout.ch_8_pg4.setChecked(
-                            str(values[7]) == 'True')
-                        # Output3
-                        self.dlg_flow_rout.le_3_pg4.setText(str(values[8]))
-                        self.dlg_flow_rout.ch_3_pg4.setChecked(
-                            str(values[9]) == 'True')
-                        self.dlg_flow_rout.ch_9_pg4.setChecked(
-                            str(values[10]) == 'True')
-                        # Output4
-                        self.dlg_flow_rout.le_4_pg4.setText(str(values[11]))
-                        self.dlg_flow_rout.ch_4_pg4.setChecked(
-                            str(values[12]) == 'True')
-                        self.dlg_flow_rout.ch_10_pg4.setChecked(
-                            str(values[13]) == 'True')
-                        # Escolha da unidade (m³/a ou L/s)
-                        self.dlg_flow_rout.rb_3_pg4.setChecked(
-                            bool(values[14]))
-                        self.dlg_flow_rout.rb_4_pg4.setChecked(
-                            bool(values[15]))
-                        # Output5
-                        self.dlg_flow_rout.le_5_pg4.setText(str(values[16]))
-                        self.dlg_flow_rout.ch_5_pg4.setChecked(
-                            str(values[17]) == 'True')
-                        self.dlg_flow_rout.ch_11_pg4.setChecked(
-                            str(values[18]) == 'True')
-                        # Output6
-                        self.dlg_flow_rout.le_6_pg4.setText(str(values[19]))
-                        self.dlg_flow_rout.ch_6_pg4.setChecked(
-                            str(values[20]) == 'True')
-                        self.dlg_flow_rout.ch_12_pg4.setChecked(
-                            str(values[21]) == 'True')
+                    # Output1
+                    self.dlg_flow_rout.le_1_pg4.setText(str(values[11]))
+                    self.dlg_flow_rout.ch_1_pg4.setChecked(
+                        str(values[12]) == 'True')
+                    self.dlg_flow_rout.ch_7_pg4.setChecked(
+                        str(values[13]) == 'True')
+                    # Escolha da unidade (m³/a ou L/s)
+                    self.dlg_flow_rout.rb_1_pg4.setChecked(
+                        str(values[14]) == 'True')
+                    self.dlg_flow_rout.rb_2_pg4.setChecked(
+                        str(values[15]) == 'True')
+                    # Output2
+                    self.dlg_flow_rout.le_2_pg4.setText(str(values[16]))
+                    self.dlg_flow_rout.ch_2_pg4.setChecked(
+                        str(values[17]) == 'True')
+                    self.dlg_flow_rout.ch_8_pg4.setChecked(
+                        str(values[18]) == 'True')
+                    # Output3
+                    self.dlg_flow_rout.le_3_pg4.setText(str(values[19]))
+                    self.dlg_flow_rout.ch_3_pg4.setChecked(
+                        str(values[20]) == 'True')
+                    self.dlg_flow_rout.ch_9_pg4.setChecked(
+                        str(values[21]) == 'True')
 
-                        # hidrograma observado
-                        if self.dlg_flow_rout.ch_12_pg4.isChecked():
-                            self.dlg_flow_rout.le_7_pg4.setText(
-                                str(values[22]))
+                    # Output4
+                    self.dlg_flow_rout.le_4_pg4.setText(str(values[22]))
+                    self.dlg_flow_rout.ch_4_pg4.setChecked(
+                        str(values[23]) == 'True')
+                    self.dlg_flow_rout.ch_10_pg4.setChecked(
+                        str(values[24]) == 'True')
+                    # Escolha da unidade (m³/a ou L/s)
+                    self.dlg_flow_rout.rb_3_pg4.setChecked(
+                        bool(values[25]))
+                    self.dlg_flow_rout.rb_4_pg4.setChecked(
+                        bool(values[26]))
+                    # Output5
+                    self.dlg_flow_rout.le_5_pg4.setText(str(values[27]))
+                    self.dlg_flow_rout.ch_5_pg4.setChecked(
+                        str(values[28]) == 'True')
+                    self.dlg_flow_rout.ch_11_pg4.setChecked(
+                        str(values[29]) == 'True')
+                    # Output6
+                    self.dlg_flow_rout.le_6_pg4.setText(str(values[30]))
+                    self.dlg_flow_rout.ch_6_pg4.setChecked(
+                        str(values[31]) == 'True')
+                    self.dlg_flow_rout.ch_12_pg4.setChecked(
+                        str(values[32]) == 'True')
 
+                    # hidrograma observado
+                    if self.dlg_flow_rout.ch_12_pg4.isChecked():
+                        self.dlg_flow_rout.le_7_pg4.setText(
+                            str(values[33]))
                         break
             else:
                 result = "Wait! You did not select any file."
@@ -1773,15 +1729,16 @@ class HidroPixel:
                 self.dlg_flow_tt.le_18_pg1.text(),
                 self.dlg_flow_tt.le_19_pg1.text(),
                 self.dlg_flow_tt.le_21_pg1.text(),
-                self.dlg_flow_tt.le_1_pg2.text(),
-                self.dlg_flow_tt.le_2_pg2.text(),
-                self.dlg_flow_tt.le_3_pg2.text(),
-                self.dlg_flow_tt.le_4_pg2.text(),
-                self.dlg_flow_tt.le_5_pg2.text(),
-                self.dlg_flow_tt.le_6_pg2.text(),
+                self.dlg_flow_tt.cb_1_pg2.currentText(),
+                self.dlg_flow_tt.cb_2_pg2.currentText(),
+                self.dlg_flow_tt.cb_3_pg2.currentText(),
+                self.dlg_flow_tt.cb_4_pg2.currentText(),
+                self.dlg_flow_tt.cb_5_pg2.currentText(),
+                self.dlg_flow_tt.cb_6_pg2.currentText(),
                 self.dlg_flow_tt.le_8_pg2.text(),
-                self.dlg_flow_tt.le_9_pg2.text(),
+                self.dlg_flow_tt.cb_7_pg2.currentText(),
                 self.dlg_flow_tt.le_10_pg2.text(),
+                self.dlg_flow_tt.le_11_pg2.text(),
                 self.dlg_flow_tt.le_6_pg4.text(),
                 self.dlg_flow_tt.le_7_pg4.text(),
                 self.dlg_flow_tt.le_8_pg4.text(),
@@ -1821,16 +1778,14 @@ class HidroPixel:
                         self.dlg_flow_tt.le_20_pg1.clear()
                         self.dlg_flow_tt.le_21_pg1.clear()
 
-                        self.dlg_flow_tt.le_1_pg2.clear()
-                        self.dlg_flow_tt.le_2_pg2.clear()
-                        self.dlg_flow_tt.te_1_pg2.clear()
-                        self.dlg_flow_tt.le_3_pg2.clear()
-                        self.dlg_flow_tt.le_4_pg2.clear()
-                        self.dlg_flow_tt.le_5_pg2.clear()
-                        self.dlg_flow_tt.le_6_pg2.clear()
-                        # self.dlg_flow_tt.le_7_pg2.clear()
+                        self.dlg_flow_tt.cb_1_pg2.setCurrentText('')
+                        self.dlg_flow_tt.cb_2_pg2.setCurrentText('')
+                        self.dlg_flow_tt.cb_3_pg2.setCurrentText('')
+                        self.dlg_flow_tt.cb_4_pg2.setCurrentText('')
+                        self.dlg_flow_tt.cb_5_pg2.setCurrentText('')
+                        self.dlg_flow_tt.cb_6_pg2.setCurrentText('')
+                        self.dlg_flow_tt.cb_7_pg2.setCurrentText('')
                         self.dlg_flow_tt.le_8_pg2.clear()
-                        self.dlg_flow_tt.le_9_pg2.clear()
                         self.dlg_flow_tt.le_10_pg2.clear()
 
                         self.dlg_flow_tt.le_6_pg4.clear()
@@ -1897,13 +1852,13 @@ class HidroPixel:
             # Verifica se alguma lineEdit sobreu alteração: modifica a execução da função close
             line_edit_list = [
                 self.dlg_exc_rain.le_1_pg1.text(),
-                self.dlg_exc_rain.le_1_pg_ri.text(),
+                self.dlg_exc_rain.cb_1_pg_ri.currentText(),
                 self.dlg_exc_rain.le_2_pg_ri.text(),
                 self.dlg_exc_rain.le_3_pg_ri.text(),
                 self.dlg_exc_rain.le_4_pg_ri.text(),
                 self.dlg_exc_rain.le_5_pg_ri.text(),
-                self.dlg_exc_rain.le_1_pg2.text(),
-                self.dlg_exc_rain.le_2_pg2.text(),
+                self.dlg_exc_rain.cb_1_pg2.currentText(),
+                self.dlg_exc_rain.cb_2_pg2.currentText(),
                 self.dlg_exc_rain.le_3_pg2.text(),
                 self.dlg_exc_rain.le_4_pg2.text(),
                 self.dlg_exc_rain.le_1_pg4.text(),
@@ -1970,11 +1925,12 @@ class HidroPixel:
                 self.dlg_flow_rout.le_3_pg1.text(),
                 self.dlg_flow_rout.le_4_pg1.text(),
                 self.dlg_flow_rout.le_5_pg1.text(),
-                self.dlg_flow_rout.le_1_pg2.text(),
-                self.dlg_flow_rout.le_2_pg2.text(),
-                self.dlg_flow_rout.le_3_pg2.text(),
+                self.dlg_flow_rout.cb_1_pg2.currentText(),
+                self.dlg_flow_rout.cb_2_pg2.currentText(),
+                self.dlg_flow_rout.cb_3_pg2.currentText(),
+                self.dlg_flow_rout.cb_4_pg2.currentText(),
+                self.dlg_flow_rout.cb_5_pg2.currentText(),
                 self.dlg_flow_rout.le_4_pg2.text(),
-                self.dlg_flow_rout.le_5_pg2.text(),
                 self.dlg_flow_rout.le_1_pg4.text(),
                 self.dlg_flow_rout.le_2_pg4.text(),
                 self.dlg_flow_rout.le_3_pg4.text(),
@@ -2000,11 +1956,12 @@ class HidroPixel:
                         self.dlg_flow_rout.le_3_pg1.clear()
                         self.dlg_flow_rout.le_4_pg1.clear()
                         self.dlg_flow_rout.le_5_pg1.clear()
-                        self.dlg_flow_rout.le_1_pg2.clear()
-                        self.dlg_flow_rout.le_2_pg2.clear()
-                        self.dlg_flow_rout.le_3_pg2.clear()
+                        self.dlg_flow_rout.cb_1_pg2.setCurrentText('')
+                        self.dlg_flow_rout.cb_2_pg2.setCurrentText('')
+                        self.dlg_flow_rout.cb_3_pg2.setCurrentText('')
+                        self.dlg_flow_rout.cb_4_pg2.setCurrentText('')
+                        self.dlg_flow_rout.cb_5_pg2.setCurrentText('')
                         self.dlg_flow_rout.le_4_pg2.clear()
-                        self.dlg_flow_rout.le_5_pg2.clear()
                         self.dlg_flow_rout.le_1_pg4.clear()
                         self.dlg_flow_rout.le_2_pg4.clear()
                         self.dlg_flow_rout.le_3_pg4.clear()
@@ -2060,6 +2017,43 @@ class HidroPixel:
 
         # Atualiza a tela do QGIS
         self.iface.layerTreeView().refreshLayerSymbology(layer.id())
+
+    def reginal_curve_condition(self):
+        """Define estado dos outputs que depende do metodo das curvas regionais"""
+
+        if self.dlg_flow_tt.groupBox_3.isChecked() == True:
+            # River cros-sectional area
+            self.dlg_flow_tt.ch_9_pg4.setEnabled(True)
+            self.dlg_flow_tt.label_87.setEnabled(True)
+            self.dlg_flow_tt.le_9_pg4.setEnabled(True)
+            self.dlg_flow_tt.ch_20_pg4.setEnabled(True)
+            self.dlg_flow_tt.tbtn_pg4_9.setEnabled(True)
+            self.dlg_flow_tt.label_86.setEnabled(True)
+
+            # River bankfull width
+            self.dlg_flow_tt.ch_10_pg4.setEnabled(True)
+            self.dlg_flow_tt.label_89.setEnabled(True)
+            self.dlg_flow_tt.le_10_pg4.setEnabled(True)
+            self.dlg_flow_tt.tbtn_pg4_10.setEnabled(True)
+            self.dlg_flow_tt.label_88.setEnabled(True)
+            self.dlg_flow_tt.ch_21_pg4.setEnabled(True)
+
+        else:
+            # River cros-sectional area
+            self.dlg_flow_tt.ch_9_pg4.setEnabled(False)
+            self.dlg_flow_tt.label_87.setEnabled(False)
+            self.dlg_flow_tt.le_9_pg4.setEnabled(False)
+            self.dlg_flow_tt.ch_20_pg4.setEnabled(False)
+            self.dlg_flow_tt.tbtn_pg4_9.setEnabled(False)
+            self.dlg_flow_tt.label_86.setEnabled(False)
+
+            # River bankfull width
+            self.dlg_flow_tt.ch_10_pg4.setEnabled(False)
+            self.dlg_flow_tt.label_89.setEnabled(False)
+            self.dlg_flow_tt.le_10_pg4.setEnabled(False)
+            self.dlg_flow_tt.tbtn_pg4_10.setEnabled(False)
+            self.dlg_flow_tt.label_88.setEnabled(False)
+            self.dlg_flow_tt.ch_21_pg4.setEnabled(False)
 
     def rain_def_condition(self, rain_condition):
         '''Esta função verifica a condição da variável precipitação para execução da rotina Excess rainfall
@@ -2186,14 +2180,9 @@ class HidroPixel:
         rainfall_interpol_vb = self.diretorio_atual + r'\temp\Rainfall_Interpolation.exe'
         rainfall_iterp_exe = subprocess.run([rainfall_interpol_vb])
 
-        # Le arquivo com info sobre qual botao foi clicado
-        cancel_file = self.diretorio_atual + r'\temp\cancela_rain_interpol.txt'
-        with open(cancel_file, 'w', encoding='utf-8') as cancel_file:
-            cancel_1_0 = int(cancel_file.readline())
-
         # verifica se houve algum erro no processamento das rotinas no vb ou se o usuario clicou em cancelar
         # Caso não, a execução continua no python
-        if rainfall_iterp_exe.returncode == 0 and cancel_1_0 == 1:
+        if rainfall_iterp_exe.returncode == 0:
 
             # Se o usuário escolheu a opção para gerar o arquivo da chuva interpolada em txt, ele será salvo no caminho fornecido
             if self.map_cond == 0:
@@ -2214,6 +2203,40 @@ class HidroPixel:
             QMessageBox.information(
                 None, "Information", "There was an inconsistency, please verify if all files were sent!", )
 
+    def processa_arquivo_chuva_med(self, input_file, output_file):
+        # Lê todo o conteúdo do arquivo
+        with open(input_file, 'r', encoding='utf-8') as f:
+            linhas = f.readlines()
+
+        # Verifica se o arquivo não está vazio
+        if not linhas:
+            raise Exception("Arquivo vazio!")
+
+        # A primeira linha é o cabeçalho
+        cabecalho = linhas[0].strip()
+
+        # Linhas de dados (excluindo o cabeçalho)
+        dados = [linha.strip() for linha in linhas[1:] if linha.strip()]
+
+        # Número de linhas de dados
+        num_linhas = len(dados)
+
+        # Calcula o delta_t a partir das duas primeiras linhas de dados
+        # Supondo que o arquivo esteja formatado como "Time(min),Rainfall(mm)"
+        if num_linhas >= 2:
+            primeiro_valor = float(dados[0].split(',')[0])
+            segundo_valor = float(dados[1].split(',')[0])
+            delta_t = segundo_valor - primeiro_valor
+        else:
+            delta_t = 0  # ou lança exceção, caso seja necessário
+
+        # Escreve o novo arquivo com a primeira linha contendo "num_linhas,delta_t"
+        with open(output_file, 'w', encoding='utf-8') as f_out:
+            f_out.write(f"{num_linhas},{int(delta_t)}\n")
+            f_out.write(cabecalho + "\n")
+            for linha in dados:
+                f_out.write(linha + "\n")
+
     def run_process_excess_rainfall(self):
         """Esta função organiza os arquivos enviados pelo user e os configura para serem lidos nas rotinas em visual basic"""
         # Captura diretório dos arquivo txt (pasta temp)
@@ -2224,17 +2247,18 @@ class HidroPixel:
         # leh bacia tif gera bacia rst ascii
         bacia_file = direct_temp + r'\Watershed.rst'
         self.leh_geotiff_escreve_ascii(
-            self.dlg_exc_rain.cb_1_pg2.currentText(), bacia_file, 'int')
+            self.lista_rasters_dir[self.dlg_exc_rain.cb_1_pg2.currentIndex()], bacia_file, 'int')
 
         # leh cn map tif gera cn map rst ascii
         cn_file = direct_temp + r'\CN_map.rst'
         self.leh_geotiff_escreve_ascii(
-            self.dlg_exc_rain.cb_2_pg2.currentText(), cn_file, 'int')
+            self.lista_rasters_dir[self.dlg_exc_rain.cb_2_pg2.currentIndex()], cn_file, 'int')
 
         # move arquivo da precipitação para a pasta temp
         if self.dlg_exc_rain.rb_1_pg1.isChecked():
             chuva_media = direct_temp + r'\Areal_averaged_rainfall.txt'
-            shutil.copy(self.dlg_exc_rain.le_3_pg2.text(), chuva_media)
+            self.processa_arquivo_chuva_med(
+                self.dlg_exc_rain.le_3_pg2.text(), chuva_media)
 
         if self.dlg_exc_rain.rb_2_pg1.isChecked():
             chuva_distribuida = direct_temp + r'\Spatially_distributed_rainfall.txt'
@@ -2341,14 +2365,9 @@ class HidroPixel:
             exc_rain_vb = self.diretorio_atual + r'\temp\excess_rainfall.exe'
             exc_rain_exe = subprocess.run([exc_rain_vb])
 
-            # Le arquivo com info sobre qual botao foi clicado
-            cancel_file = self.diretorio_atual + r'\temp\cancela_exc_rainf.txt'
-            with open(cancel_file, 'w', encoding='utf-8') as cancel_file:
-                cancel_1_0 = int(cancel_file.readline())
-
             # verifica se houve algum erro no processamento das rotinas no vb ou se o usuario clicou em cancelar
             # Caso não, a execução continua no python
-            if exc_rain_exe.returncode == 0 and cancel_1_0 == 1:
+            if exc_rain_exe.returncode == 0:
                 self.dlg_exc_rain.progressBar.setValue(60)
 
                 # move o arquivo txt contendo o hietograma de chuva excedente para o diretório informado
@@ -2460,6 +2479,9 @@ class HidroPixel:
         # Escreve arquivo txt contento os parâmetros do modelo
         parameters_file = direct_temp + r'\parameters_flow_tt.txt'
         with open(parameters_file, 'w', encoding='utf-8') as arquivo_txt:
+            arquivo_txt.write('Regional curve method is checked:')
+            arquivo_txt.write(
+                f'{1 if self.dlg_flow_tt.groupBox_3.isChecked() == True else 0}')
             arquivo_txt.write(
                 f'Manning coefficient for river segments without cross-section information,{self.dlg_flow_tt.le_14_pg1.text()}\n')
             arquivo_txt.write(f'Sheet flow lenght (m),30.48\n')
@@ -2510,7 +2532,7 @@ class HidroPixel:
 
         LULC_file = direct_temp + r'\LULC.rst'
         self.leh_geotiff_escreve_ascii(
-            self.lista_rasters_dir[self.dlg_flow_tt.le_9_pg2.currentIndex()], LULC_file, 'int')
+            self.lista_rasters_dir[self.dlg_flow_tt.cb_7_pg2.currentIndex()], LULC_file, 'int')
 
         # Escreve arquivo txt com os diretórios e nome dos inputs enviados pelo user
         direct_in_files = direct_temp + r'\input_files_config_flow_tt.txt'
@@ -2545,7 +2567,7 @@ class HidroPixel:
         # Organiza os caminhos dos arquivos de saída enviados pelo user: modifica a extensão de .tif para .rst
         self.output1_flow_tt = direct_temp + r'\Slope.rst'
         self.output2_flow_tt = direct_temp + r'\river_segments.rst'
-        self.output3_flow_tt = direct_temp + r'Hydraulic_radius-roughness_and_slope.txt'
+        self.output3_flow_tt = direct_temp + r'\Hydraulic_radius-roughness_and_slope.txt'
         self.output4_flow_tt = direct_temp + r'\River_cross-sectional_area.rst'
         self.output5_flow_tt = direct_temp + r'\River_bankfull_width.rst'
         self.output6_flow_tt = direct_temp + r'\Flow_travel_time.rst'
@@ -2655,13 +2677,9 @@ class HidroPixel:
                 travel_time_vb = self.diretorio_atual + r'\temp\Travel_Time.exe'
                 flow_tt_exe = subprocess.run([travel_time_vb])
 
-                # Le arquivo com info sobre qual botao foi clicado
-                cancel_file = self.diretorio_atual + r'\temp\cancela_flow_tt.txt'
-                with open(cancel_file, 'w', encoding='utf-8') as cancel_file:
-                    cancel_1_0 = int(cancel_file.readline())
                 # verifica se houve algum erro no processamento das rotinas no vb ou se o usuario clicou em cancelar
                 # Caso não, a execução continua no python
-                if flow_tt_exe.returncode == 0 and cancel_1_0 == 1:
+                if flow_tt_exe.returncode == 0:
                     self.dlg_flow_tt.progressBar.setValue(60)
 
                     # Move e renomeia arquivo txt com as características dos trechos de rios semelhantes
@@ -2765,7 +2783,7 @@ class HidroPixel:
         # Chama funções para tranformação do raster em geotiff para rst tipo ascii
         bacia_file = direct_temp + r'\Watershed.rst'
         self.leh_geotiff_escreve_ascii(
-            self.dlg_flow_rout.cb_1_pg2.currentText(), bacia_file, 'int')
+            self.lista_rasters_dir[self.dlg_flow_rout.cb_1_pg2.currentIndex()], bacia_file, 'int')
 
         # Versao TUH
         # pixels_id_file = direct_temp + r'\map_pixels_id.rst'
@@ -2774,19 +2792,19 @@ class HidroPixel:
 
         flow_tt_file = direct_temp + r'\flow_tt.rst'
         self.leh_geotiff_escreve_ascii(
-            self.dlg_flow_rout.cb_2_pg2.currentText(), flow_tt_file, 'float')
+            self.lista_rasters_dir[self.dlg_flow_rout.cb_3_pg2.currentIndex()], flow_tt_file, 'float')
 
         hietograma_file = direct_temp + r'\excess_hyetographs.txt'
         shutil.copy(self.dlg_flow_rout.le_4_pg2.text(), hietograma_file)
 
         total_exc_rain_file = direct_temp + r'\total_excess_rainfall.rst'
         self.leh_geotiff_escreve_ascii(
-            self.dlg_flow_rout.le_5_pg2.text(), total_exc_rain_file, 'float')
+            self.lista_rasters_dir[self.dlg_flow_rout.cb_5_pg2.currentIndex()], total_exc_rain_file, 'float')
 
         if self.dlg_flow_rout.groupBox_2.isChecked() == True:
             watershed_into_classes = direct_temp + r'\watershed_into_classes.rst'
             self.leh_geotiff_escreve_ascii(
-                self.dlg_flow_rout.cb_4_pg2.currentText(), watershed_into_classes, 'int', mapa_classes='y')
+                self.lista_rasters_dir[self.dlg_flow_rout.cb_4_pg2.currentIndex()], watershed_into_classes, 'int', mapa_classes='y')
         else:
             watershed_into_classes = ""
 
@@ -2796,19 +2814,17 @@ class HidroPixel:
             arquivo_txt.write("Selected input files directory\n")
             arquivo_txt.write(
                 f'{1 if self.dlg_flow_rout.cb_1_pg2.currentText() !="" else 0},watershed,{bacia_file}\n')
-
             # Versao TUH
             # arquivo_txt.write(
             #     f'{1 if self.dlg_flow_rout.le_2_pg2.text() !="" else 0},map_pixels_id,{pixels_id_file}\n')
-
             arquivo_txt.write(
-                f'{1 if self.dlg_flow_rout.cb_2_pg2.currentText() !="" else 0},flow_travel_time,{flow_tt_file}\n')
+                f'{1 if self.dlg_flow_rout.cb_3_pg2.currentText() !="" else 0},flow_travel_time,{flow_tt_file}\n')
             arquivo_txt.write(
                 f'{1 if self.dlg_flow_rout.le_4_pg2.text() !="" else 0},excess_hyetographs,{hietograma_file}\n')
             arquivo_txt.write(
-                f'{1 if self.dlg_flow_rout.le_5_pg2.text() !="" else 0},total_excess_rainfall,{total_exc_rain_file}\n')
+                f'{1 if self.dlg_flow_rout.cb_5_pg2.currentText() !="" else 0},total_excess_rainfall,{total_exc_rain_file}\n')
             arquivo_txt.write(
-                f'{1 if self.dlg_flow_rout.cb_3_pg2.currentText() !="" else 0},watershed_into_classes,{watershed_into_classes}\n')
+                f'{1 if self.dlg_flow_rout.cb_4_pg2.currentText() !="" else 0},watershed_into_classes,{watershed_into_classes}\n')
             arquivo_txt.write(f'{1},parameters,{parameters_flow_rout}')
 
         self.output1_flow_rout = direct_temp + r'\map_of_resulting_peak_discharge.rst'
@@ -2832,93 +2848,98 @@ class HidroPixel:
         cont = 0
         if self.dlg_flow_rout.ch_12_pg4.isChecked() == True and self.dlg_flow_rout.le_6_pg4.text() != '' and self.dlg_flow_rout.le_7_pg4.text() == '':
             hidrograma_calc = self.dlg_flow_rout.le_6_pg4.text()
-            with open(hidrograma_calc, 'r', encoding='ISO-8859-1') as arquivo_txt:
-                cabecalho = arquivo_txt.readline()
-                linhas = arquivo_txt.readlines()
-                vazoes_calc = np.zeros(len(linhas))
-                tempos_calc = np.zeros(len(linhas))
+            with open(hidrograma_calc, 'r', encoding='ISO-8859-1') as f:
+                header = f.readline().strip().split(',')
 
-                for linha in linhas:
-                    tempos_calc[cont] = linha.replace('\n', '').split(',')[0]
-                    vazoes_calc[cont] = linha.replace('\n', '').split(',')[1]
-                    cont += 1
+            # Armazena a legenda do grafico
+            header[1] = 'Calculated Runoff'
 
-            # Determinação do delta_t: deve ser o mesmo para o hidrograma calculado e observado
-            delta_t = self.dlg_flow_rout.le_2_pg1.text()
+            # Carrega as vazoes (pula a primeira linha, usa vírgula como separador)
+            data = np.loadtxt(hidrograma_calc, skiprows=1, delimiter=',')
 
-            # Plotagem dos pontos e do hidrograma calculado
+            # A primeira coluna e o tempo
+            tempos = data[:, 0]
+
+            # Determinacao do delta
+            if len(tempos) > 1:
+                delta_t = tempos[1] - tempos[0]
+            else:
+                delta_t = 0
+
+            # Cria grafico e delimita tamanho de exibicao
             plt.figure(figsize=(8, 6))
             plt.gcf().canvas.manager.window.setWindowTitle('Resulting Watershed Hydrograph')
             plt.title('HYDROGRAPH')
-            plt.plot(tempos_calc, vazoes_calc, c='red',
-                     label="Calculated Runoff")
+
+            # Plot dos hidrogramas calculados
+            for i in range(1, data.shape[1]):
+                plt.plot(tempos, data[:, i], label=header[i].strip())
             plt.xlabel('time (min)')
-            plt.ylabel('Q(m³/s)')
+            plt.ylabel('Q (m³/s)')
             plt.legend()
             plt.grid()
             plt.show()
-
-        elif self.dlg_flow_rout.ch_12_pg4.isChecked() == True and self.dlg_flow_rout.le_6_pg4.text() != '' and self.dlg_flow_rout.le_7_pg4.text() != '':
+        # Plota, se marcado, o hidrograma calculado e o observado e calcula as metricas
+        elif self.dlg_flow_rout.ch_12_pg4.isChecked() == True and self.dlg_flow_rout.le_6_pg4.text() != '' and self.dlg_flow_rout.le_7_pg4.text() == '' and self.dlg_flow_rout.cb_4_pg2.currentText() == '':
             hidrograma_obs = self.dlg_flow_rout.le_7_pg4.text()
-            with open(hidrograma_obs, 'r', encoding='ISO-8859-1') as arquivo_txt:
-                cabecalho = arquivo_txt.readline()
-                linhas = arquivo_txt.readlines()
-                vazoes_obs = np.zeros(len(linhas))
-                tempos_obs = np.zeros(len(linhas))
-
-                for cont, linha in enumerate(linhas):
-                    tempos_obs[cont] = linha.replace('\n', '').split(',')[0]
-                    vazoes_obs[cont] = float(
-                        linha.replace('\n', '').split(',')[1])
-
-            # Determinação do delta_t: deve ser o mesmo para o hidrograma calculado e observado
-            # delta_t = self.dlg_flow_rout.le_2_pg1.text()
-            delta_t = tempos_obs[2]-tempos_obs[1]
-            # leh hidrograma calculado
-
             hidrograma_calc = self.dlg_flow_rout.le_6_pg4.text()
-            cont = 0
-            with open(hidrograma_calc, 'r', encoding='ISO-8859-1') as arquivo_txt:
-                cabecalho = arquivo_txt.readline()
-                linhas = arquivo_txt.readlines()
-                vazoes_calc = np.zeros(len(linhas))
-                tempos_calc = np.zeros(len(linhas))
 
-                for cont, linha in enumerate(linhas):
-                    tempos_obs[cont] = linha.replace('\n', '').split(',')[0]
-                    vazoes_obs[cont] = float(
-                        linha.replace('\n', '').split(',')[1])
+            # Leitura do hidrograma observado
+            with open(hidrograma_obs, 'r', encoding='ISO-8859-1') as f:
+                header_obs = f.readline().strip().split(',')
+                nomes_obs = header_obs[1:]  # descarta o tempo
+                data_obs = np.loadtxt(f, delimiter=',')
+            tempos_obs = data_obs[:, 0]
+            vazoes_obs = data_obs[:, 1:]  # pode ter várias colunas
 
-            # Calcula metricas para avaliação do modelo
-            # erro relativo da vazão de pico
-            er_vazao_pico = (
-                (np.amax(vazoes_calc) - np.amax(vazoes_obs))/np.amax(vazoes_obs))*100
-            er_tempo_pico = ((tempos_calc[np.argmax(vazoes_calc)] - tempos_obs[np.argmax(
-                vazoes_obs)])/tempos_obs[np.argmax(vazoes_obs)])*100  # erro relativo do tempo de pico
-            nse = 1 - (np.sum((vazoes_calc - vazoes_obs) ** 2) / np.sum((vazoes_obs -
-                       np.mean(vazoes_obs)) ** 2))  # calculo do coeficiente de Nash-Sutcliffe
-            # calcula erro medio quadratico
-            rmse = np.sqrt(np.mean((vazoes_calc - vazoes_obs) ** 2))
+            # Leitura do hidrograma calculado
+            with open(hidrograma_calc, 'r', encoding='ISO-8859-1') as f:
+                header_calc = f.readline().strip().split(',')
+                nomes_calc = header_calc[1:]
+                data_calc = np.loadtxt(f, delimiter=',')
+            tempos_calc = data_calc[:, 0]
+            vazoes_calc = data_calc[:, 1:]
 
-            # Calcula volume
-            vol_obs = np.sum(vazoes_obs)*delta_t
-            vol_calc = np.sum(vazoes_calc)*delta_t
-            er_vol = ((vol_calc-vol_obs)/vol_obs)
+            #  Cálculo de delta_t
+            delta_t = tempos_obs[1] - tempos_obs[0]
 
-            # Plotagem dos pontos e do polinomio geral
+            # Plotagem
             plt.figure(figsize=(8, 6))
             plt.gcf().canvas.manager.window.setWindowTitle('Resulting Watershed Hydrograph')
             plt.title('HYDROGRAPH')
-            plt.plot(tempos_obs, vazoes_obs, c='black',
-                     label="Observed Runoff")
-            plt.plot(tempos_calc, vazoes_calc, c='red',
-                     label="Calculated Runoff")
+
+            # Observado (primeira coluna de vazões observadas) em preto
+            plt.plot(tempos_obs, vazoes_obs[:, 0], color='black',
+                     linestyle='-', label='Observed Runoff')
+
+            # Calculado total (primeira coluna de vazões calculadas) em vermelho
+            plt.plot(tempos_calc, vazoes_calc[:, 0], color='red',
+                     linestyle='-', label='Calculated Runoff')
+
             plt.xlabel('time (min)')
             plt.ylabel('Q(m³/s)')
-            plt.legend()
+
+            # legenda no canto superior direito, vertical e fonte reduzida
+            plt.legend(loc='upper right', fontsize='small')
+
             plt.grid()
-            # Adicionando as métricas fora do gráfico com ajuste
-            plt.figtext(0.1, 0.25, f'RMSE: {rmse:.2f}', fontsize=10)
+
+            # Métricas de comparação
+            q_obs = vazoes_obs[:, 0]
+            q_calc = vazoes_calc[:, 0]
+            er_vazao_pico = (np.max(q_calc) - np.max(q_obs)) / \
+                np.max(q_obs) * 100
+            er_tempo_pico = ((tempos_calc[np.argmax(
+                q_calc)] - tempos_obs[np.argmax(q_obs)]) / tempos_obs[np.argmax(q_obs)]) * 100
+            nse = 1 - (np.sum((q_calc - q_obs)**2) /
+                       np.sum((q_obs - np.mean(q_obs))**2))
+            rmse = np.sqrt(np.mean((q_calc - q_obs)**2))
+            vol_obs = np.sum(q_obs) * delta_t
+            vol_calc = np.sum(q_calc) * delta_t
+            er_vol = (vol_calc - vol_obs) / vol_obs * 100
+
+            # mantém as posições originais das métricas
+            plt.figtext(0.1, 0.25, f'RMSE: {rmse:.2f}m³/s', fontsize=10)
             plt.figtext(0.1, 0.20, f'NS coefficient: {nse:.2f}', fontsize=10)
             plt.figtext(
                 0.1, 0.15, f'relative peak error: {er_vazao_pico:.2f}%', fontsize=10)
@@ -2927,7 +2948,83 @@ class HidroPixel:
             plt.figtext(
                 0.1, 0.05, f'relative volume error: {er_vol:.2f}%', fontsize=10)
 
-            # Ajusta a margem inferior para caber o texto
+            plt.subplots_adjust(bottom=0.40)
+            plt.show()
+
+        # Plota, se marcado, o hidrograma observado, calculado e tambem as vazoes por classe e calcula as metricas da vazao obs e calculada (sera extinto)
+        elif self.dlg_flow_rout.ch_12_pg4.isChecked() == True and self.dlg_flow_rout.le_6_pg4.text() != '' and self.dlg_flow_rout.le_7_pg4.text() != '' and self.dlg_flow_rout.cb_4_pg2.currentText() != '':
+            hidrograma_obs = self.dlg_flow_rout.le_7_pg4.text()
+            hidrograma_calc = self.dlg_flow_rout.le_6_pg4.text()
+
+            # Leitura do hidrograma observado
+            with open(hidrograma_obs, 'r', encoding='ISO-8859-1') as f:
+                header_obs = f.readline().strip().split(',')
+                nomes_obs = header_obs[1:]  # descarta o tempo
+                data_obs = np.loadtxt(f, delimiter=',')
+            tempos_obs = data_obs[:, 0]
+            vazoes_obs = data_obs[:, 1:]  # pode ter várias colunas
+
+            # Leitura do hidrograma calculado
+            with open(hidrograma_calc, 'r', encoding='ISO-8859-1') as f:
+                header_calc = f.readline().strip().split(',')
+                nomes_calc = header_calc[1:]
+                data_calc = np.loadtxt(f, delimiter=',')
+            tempos_calc = data_calc[:, 0]
+            vazoes_calc = data_calc[:, 1:]
+
+            #  Cálculo de delta_t
+            delta_t = tempos_obs[1] - tempos_obs[0]
+
+            # Plotagem
+            plt.figure(figsize=(8, 6))
+            plt.gcf().canvas.manager.window.setWindowTitle('Resulting Watershed Hydrograph')
+            plt.title('HYDROGRAPH')
+
+            # Observado (primeira coluna de vazões observadas) em preto
+            plt.plot(tempos_obs, vazoes_obs[:, 0], color='black',
+                     linestyle='-', label='Observed Runoff')
+
+            # Calculado total (primeira coluna de vazões calculadas) em vermelho
+            plt.plot(tempos_calc, vazoes_calc[:, 0], color='red',
+                     linestyle='-', label='Calculated Runoff')
+
+            # As demais classes calculadas, cada uma com estilo contínuo e cor padrão do matplotlib
+            for j in range(1, vazoes_calc.shape[1]):
+                plt.plot(tempos_calc, vazoes_calc[:, j],
+                         linestyle='-', label=nomes_calc[j])
+
+            plt.xlabel('time (min)')
+            plt.ylabel('Q(m³/s)')
+
+            # legenda no canto superior direito, vertical e fonte reduzida
+            plt.legend(loc='upper right', fontsize='small')
+
+            plt.grid()
+
+            # Métricas de comparação
+            q_obs = vazoes_obs[:, 0]
+            q_calc = vazoes_calc[:, 0]
+            er_vazao_pico = (np.max(q_calc) - np.max(q_obs)) / \
+                np.max(q_obs) * 100
+            er_tempo_pico = ((tempos_calc[np.argmax(
+                q_calc)] - tempos_obs[np.argmax(q_obs)]) / tempos_obs[np.argmax(q_obs)]) * 100
+            nse = 1 - (np.sum((q_calc - q_obs)**2) /
+                       np.sum((q_obs - np.mean(q_obs))**2))
+            rmse = np.sqrt(np.mean((q_calc - q_obs)**2))
+            vol_obs = np.sum(q_obs) * delta_t
+            vol_calc = np.sum(q_calc) * delta_t
+            er_vol = (vol_calc - vol_obs) / vol_obs * 100
+
+            # mantém as posições originais das métricas
+            plt.figtext(0.1, 0.25, f'RMSE: {rmse:.2f}m³/s', fontsize=10)
+            plt.figtext(0.1, 0.20, f'NS coefficient: {nse:.2f}', fontsize=10)
+            plt.figtext(
+                0.1, 0.15, f'relative peak error: {er_vazao_pico:.2f}%', fontsize=10)
+            plt.figtext(
+                0.1, 0.10, f'relative time to peak error: {er_tempo_pico:.2f}%', fontsize=10)
+            plt.figtext(
+                0.1, 0.05, f'relative volume error: {er_vol:.2f}%', fontsize=10)
+
             plt.subplots_adjust(bottom=0.40)
             plt.show()
 
@@ -2983,14 +3080,9 @@ class HidroPixel:
             flow_rout_vb = self.diretorio_atual + r'\temp\HidropixelDLR.exe'
             flow_rout_exe = subprocess.run([flow_rout_vb])
 
-            # Le arquivo com info sobre qual botao foi clicado
-            cancel_file = self.diretorio_atual + r'\temp\cancela_flow_rout.txt'
-            with open(cancel_file, 'w', encoding='utf-8') as cancel_file:
-                cancel_1_0 = int(cancel_file.readline())
-
             # verifica se houve algum erro no processamento das rotinas no vb ou se o usuario clicou em cancelar
             # Caso não, a execução continua no python
-            if flow_rout_exe.returncode == 0 and cancel_1_0 == 1:
+            if flow_rout_exe.returncode == 0:
                 self.dlg_flow_rout.progressBar.setValue(60)
 
                 # Copia e renomeia arquivo txt do hidrograma final
@@ -3045,23 +3137,26 @@ class HidroPixel:
 
     def atualiza_raster_list(self):
         """
-        Atualiza a lista de rasters conforme a ordem definida no painel de camadas 
-        do QGIS, adicionando apenas nomes únicos.
+        Reconstrói do zero a lista única de (nome, path) na ordem do painel de camadas.
+        Retorna apenas a lista de nomes (para popular os combos) e armazena em 
+        self.lista_rasters_dir os paths na mesma ordem.
         """
-        layer_tree_layers = QgsProject.instance().layerTreeRoot().findLayers()
+        # Limpa listas antigas
+        self.lista_rasters_dir = [None]
         lista_rasters = [None]
-        self.lista_rasters_dir = []
-        nomes_usados = set()
-        dir_usados = set()
-        for layer_tree in layer_tree_layers:
-            layer = layer_tree.layer()
+
+        # Percorre a árvore de camadas na ordem visual do QGIS
+        layer_tree_layers = QgsProject.instance().layerTreeRoot().findLayers()
+        vistos = set()
+        for node in layer_tree_layers:
+            layer = node.layer()
             if layer.type() == QgsMapLayer.RasterLayer:
                 nome = layer.name()
-                dir_name = layer.source()
-                if nome not in nomes_usados:
-                    dir_usados.add()
-                    self.lista_rasters_dir.append(dir_name)
-                    nomes_usados.add(nome)
+                path = layer.source()
+                # garante pares únicos
+                if (nome, path) not in vistos:
+                    vistos.add((nome, path))
+                    self.lista_rasters_dir.append(path)
                     lista_rasters.append(nome)
 
         return lista_rasters
@@ -3074,10 +3169,10 @@ class HidroPixel:
         funcao = 3: Flow Routing"""
 
         # adiciona layers raster ao combox
-        lista_rasters = self.atualiza_raster_list()
+        nomes = self.atualiza_raster_list()
 
         # lista com combo boxes por rotina
-        list_cb1 = [
+        combos = [
             self.dlg_flow_tt.cb_1_pg2,
             self.dlg_flow_tt.cb_2_pg2,
             self.dlg_flow_tt.cb_3_pg2,
@@ -3095,14 +3190,13 @@ class HidroPixel:
             self.dlg_flow_rout.cb_5_pg2
         ]
 
-        raster_name = None
-        # Aplica funcao para todos os tool buttons
-        for cb1 in list_cb1:
-            # Captura valor atual do combo box
-            raster_name = cb1.currentText()
-            cb1.clear()
-            cb1.addItems(lista_rasters)
-            cb1.setCurrentText(raster_name)
+        for cb in combos:
+            atual = cb.currentText()
+            cb.clear()
+            cb.addItems(nomes)
+            # se o valor antigo ainda existir, refaz a seleção
+            if atual in nomes:
+                cb.setCurrentText(atual)
 
     def SsButoes(self, active_button, instancia, page=0):
         """Esta função configura o estilo dos botões das diferentes páginas do plugin. Aquele que estiver em destaque representará a página autal
@@ -3155,7 +3249,7 @@ class HidroPixel:
             self.run_flow_tt()
 
         else:
-            result = 'Provide a valid directory for the outputs!'
+            result = r'Provide a valid directory for the outputs!'
             QMessageBox.warning(None, "Invalid directory provided", result)
 
     def CondicaoRunRainfall_inter(self, map_out):
@@ -3187,24 +3281,60 @@ class HidroPixel:
 
     def get_project_dir(self, interface):
         """Solicita diretorio para armazenar projeto do Hidropixel"""
-        file_name, _ = QFileDialog.getSaveFileName(
-            None, "Save the project!", interface.le_1_pg1.text(), "Hidropixel project (*.hpx)")
+        while True:
+            file_name, _ = QFileDialog.getSaveFileName(
+                None, "Save the project!", interface.le_1_pg1.text(), "Hidropixel project (*.hpx)")
 
-        if not file_name:
-            result = "Wait! You did not select any directory."
-            reply = QMessageBox.warning(
-                None, "No file selected", result, QMessageBox.Ok)
-            if reply == QMessageBox.Ok:
-                return
-        else:
-            interface.le_2_pg1.setText(file_name)
-            return
+            if not file_name:
+                result = "Wait! You did not select any directory."
+                reply = QMessageBox.warning(
+                    None, "No file selected", result, QMessageBox.Ok)
+                if reply == QMessageBox.Ok:
+                    break
+
+            else:
+                interface.le_2_pg1.setText(file_name)
+                break
+
+    def parameters_mask(self):
+        """Aplica mascara aos com os parametros para aceitar apenas valores numericos"""
+        # define validatos
+        int_validator = QIntValidator()
+        float_validadator = QDoubleValidator()
+
+        # Flow Travel Time
+        self.dlg_flow_tt.le_1_pg1.setValidator(float_validadator)
+        self.dlg_flow_tt.le_3_pg1.setValidator(float_validadator)
+        self.dlg_flow_tt.le_4_pg1.setValidator(float_validadator)
+        self.dlg_flow_tt.le_5_pg1.setValidator(int_validator)
+        self.dlg_flow_tt.le_6_pg1.setValidator(int_validator)
+        self.dlg_flow_tt.le_7_pg1.setValidator(int_validator)
+        self.dlg_flow_tt.le_8_pg1.setValidator(int_validator)
+        self.dlg_flow_tt.le_9_pg1.setValidator(int_validator)
+        self.dlg_flow_tt.le_10_pg1.setValidator(int_validator)
+        self.dlg_flow_tt.le_11_pg1.setValidator(int_validator)
+        self.dlg_flow_tt.le_12_pg1.setValidator(int_validator)
+        self.dlg_flow_tt.le_14_pg1.setValidator(float_validadator)
+        self.dlg_flow_tt.le_15_pg1.setValidator(float_validadator)
+        self.dlg_flow_tt.le_16_pg1.setValidator(float_validadator)
+        self.dlg_flow_tt.le_17_pg1.setValidator(float_validadator)
+        self.dlg_flow_tt.le_18_pg1.setValidator(float_validadator)
+        self.dlg_flow_tt.le_19_pg1.setValidator(float_validadator)
+
+        # Excess Rainfall
+        self.dlg_exc_rain.le_1_pg1.setValidator(float_validadator)
+
+        # Flow Routing
+        self.dlg_flow_rout.le_5_pg1.setValidator(float_validadator)
+        self.dlg_flow_rout.le_2_pg1.setValidator(float_validadator)
 
     def run_save_project(self, interface, function):
         """Organiza logica de execucao da rotina que salva projeto .hpx"""
         # So salva se nome e diretorio do projeto for fornecido
         if interface.le_1_pg1.text() != '' and interface.le_2_pg1.text() != '':
             self.save_to_project(function, interface.le_2_pg1.text())
+            QMessageBox.information(
+                None, "Project saved", "Operation completed successfully", QMessageBox.Ok)
         else:
             result = "Provide a valid project name and directory!"
             QMessageBox.warning(
@@ -3215,7 +3345,8 @@ class HidroPixel:
         """Esta é a função principal do plugin, todas as funcionalidades propostas anteriormente serão efetivadas na função run"""
 
         self.dlg_hidro_pixel = HidroPixelDialog()
-        self.dlg_hidro_pixel.setWindowModality(Qt.ApplicationModal)
+        # self.dlg_hidro_pixel.setWindowModality(Qt.ApplicationModal)
+
         # Verifica se a interface já foi mostrada anteriormente
         if not hasattr(self, 'dlg_hidro_pixel') or not self.dlg_hidro_pixel.isVisible():
             # Adiciona logo Hidropixel na pagina incial
@@ -3241,6 +3372,9 @@ class HidroPixel:
             # Configura botão about
             self.dlg_hidro_pixel.btn_flow_about.clicked.connect(
                 lambda: self.dlg_about.show())
+
+            # Chama funcao que aplica mascara para todos os parametros das diferentes rotinas
+            self.parameters_mask()
 
             # Configura botões do menu do hidropixel e estilo dos botoes da configuration page
             self.dlg_hidro_pixel.btn_flow_trav.clicked.connect(
@@ -3284,7 +3418,7 @@ class HidroPixel:
             self.dlg_flow_tt.tbtn_pg1_1.clicked.connect(
                 lambda: self.carrega_work_folder(self.dlg_flow_tt.le_21_pg1))
 
-            # Configura combo boxes para receber rasters do projeto QGIS
+            # Configura comboboxes para receber rasters do projeto QGIS
 
             self.carrega_rasters()
             # self.dlg_flow_tt.cb_1_pg1.toggled.connect(lambda: self.sheet_flow_status(self.dlg_flow_tt.cb_1_pg1.isChecked()))
@@ -3327,19 +3461,38 @@ class HidroPixel:
             self.dlg_flow_tt.btn_save_file_pg4.clicked.connect(
                 lambda: self.dlg_save_project_flow_tt.show())
 
+            # Configura logica dos outputs ligados ao metodo das curvas regionais
+            # River cros-sectional area
+            self.dlg_flow_tt.ch_9_pg4.setEnabled(False)
+            self.dlg_flow_tt.label_87.setEnabled(False)
+            self.dlg_flow_tt.le_9_pg4.setEnabled(False)
+            self.dlg_flow_tt.ch_20_pg4.setEnabled(False)
+            self.dlg_flow_tt.tbtn_pg4_9.setEnabled(False)
+            self.dlg_flow_tt.label_86.setEnabled(False)
+
+            # River bankfull width
+            self.dlg_flow_tt.ch_10_pg4.setEnabled(False)
+            self.dlg_flow_tt.label_89.setEnabled(False)
+            self.dlg_flow_tt.le_10_pg4.setEnabled(False)
+            self.dlg_flow_tt.tbtn_pg4_10.setEnabled(False)
+            self.dlg_flow_tt.label_88.setEnabled(False)
+            self.dlg_flow_tt.ch_21_pg4.setEnabled(False)
+            self.dlg_flow_tt.groupBox_3.toggled.connect(
+                lambda: self.reginal_curve_condition())
+
             # configura gui save to project para criar projeto da flow travel time
             self.dlg_save_project_flow_tt.tbtn_path.clicked.connect(
                 lambda: self.get_project_dir(self.dlg_save_project_flow_tt))
             self.dlg_save_project_flow_tt.btn_save_project.clicked.connect(
                 lambda: self.run_save_project(self.dlg_save_project_flow_tt, 1))
 
-            # Configura botão para ler informações de uma arquivo enviado : flow travel time
+            # Configura botão para ler informações de um arquivo enviado : flow travel time
             self.dlg_flow_tt.btn_read_pg1.clicked.connect(
-                lambda: self.read_from_file(1, 1, self.dlg_flow_tt.le_21_pg1.text()))
+                lambda: self.read_from_project(1, self.dlg_flow_tt.le_21_pg1.text()))
             self.dlg_flow_tt.btn_read_pg2.clicked.connect(
-                lambda: self.read_from_file(1, 2, self.dlg_flow_tt.le_21_pg1.text()))
+                lambda: self.read_from_project(1, self.dlg_flow_tt.le_21_pg1.text()))
             self.dlg_flow_tt.btn_read_pg4.clicked.connect(
-                lambda: self.read_from_file(1, 4, self.dlg_flow_tt.le_21_pg1.text()))
+                lambda: self.read_from_project(1, self.dlg_flow_tt.le_21_pg1.text()))
 
             # Configura botões das tabelas : flow travel time
             self.dlg_flow_tt.btn_read_t1.clicked.connect(lambda: self.read_tb_from_file(
@@ -3455,13 +3608,14 @@ class HidroPixel:
 
             # Configura botão para ler informações de uma arquivo enviado : excess rainfall
             self.dlg_exc_rain.btn_read_pg1.clicked.connect(
-                lambda: self.read_from_file(2, 1, self.dlg_exc_rain.le_3_pg1.text()))
+                lambda: self.read_from_project(2, self.dlg_exc_rain.le_3_pg1.text()))
+
             self.dlg_exc_rain.btn_read_pg_ri.clicked.connect(
-                lambda: self.read_from_file(2, 2, self.dlg_exc_rain.le_3_pg1.text()))
+                lambda: self.read_from_project(2, self.dlg_exc_rain.le_3_pg1.text()))
             self.dlg_exc_rain.btn_read_pg2.clicked.connect(
-                lambda: self.read_from_file(2, 3, self.dlg_exc_rain.le_3_pg1.text()))
+                lambda: self.read_from_project(2, self.dlg_exc_rain.le_3_pg1.text()))
             self.dlg_exc_rain.btn_read_pg4.clicked.connect(
-                lambda: self.read_from_file(2, 5, self.dlg_exc_rain.le_3_pg1.text()))
+                lambda: self.read_from_project(2, self.dlg_exc_rain.le_3_pg1.text()))
 
             # Configura os botões da página run page: excess rainfall
             self.dlg_exc_rain.tbtn_pg4_1.clicked.connect(
@@ -3530,8 +3684,8 @@ class HidroPixel:
             # Configura os botões da página input data : flow routing
             self.dlg_flow_rout.tbtn_pg2_1.clicked.connect(
                 lambda: self.carregaArquivos(0, self.dlg_flow_rout.cb_1_pg2))
-            self.dlg_flow_rout.tbtn_pg2_2.clicked.connect(
-                lambda: self.carregaArquivos(0, self.dlg_flow_rout.cb_2_pg2))
+            # self.dlg_flow_rout.tbtn_pg2_2.clicked.connect(
+            #     lambda: self.carregaArquivos(0, self.dlg_flow_rout.cb_2_pg2))
             self.dlg_flow_rout.tbtn_pg2_3.clicked.connect(
                 lambda: self.carregaArquivos(0, self.dlg_flow_rout.cb_3_pg2))
             self.dlg_flow_rout.tbtn_pg2_4.clicked.connect(
@@ -3539,10 +3693,10 @@ class HidroPixel:
             self.dlg_flow_rout.tbtn_pg2_5.clicked.connect(
                 lambda: self.carregaArquivos(0, self.dlg_flow_rout.cb_5_pg2))
             self.dlg_flow_rout.tbtn_pg2_6.clicked.connect(
-                lambda: self.carregaArquivos(0, self.dlg_flow_rout.le_6_pg2))
+                lambda: self.carregaArquivos(0, self.dlg_flow_rout.cb_4_pg2))
 
-            # self.dlg_flow_rout.tbtn_pg4_7.clicked.connect(
-            #     lambda: self.carregaArquivos(self.dlg_flow_rout.le_7_pg4, file_type='text'))
+            self.dlg_flow_rout.tbtn_pg4_7.clicked.connect(
+                lambda: self.carregaArquivos(self.dlg_flow_rout.le_7_pg4, 0, file_type='text'))
 
             # configura botões de salvar e salvar para um arquivo: flow travel time
             self.dlg_flow_rout.btn_save_file_pg1.clicked.connect(
@@ -3553,18 +3707,18 @@ class HidroPixel:
                 lambda: self.dlg_save_project_flow_rout.show())
 
             # configura gui save to project para criar projeto da excess rainfall
-            self.dlg_save_project_exc_rain.tbtn_path.clicked.connect(
-                lambda: self.get_project_dir(self.dlg_save_project_exc_rain))
+            self.dlg_save_project_flow_rout.tbtn_path.clicked.connect(
+                lambda: self.get_project_dir(self.dlg_save_project_flow_rout))
             self.dlg_save_project_flow_rout.btn_save_project.clicked.connect(
                 lambda: self.run_save_project(self.dlg_save_project_flow_rout, 3))
 
             # Configura botão para ler informações de uma arquivo enviado : flow routing
             self.dlg_flow_rout.btn_read_pg1.clicked.connect(
-                lambda: self.read_from_file(3, 1, self.dlg_flow_rout.le_3_pg1.text()))
+                lambda: self.read_from_project(3, self.dlg_flow_rout.le_3_pg1.text()))
             self.dlg_flow_rout.btn_read_pg2.clicked.connect(
-                lambda: self.read_from_file(3, 2, self.dlg_flow_rout.le_3_pg1.text()))
+                lambda: self.read_from_project(3, self.dlg_flow_rout.le_3_pg1.text()))
             self.dlg_flow_rout.btn_read_pg4.clicked.connect(
-                lambda: self.read_from_file(3, 4, self.dlg_flow_rout.le_3_pg1.text()))
+                lambda: self.read_from_project(3, self.dlg_flow_rout.le_3_pg1.text()))
 
             # Configura os botões da página run page: flow routing
             self.dlg_flow_rout.tbtn_pg4_1.clicked.connect(

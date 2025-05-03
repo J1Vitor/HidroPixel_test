@@ -137,9 +137,9 @@
                <property name="geometry">
                 <rect>
                  <x>0</x>
-                 <y>-272</y>
+                 <y>0</y>
                  <width>641</width>
-                 <height>661</height>
+                 <height>651</height>
                 </rect>
                </property>
                <layout class="QGridLayout" name="gridLayout_67">
@@ -914,6 +914,12 @@
                   <property name="flat">
                    <bool>true</bool>
                   </property>
+                  <property name="checkable">
+                   <bool>true</bool>
+                  </property>
+                  <property name="checked">
+                   <bool>false</bool>
+                  </property>
                   <layout class="QGridLayout" name="gridLayout_66">
                    <item row="0" column="0">
                     <layout class="QGridLayout" name="gridLayout_16">
@@ -1068,62 +1074,20 @@
                     </layout>
                    </item>
                    <item row="2" column="0">
-                    <widget class="QGroupBox" name="groupBox_4">
-                     <property name="title">
-                      <string>Use regional curve parameters:</string>
+                    <widget class="QFrame" name="frame_10">
+                     <property name="frameShape">
+                      <enum>QFrame::Box</enum>
                      </property>
-                     <property name="flat">
-                      <bool>true</bool>
+                     <property name="frameShadow">
+                      <enum>QFrame::Sunken</enum>
                      </property>
-                     <property name="checkable">
-                      <bool>true</bool>
+                     <property name="lineWidth">
+                      <number>1</number>
                      </property>
-                     <property name="checked">
-                      <bool>false</bool>
+                     <property name="midLineWidth">
+                      <number>0</number>
                      </property>
                      <layout class="QGridLayout" name="gridLayout_65">
-                      <property name="topMargin">
-                       <number>5</number>
-                      </property>
-                      <item row="0" column="2">
-                       <widget class="QLabel" name="label_82">
-                        <property name="sizePolicy">
-                         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                          <horstretch>0</horstretch>
-                          <verstretch>0</verstretch>
-                         </sizepolicy>
-                        </property>
-                        <property name="minimumSize">
-                         <size>
-                          <width>16</width>
-                          <height>16</height>
-                         </size>
-                        </property>
-                        <property name="maximumSize">
-                         <size>
-                          <width>16</width>
-                          <height>16</height>
-                         </size>
-                        </property>
-                        <property name="font">
-                         <font>
-                          <pointsize>9</pointsize>
-                         </font>
-                        </property>
-                        <property name="toolTip">
-                         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add the diagonal step, which by default is set to 1.4241.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                        </property>
-                        <property name="whatsThis">
-                         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add the description or function of the object&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                        </property>
-                        <property name="text">
-                         <string/>
-                        </property>
-                        <property name="pixmap">
-                         <pixmap>tip_icon.png</pixmap>
-                        </property>
-                       </widget>
-                      </item>
                       <item row="1" column="0">
                        <widget class="QFrame" name="frame">
                         <property name="maximumSize">
@@ -1155,7 +1119,7 @@
                         </layout>
                        </widget>
                       </item>
-                      <item row="1" column="1" colspan="2">
+                      <item row="1" column="1">
                        <widget class="QFrame" name="frame_9">
                         <property name="frameShape">
                          <enum>QFrame::StyledPanel</enum>
@@ -1465,6 +1429,19 @@
                         </layout>
                        </widget>
                       </item>
+                      <item row="0" column="0" colspan="2">
+                       <widget class="QLabel" name="label_53">
+                        <property name="frameShape">
+                         <enum>QFrame::NoFrame</enum>
+                        </property>
+                        <property name="frameShadow">
+                         <enum>QFrame::Raised</enum>
+                        </property>
+                        <property name="text">
+                         <string>Regional curve parameters:</string>
+                        </property>
+                       </widget>
+                      </item>
                      </layout>
                     </widget>
                    </item>
@@ -1476,21 +1453,21 @@
                   <item row="0" column="2">
                    <widget class="QPushButton" name="btn_help_pg1">
                     <property name="text">
-                     <string>Help</string>
+                     <string notr="true">Help</string>
                     </property>
                    </widget>
                   </item>
                   <item row="0" column="0">
                    <widget class="QPushButton" name="btn_read_pg1">
                     <property name="text">
-                     <string>Read from project</string>
+                     <string notr="true">Read from project</string>
                     </property>
                    </widget>
                   </item>
                   <item row="0" column="1">
                    <widget class="QPushButton" name="btn_save_file_pg1">
                     <property name="text">
-                     <string>Save to project</string>
+                     <string notr="true">Save to project</string>
                     </property>
                    </widget>
                   </item>
@@ -1546,8 +1523,8 @@
                 </property>
                 <property name="font">
                  <font>
-                  <weight>75</weight>
-                  <bold>true</bold>
+                  <weight>50</weight>
+                  <bold>false</bold>
                  </font>
                 </property>
                 <property name="text">
@@ -1569,8 +1546,8 @@
                <property name="geometry">
                 <rect>
                  <x>0</x>
-                 <y>-342</y>
-                 <width>641</width>
+                 <y>0</y>
+                 <width>468</width>
                  <height>733</height>
                 </rect>
                </property>
@@ -2765,21 +2742,21 @@
                   <item row="0" column="1">
                    <widget class="QPushButton" name="btn_save_file_pg2">
                     <property name="text">
-                     <string>Save to project</string>
+                     <string notr="true">Save to project</string>
                     </property>
                    </widget>
                   </item>
                   <item row="0" column="0">
                    <widget class="QPushButton" name="btn_read_pg2">
                     <property name="text">
-                     <string>Read from project</string>
+                     <string notr="true">Read from project</string>
                     </property>
                    </widget>
                   </item>
                   <item row="0" column="2">
                    <widget class="QPushButton" name="btn_help_pg2">
                     <property name="text">
-                     <string>Help</string>
+                     <string notr="true">Help</string>
                     </property>
                    </widget>
                   </item>
@@ -2816,8 +2793,8 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>658</width>
-                 <height>391</height>
+                 <width>258</width>
+                 <height>61</height>
                 </rect>
                </property>
                <layout class="QGridLayout" name="gridLayout_30">
@@ -2833,7 +2810,7 @@
                    <item row="0" column="0">
                     <widget class="QLabel" name="label_46">
                      <property name="text">
-                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:14pt; font-weight:700;&quot;&gt;EM DESENVOLVIMENTO&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:14pt; font-weight:700;&quot;&gt;UNDER DEVELOPMENT&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                      </property>
                     </widget>
                    </item>
@@ -2876,8 +2853,8 @@
                 </property>
                 <property name="font">
                  <font>
-                  <weight>75</weight>
-                  <bold>true</bold>
+                  <weight>50</weight>
+                  <bold>false</bold>
                  </font>
                 </property>
                 <property name="text">
@@ -2921,8 +2898,8 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>658</width>
-                 <height>391</height>
+                 <width>556</width>
+                 <height>320</height>
                 </rect>
                </property>
                <layout class="QGridLayout" name="gridLayout_48">
@@ -3936,14 +3913,14 @@
                   <item>
                    <widget class="QPushButton" name="btn_read_pg4">
                     <property name="text">
-                     <string>Read from project</string>
+                     <string notr="true">Read from project</string>
                     </property>
                    </widget>
                   </item>
                   <item>
                    <widget class="QPushButton" name="btn_save_file_pg4">
                     <property name="text">
-                     <string>Save to project</string>
+                     <string notr="true">Save to project</string>
                     </property>
                    </widget>
                   </item>
@@ -3956,7 +3933,7 @@
                      <string notr="true"/>
                     </property>
                     <property name="text">
-                     <string>Run</string>
+                     <string notr="true">Run</string>
                     </property>
                    </widget>
                   </item>
@@ -3966,14 +3943,14 @@
                      <string notr="true"/>
                     </property>
                     <property name="text">
-                     <string>Close</string>
+                     <string notr="true">Close</string>
                     </property>
                    </widget>
                   </item>
                   <item>
                    <widget class="QPushButton" name="btn_help_pg4">
                     <property name="text">
-                     <string>Help</string>
+                     <string notr="true">Help</string>
                     </property>
                    </widget>
                   </item>
@@ -4008,8 +3985,8 @@
                 </property>
                 <property name="font">
                  <font>
-                  <weight>75</weight>
-                  <bold>true</bold>
+                  <weight>50</weight>
+                  <bold>false</bold>
                  </font>
                 </property>
                 <property name="text">
@@ -4158,7 +4135,6 @@ p, li { white-space: pre-wrap; }
   <tabstop>le_12_pg1</tabstop>
   <tabstop>le_14_pg1</tabstop>
   <tabstop>le_15_pg1</tabstop>
-  <tabstop>groupBox_4</tabstop>
   <tabstop>le_16_pg1</tabstop>
   <tabstop>le_17_pg1</tabstop>
   <tabstop>le_18_pg1</tabstop>
