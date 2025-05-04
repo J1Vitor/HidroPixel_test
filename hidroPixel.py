@@ -21,21 +21,18 @@
  ***************************************************************************/
 """
 from qgis.PyQt import uic
-from qgis.PyQt.QtCore import QSettings, QTranslator, QCoreApplication, QRegularExpression, Qt
-from qgis.PyQt.QtGui import QIcon, QRegExpValidator, QIntValidator, QDoubleValidator, QFont, QPixmap
-from qgis.PyQt.QtWidgets import QApplication, QMainWindow, QAction, QFileDialog, QMessageBox, QTableWidgetItem, QWidget, QStackedWidget, QPushButton
-from qgis.core import QgsMessageLog, Qgis, QgsProject, QgsMapLayer, QgsRasterLayer
+from qgis.PyQt.QtCore import QSettings, QTranslator, QCoreApplication
+from qgis.PyQt.QtGui import QIcon, QIntValidator, QDoubleValidator, QFont, QPixmap
+from qgis.PyQt.QtWidgets import QApplication, QAction, QFileDialog, QMessageBox, QTableWidgetItem
+from qgis.core import QgsProject, QgsMapLayer, QgsRasterLayer
 import qgis.utils
 
 
 # Import the code for the dialog
 import os.path
 import shutil
-import sys
 import os
-import uuid
 import glob
-import logging
 from .hidroPixel_dialog import HidroPixelDialog
 from pathlib import Path
 from datetime import datetime
@@ -426,7 +423,7 @@ class HidroPixel:
             function == 2: Excess rainfall;
             function == 3: Flow routing
         """
-
+        self.save_result = True
         with open(file_name, 'w', encoding='utf-8') as arquivo_txt:
 
             if function == 1:
@@ -1711,286 +1708,16 @@ class HidroPixel:
            - Function = 3 : Flow routing'''
 
         if function == 1:
-            # Verifica se alguma lineEdit sobreu alteração: modifica a execução da função close
-            line_edit_list = [
-                self.dlg_flow_tt.le_1_pg1.text(),
-                self.dlg_flow_tt.le_5_pg1.text(),
-                self.dlg_flow_tt.le_6_pg1.text(),
-                self.dlg_flow_tt.le_7_pg1.text(),
-                self.dlg_flow_tt.le_8_pg1.text(),
-                self.dlg_flow_tt.le_9_pg1.text(),
-                self.dlg_flow_tt.le_10_pg1.text(),
-                self.dlg_flow_tt.le_11_pg1.text(),
-                self.dlg_flow_tt.le_12_pg1.text(),
-                self.dlg_flow_tt.le_14_pg1.text(),
-                self.dlg_flow_tt.le_15_pg1.text(),
-                self.dlg_flow_tt.le_16_pg1.text(),
-                self.dlg_flow_tt.le_17_pg1.text(),
-                self.dlg_flow_tt.le_18_pg1.text(),
-                self.dlg_flow_tt.le_19_pg1.text(),
-                self.dlg_flow_tt.le_21_pg1.text(),
-                self.dlg_flow_tt.cb_1_pg2.currentText(),
-                self.dlg_flow_tt.cb_2_pg2.currentText(),
-                self.dlg_flow_tt.cb_3_pg2.currentText(),
-                self.dlg_flow_tt.cb_4_pg2.currentText(),
-                self.dlg_flow_tt.cb_5_pg2.currentText(),
-                self.dlg_flow_tt.cb_6_pg2.currentText(),
-                self.dlg_flow_tt.le_8_pg2.text(),
-                self.dlg_flow_tt.cb_7_pg2.currentText(),
-                self.dlg_flow_tt.le_10_pg2.text(),
-                self.dlg_flow_tt.le_11_pg2.text(),
-                self.dlg_flow_tt.le_6_pg4.text(),
-                self.dlg_flow_tt.le_7_pg4.text(),
-                self.dlg_flow_tt.le_8_pg4.text(),
-                self.dlg_flow_tt.le_9_pg4.text(),
-                self.dlg_flow_tt.le_10_pg4.text(),
-                self.dlg_flow_tt.le_11_pg4.text()
-            ]
-
-            # Verifica se algum elemento da lista de line_edits foi modificado
-            if any(item != '' for item in line_edit_list) and self.save_result == False:
-                while True:
-
-                    result = "Wait! You did not save your changes. Are you sure you want to close?"
-                    reply = QMessageBox.warning(
-                        None, "Changes not saved", result, QMessageBox.Ok | QMessageBox.Cancel)
-                    if reply == QMessageBox.Cancel:
-                        break
-
-                    else:
-                        # Limpando as informações armazenadas: line edit
-                        self.dlg_flow_tt.le_1_pg1.clear()
-                        self.dlg_flow_tt.le_5_pg1.clear()
-                        self.dlg_flow_tt.le_6_pg1.clear()
-                        self.dlg_flow_tt.le_7_pg1.clear()
-                        self.dlg_flow_tt.le_8_pg1.clear()
-                        self.dlg_flow_tt.le_9_pg1.clear()
-                        self.dlg_flow_tt.le_10_pg1.clear()
-                        self.dlg_flow_tt.le_11_pg1.clear()
-                        self.dlg_flow_tt.le_12_pg1.clear()
-                        self.dlg_flow_tt.le_13_pg1.clear()
-                        self.dlg_flow_tt.le_14_pg1.clear()
-                        self.dlg_flow_tt.le_15_pg1.clear()
-                        self.dlg_flow_tt.le_16_pg1.clear()
-                        self.dlg_flow_tt.le_17_pg1.clear()
-                        self.dlg_flow_tt.le_18_pg1.clear()
-                        self.dlg_flow_tt.le_19_pg1.clear()
-                        self.dlg_flow_tt.le_20_pg1.clear()
-                        self.dlg_flow_tt.le_21_pg1.clear()
-
-                        self.dlg_flow_tt.cb_1_pg2.setCurrentText('')
-                        self.dlg_flow_tt.cb_2_pg2.setCurrentText('')
-                        self.dlg_flow_tt.cb_3_pg2.setCurrentText('')
-                        self.dlg_flow_tt.cb_4_pg2.setCurrentText('')
-                        self.dlg_flow_tt.cb_5_pg2.setCurrentText('')
-                        self.dlg_flow_tt.cb_6_pg2.setCurrentText('')
-                        self.dlg_flow_tt.cb_7_pg2.setCurrentText('')
-                        self.dlg_flow_tt.le_8_pg2.clear()
-                        self.dlg_flow_tt.le_10_pg2.clear()
-
-                        self.dlg_flow_tt.le_6_pg4.clear()
-                        self.dlg_flow_tt.le_7_pg4.clear()
-                        self.dlg_flow_tt.le_8_pg4.clear()
-                        self.dlg_flow_tt.le_9_pg4.clear()
-                        self.dlg_flow_tt.le_10_pg4.clear()
-                        self.dlg_flow_tt.le_11_pg4.clear()
-
-                        # Limpando as informações armazenadas: tables widgets
-                        nlin_tb1 = self.dlg_flow_tt.tbw_1_pg2.rowCount()
-                        ncol_tb1 = self.dlg_flow_tt.tbw_1_pg2.columnCount()
-                        nlin_tb2 = self.dlg_flow_tt.tbw_2_pg2.rowCount()
-                        ncol_tb2 = self.dlg_flow_tt.tbw_2_pg2.columnCount()
-                        # Primeira tabela
-                        for lin in range(nlin_tb1):
-                            for col in range(ncol_tb1):
-                                item = self.dlg_flow_tt.tbw_1_pg2.item(
-                                    lin, col)
-                                if item is not None:
-                                    item.setText('')
-
-                        # Segunda tabela
-                        for lin in range(nlin_tb2):
-                            for col in range(ncol_tb2):
-                                item = self.dlg_flow_tt.tbw_2_pg2.item(
-                                    lin, col)
-                                if item is not None:
-                                    item.setText('')
-                        self.dlg_flow_tt.ch_1_pg4.setChecked(False)
-                        self.dlg_flow_tt.ch_2_pg4.setChecked(False)
-                        self.dlg_flow_tt.ch_3_pg4.setChecked(False)
-                        self.dlg_flow_tt.ch_4_pg4.setChecked(False)
-                        self.dlg_flow_tt.ch_5_pg4.setChecked(False)
-                        self.dlg_flow_tt.ch_6_pg4.setChecked(False)
-                        self.dlg_flow_tt.ch_7_pg4.setChecked(False)
-                        self.dlg_flow_tt.ch_8_pg4.setChecked(False)
-                        self.dlg_flow_tt.ch_9_pg4.setChecked(False)
-                        self.dlg_flow_tt.ch_10_pg4.setChecked(False)
-                        self.dlg_flow_tt.ch_11_pg4.setChecked(False)
-                        self.dlg_flow_tt.ch_12_pg4.setChecked(False)
-                        self.dlg_flow_tt.ch_13_pg4.setChecked(False)
-                        self.dlg_flow_tt.ch_14_pg4.setChecked(False)
-                        self.dlg_flow_tt.ch_15_pg4.setChecked(False)
-                        self.dlg_flow_tt.ch_16_pg4.setChecked(False)
-                        self.dlg_flow_tt.ch_17_pg4.setChecked(False)
-                        self.dlg_flow_tt.ch_18_pg4.setChecked(False)
-                        self.dlg_flow_tt.ch_19_pg4.setChecked(False)
-                        self.dlg_flow_tt.ch_20_pg4.setChecked(False)
-                        self.dlg_flow_tt.ch_21_pg4.setChecked(False)
-                        self.dlg_flow_tt.ch_22_pg4.setChecked(False)
-                        self.dlg_flow_tt.close()
-
-                    # Atualiza as variáveis para a condição de salvamento
-                    self.save_result = False
-                    break
-
-            # Se não houver moficações nos objetos do plugin, a janela será fechada normalmente
-            else:
-                self.dlg_flow_tt.close()
-                self.save_result = False
+            self.dlg_flow_tt.close()
+            self.save_result = False
 
         elif function == 2:
-            # Verifica se alguma lineEdit sobreu alteração: modifica a execução da função close
-            line_edit_list = [
-                self.dlg_exc_rain.le_1_pg1.text(),
-                self.dlg_exc_rain.cb_1_pg_ri.currentText(),
-                self.dlg_exc_rain.le_2_pg_ri.text(),
-                self.dlg_exc_rain.le_3_pg_ri.text(),
-                self.dlg_exc_rain.le_4_pg_ri.text(),
-                self.dlg_exc_rain.le_5_pg_ri.text(),
-                self.dlg_exc_rain.cb_1_pg2.currentText(),
-                self.dlg_exc_rain.cb_2_pg2.currentText(),
-                self.dlg_exc_rain.le_3_pg2.text(),
-                self.dlg_exc_rain.le_4_pg2.text(),
-                self.dlg_exc_rain.le_1_pg4.text(),
-                self.dlg_exc_rain.le_2_pg4.text(),
-                self.dlg_exc_rain.le_3_pg4.text(),
-                self.dlg_exc_rain.le_4_pg4.text(),
-                self.dlg_exc_rain.le_5_pg4.text(),
-            ]
-
-            # Verifica se algum elemento da função foi modificado
-            if any(item != '' for item in line_edit_list) and self.save_result == False:
-                while True:
-
-                    result = "Wait! You did not save your changes. Are you sure you want to close?"
-                    reply = QMessageBox.warning(
-                        None, "Changes not saved", result, QMessageBox.Ok | QMessageBox.Cancel)
-                    if reply == QMessageBox.Cancel:
-                        break
-
-                    else:
-                        # Limpando os elementos da função excess rainfall
-                        self.dlg_exc_rain.le_1_pg1.clear()
-                        self.dlg_exc_rain.le_2_pg1.clear()
-                        self.dlg_exc_rain.le_3_pg1.clear()
-                        self.dlg_exc_rain.le_4_pg1.clear()
-                        self.dlg_exc_rain.le_1_pg_ri.clear()
-                        self.dlg_exc_rain.le_2_pg_ri.clear()
-                        self.dlg_exc_rain.le_3_pg_ri.clear()
-                        self.dlg_exc_rain.le_4_pg_ri.clear()
-                        self.dlg_exc_rain.le_5_pg_ri.clear()
-                        self.dlg_exc_rain.le_1_pg2.clear()
-                        self.dlg_exc_rain.le_2_pg2.clear()
-                        self.dlg_exc_rain.le_3_pg2.clear()
-                        self.dlg_exc_rain.le_4_pg2.clear()
-                        self.dlg_exc_rain.le_1_pg4.clear()
-                        self.dlg_exc_rain.le_2_pg4.clear()
-                        self.dlg_exc_rain.le_3_pg4.clear()
-                        self.dlg_exc_rain.le_4_pg4.clear()
-                        self.dlg_exc_rain.le_5_pg4.clear()
-                        self.dlg_exc_rain.le_6_pg4.clear()
-                        self.dlg_exc_rain.rb_1_pg1.setChecked(False)
-                        self.dlg_exc_rain.rb_2_pg1.setChecked(False)
-                        self.dlg_exc_rain.ch_1_pg4.setChecked(False)
-                        self.dlg_exc_rain.ch_2_pg4.setChecked(False)
-                        self.dlg_exc_rain.ch_3_pg4.setChecked(False)
-                        self.dlg_exc_rain.ch_4_pg4.setChecked(False)
-                        self.dlg_exc_rain.ch_5_pg4.setChecked(False)
-                        self.dlg_exc_rain.ch_6_pg4.setChecked(False)
-                        self.dlg_exc_rain.close()
-
-                    # Atualiza as variáveis para a condição de salvamento
-                    self.save_result = False
-                    break
-            else:
-                # Se não houver moficações nos objetos do plugin, a janela será fechada normalmente
-                self.save_result = False
-                self.dlg_exc_rain.close()
+            self.save_result = False
+            self.dlg_exc_rain.close()
 
         elif function == 3:
-            # Verifica se alguma lineEdit sobreu alteração: modifica a execução da função close
-            line_edit_list = [
-                self.dlg_flow_rout.le_1_pg1.text(),
-                self.dlg_flow_rout.le_2_pg1.text(),
-                self.dlg_flow_rout.le_3_pg1.text(),
-                self.dlg_flow_rout.le_4_pg1.text(),
-                self.dlg_flow_rout.le_5_pg1.text(),
-                self.dlg_flow_rout.cb_1_pg2.currentText(),
-                self.dlg_flow_rout.cb_2_pg2.currentText(),
-                self.dlg_flow_rout.cb_3_pg2.currentText(),
-                self.dlg_flow_rout.cb_4_pg2.currentText(),
-                self.dlg_flow_rout.cb_5_pg2.currentText(),
-                self.dlg_flow_rout.le_4_pg2.text(),
-                self.dlg_flow_rout.le_1_pg4.text(),
-                self.dlg_flow_rout.le_2_pg4.text(),
-                self.dlg_flow_rout.le_3_pg4.text(),
-                self.dlg_flow_rout.le_4_pg4.text(),
-                self.dlg_flow_rout.le_5_pg4.text(),
-                self.dlg_flow_rout.le_6_pg4.text()
-            ]
-
-            # Verifica se algum elemento da função foi modificado
-            if any(item != '' for item in line_edit_list) and self.save_result == False:
-                while True:
-
-                    result = "Wait! You did not save your changes. Are you sure you want to close?"
-                    reply = QMessageBox.warning(
-                        None, "Changes not saved", result, QMessageBox.Ok | QMessageBox.Cancel)
-                    if reply == QMessageBox.Cancel:
-                        break
-
-                    else:
-                        # Limpando os elementos da função excess rainfall
-                        self.dlg_flow_rout.le_1_pg1.clear()
-                        self.dlg_flow_rout.le_2_pg1.clear()
-                        self.dlg_flow_rout.le_3_pg1.clear()
-                        self.dlg_flow_rout.le_4_pg1.clear()
-                        self.dlg_flow_rout.le_5_pg1.clear()
-                        self.dlg_flow_rout.cb_1_pg2.setCurrentText('')
-                        self.dlg_flow_rout.cb_2_pg2.setCurrentText('')
-                        self.dlg_flow_rout.cb_3_pg2.setCurrentText('')
-                        self.dlg_flow_rout.cb_4_pg2.setCurrentText('')
-                        self.dlg_flow_rout.cb_5_pg2.setCurrentText('')
-                        self.dlg_flow_rout.le_4_pg2.clear()
-                        self.dlg_flow_rout.le_1_pg4.clear()
-                        self.dlg_flow_rout.le_2_pg4.clear()
-                        self.dlg_flow_rout.le_3_pg4.clear()
-                        self.dlg_flow_rout.le_4_pg4.clear()
-                        self.dlg_flow_rout.le_5_pg4.clear()
-                        self.dlg_flow_rout.le_6_pg4.clear()
-                        self.dlg_flow_rout.rb_1_pg1.setChecked(False)
-                        self.dlg_flow_rout.rb_2_pg1.setChecked(False)
-                        self.dlg_flow_rout.rb_3_pg1.setChecked(False)
-                        self.dlg_flow_rout.rb_1_pg4.setChecked(False)
-                        self.dlg_flow_rout.rb_2_pg4.setChecked(False)
-                        self.dlg_flow_rout.rb_3_pg4.setChecked(False)
-                        self.dlg_flow_rout.rb_4_pg4.setChecked(False)
-                        self.dlg_flow_rout.ch_1_pg4.setChecked(False)
-                        self.dlg_flow_rout.ch_2_pg4.setChecked(False)
-                        self.dlg_flow_rout.ch_3_pg4.setChecked(False)
-                        self.dlg_flow_rout.ch_4_pg4.setChecked(False)
-                        self.dlg_flow_rout.ch_5_pg4.setChecked(False)
-                        self.dlg_flow_rout.ch_6_pg4.setChecked(False)
-                        self.dlg_flow_rout.close()
-
-                    # Atualiza as variáveis para a condição de salvamento
-                    self.save_result = False
-                    break
-
-            else:
-                # Se não houver moficações nos objetos do plugin, a janela será fechada normalmente
-                self.save_result = False
-                self.dlg_flow_rout.close()
+            self.save_result = False
+            self.dlg_flow_rout.close()
 
     def clear_table(self, table, lineEdit):
         '''Esta função limpa os valores armazenados na respectiva tabela'''
