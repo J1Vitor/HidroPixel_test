@@ -2178,9 +2178,12 @@ class HidroPixel:
 
             # Finaliza execução do programa e elimina os arquivos temporários criados
             self.apaga_arquivos_temp()
+            self.dlg_exc_rain.progressBar.setValue(0)
             self.dlg_exc_rain.te_logg.clear()
             self.dlg_exc_rain.pg_par_exc_rain.setEnabled(True)
             self.dlg_exc_rain.pg_log_exc_rain.setEnabled(False)
+            end_msg = "The Hidropixel process has been canceled... Take a breath and go back to work!"
+            self.dlg_exc_rain.te_logg.append(end_msg)
             break
 
     def run_process_flow_tt(self):
@@ -2206,9 +2209,9 @@ class HidroPixel:
         # Escreve arquivo txt contento os parâmetros do modelo
         parameters_file = direct_temp + r'\parameters_flow_tt.txt'
         with open(parameters_file, 'w', encoding='utf-8') as arquivo_txt:
-            arquivo_txt.write('Regional curve method is checked:')
+            arquivo_txt.write('Regional curve method is checked,')
             arquivo_txt.write(
-                f'{1 if self.dlg_flow_tt.groupBox_3.isChecked() == True else 0}')
+                f'{1 if self.dlg_flow_tt.groupBox_3.isChecked() == True else 0}\n')
             arquivo_txt.write(
                 f'Manning coefficient for river segments without cross-section information,{self.dlg_flow_tt.le_14_pg1.text()}\n')
             arquivo_txt.write(f'Sheet flow lenght (m),30.48\n')
@@ -2349,6 +2352,7 @@ class HidroPixel:
         mensagem_log1 += f"Algorithm started at: {datatime_started}\n"
         mensagem_log1 += "--------------------------------------------------------\n"
         self.dlg_flow_tt.progressBar.setValue(10)
+
         # Cria condição de parada da execução: se o usuário clicar no botão cancel da página de log
         while True:
             # Método usado para permitir a iteração do usuário enquanto o programa está em execução
@@ -2489,6 +2493,16 @@ class HidroPixel:
                     self.dlg_flow_tt.pg_log_ftt.setEnabled(False)
                     self.apaga_arquivos_temp()
                     break
+
+            # Finaliza execução do programa e elimina os arquivos temporários criados
+            self.dlg_flow_tt.te_logg.clear()
+            self.dlg_flow_tt.progressBar.setValue(0)
+            self.dlg_flow_tt.pg_par_ftt.setEnabled(True)
+            self.dlg_flow_tt.pg_log_ftt.setEnabled(False)
+            end_msg = "The Hidropixel process has been canceled... Take a breath and go back to work!"
+            self.dlg_flow_tt.te_logg.append(end_msg)
+            self.apaga_arquivos_temp()
+            break
 
     def run_process_flow_rout(self):
         """Esta função organiza os arquivos de entrada para as rotinas em vb apartir do plugin qgis"""
@@ -2861,6 +2875,16 @@ class HidroPixel:
                 self.dlg_flow_rout.pg_log_f_rout.setEnabled(False)
                 self.apaga_arquivos_temp()
                 break
+
+            # Caso nenhuma das condicoes acima sejam verdadeira, libera a interface grafica e limpa os arquivos
+            self.dlg_flow_rout.te_logg.clear()
+            self.dlg_flow_rout.progressBar.setValue(0)
+            self.dlg_flow_rout.pg_par_f_rout.setEnabled(True)
+            self.dlg_flow_rout.pg_log_f_rout.setEnabled(False)
+            end_msg = "The Hidropixel process has been canceled... Take a breath and go back to work!"
+            self.dlg_flow_rout.te_logg.append(end_msg)
+            self.apaga_arquivos_temp()
+            break
 
     def atualiza_raster_list(self):
         """
