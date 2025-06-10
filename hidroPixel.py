@@ -308,12 +308,30 @@ class HidroPixel:
         if pasta != '':
             # Se o usário enviar um arquivo, este será armazenado na sua referida line edit
             line_edit.setText(pasta)
+
+            # Define por padrao path == working folder
+            self.dlg_save_project_flow_tt.le_2_pg1.setText(
+                self.dlg_flow_tt.le_21_pg1.text())
+            self.dlg_save_project_exc_rain.le_2_pg1.setText(
+                self.dlg_exc_rain.le_3_pg1.text())
+            self.dlg_save_project_flow_rout.le_2_pg1.setText(
+                self.dlg_flow_rout.le_3_pg1.text())
         else:
             # Caso contrário, será mostrada uma mensagem de aviso
             result = "Wait! You did not select any folder."
             QMessageBox.warning(None, "No folder selected", result)
 
         return pasta
+
+    def project_path(self):
+        """Define por padrao path == working folder para a GUI do save to project"""
+        # Define por padrao path == working folder
+        self.dlg_save_project_flow_tt.le_2_pg1.setText(
+            self.dlg_flow_tt.le_21_pg1.text())
+        self.dlg_save_project_exc_rain.le_2_pg1.setText(
+            self.dlg_exc_rain.le_3_pg1.text())
+        self.dlg_save_project_flow_rout.le_2_pg1.setText(
+            self.dlg_flow_rout.le_3_pg1.text())
 
     def carregaArquivos(self, line_edit, combobox, file_type="raster"):
         """Esta função é utilizada para adicionar os arquivos enviados pelo usuário ao plugin"""
@@ -590,6 +608,9 @@ class HidroPixel:
                 arquivo_txt.write("Add:\n")
                 arquivo_txt.write(
                     f"={self.dlg_flow_tt.ch_22_pg4.isChecked()}\n")
+                # Escreve working folder
+                arquivo_txt.write("Working Folder:\n")
+                arquivo_txt.write(f'={self.dlg_flow_tt.le_21_pg1.text()}')
 
             if function == 2:
                 # Define valor do projeto na GUI
@@ -714,6 +735,9 @@ class HidroPixel:
                 arquivo_txt.write("Selected:\n")
                 arquivo_txt.write(
                     f"={self.dlg_exc_rain.ch_6_pg4.isChecked()}\n")
+                # Escreve working folder
+                arquivo_txt.write("Working Folder:\n")
+                arquivo_txt.write(f'={self.dlg_exc_rain.le_3_pg1.text()}')
 
             if function == 3:
 
@@ -851,6 +875,9 @@ class HidroPixel:
                     arquivo_txt.write("Observed runoff (m³/s):\n")
                     arquivo_txt.write(
                         f"={self.dlg_flow_rout.le_7_pg4.text()}\n")
+                # Escreve working folder
+                arquivo_txt.write("Working Folder:\n")
+                arquivo_txt.write(f'={self.dlg_flow_rout.le_3_pg1.text()}')
 
     def read_from_project(self, function, directory):
         '''Obtem as informações a partir projeto .hpx enviado pelo usuário
@@ -978,6 +1005,7 @@ class HidroPixel:
                         str(values[43]) == 'True')
                     self.dlg_flow_tt.ch_22_pg4.setChecked(
                         str(values[44]) == 'True')
+                    self.dlg_flow_tt.le_21_pg1.setText(str(values[45]))
                     break
 
                 elif function == 2:
@@ -1064,6 +1092,7 @@ class HidroPixel:
                     self.dlg_exc_rain.le_6_pg4.setText(str(values[26]))
                     self.dlg_exc_rain.ch_6_pg4.setChecked(
                         str(values[27]) == 'True')
+                    self.dlg_exc_rain.le_3_pg1.setText(str(values[28]))
                     break
 
                 elif function == 3:
@@ -1163,6 +1192,10 @@ class HidroPixel:
                     if self.dlg_flow_rout.ch_12_pg4.isChecked():
                         self.dlg_flow_rout.le_7_pg4.setText(
                             str(values[33]))
+                        self.dlg_flow_rout.le_3_pg1.setText(str(values[34]))
+                        break
+                    else:
+                        self.dlg_flow_rout.le_3_pg1.setText(str(values[33]))
                         break
             else:
                 result = "Wait! You did not select any file."
@@ -1843,8 +1876,9 @@ class HidroPixel:
         arquivos_txt = glob.glob('*.txt')
         arquivos_rst = glob.glob('*.rst')
         arquivos_rdc = glob.glob('*.rdc')
+        arquivos_tif = glob.glob('*.tif')
 
-        # Apaga todos os arquivos .txt
+        # Apaga todos os arquivos
         for txt in arquivos_txt:
             os.remove(txt)
 
@@ -1854,10 +1888,28 @@ class HidroPixel:
         for rdc in arquivos_rdc:
             os.remove(rdc)
 
+        for tif in arquivos_tif:
+            os.remove(tif)
+
     def replace_tif_rst(self, arquivo1):
         '''Esta função modifica a extensão do parâmetro de .tif para .rst'''
         arquivo2 = arquivo1.replace('.tif', '.rst')
         return arquivo2
+
+    def is_basename_only(self, path_or_name):
+        return path_or_name == os.path.basename(path_or_name)
+
+    def caminho_completo(self, working_folder, lineEditVal):
+        is_basename = self.is_basename_only(lineEditVal)
+        if is_basename:
+            return os.path.join(working_folder, lineEditVal)
+        return lineEditVal
+
+    def define_extensao_hpx(self, caminho):
+        base, ext = os.path.splitext(caminho)
+        if ext == '':
+            caminho = caminho + '.hpx'
+        return caminho
 
     def run_process_rainfall_interpol(self):
         """Esta função configura a execução da rotina Rainfall Interpolation do vb.net, gerando os arquivos necessários à execução daquela"""
@@ -1913,7 +1965,10 @@ class HidroPixel:
 
             # Se o usuário escolheu a opção para gerar o arquivo da chuva interpolada em txt, ele será salvo no caminho fornecido
             if self.map_cond == 0:
-                os.rename(self.output1_ri, self.dlg_exc_rain.le_4_pg_ri.text())
+                output_fin = self.caminho_completo(
+                    self.dlg_exc_rain.le_3_pg1.text(), self.dlg_exc_rain.le_4_pg_ri.text())
+                shutil.move(self.output1_ri,
+                            output_fin)
 
             # Se o usuário escolheu para gerar os mapas da precipitação interpolada, eles serão enviados para a pasta informada
             else:
@@ -1979,7 +2034,7 @@ class HidroPixel:
         # leh cn map tif gera cn map rst ascii
         cn_file = direct_temp + r'\CN_map.rst'
         self.leh_geotiff_escreve_ascii(
-            self.lista_rasters_dir[self.dlg_exc_rain.cb_2_pg2.currentIndex()], cn_file, 'int')
+            self.lista_rasters_dir[self.dlg_exc_rain.cb_2_pg2.currentIndex()], cn_file, 'float')
 
         # move arquivo da precipitação para a pasta temp
         if self.dlg_exc_rain.rb_1_pg1.isChecked():
@@ -2099,62 +2154,79 @@ class HidroPixel:
 
                 # move o arquivo txt contendo o hietograma de chuva excedente para o diretório informado
                 if self.dlg_exc_rain.ch_6_pg4.isChecked():
+                    # Verifica se o user enviou o diretorio do arquivo ou apenas o nome (nesse caso, working folder != '')
+                    is_basename = self.is_basename_only(
+                        self.dlg_exc_rain.le_6_pg4.text())
 
-                    os.rename(self.output6_exec_rain,
-                              self.dlg_exc_rain.le_6_pg4.text())
+                    # Se for apenas basename, concatena working folder com valor informado (deve ter extensao)
+                    if is_basename == True:
+                        output_file = os.path.join(
+                            self.dlg_exc_rain.le_3_pg1.text(), self.dlg_exc_rain.le_6_pg4.text())
+                        shutil.move(self.output6_exec_rain, output_file)
+                    else:
+                        shutil.move(self.output6_exec_rain,
+                                    self.dlg_exc_rain.le_6_pg4.text())
 
-                # Converte arquivos de saída de .rst ascii para tif
+                # Converte arquivos de saída de .rst ascii para geotif
                 if self.dlg_exc_rain.le_6_pg4.text() != '' or self.dlg_exc_rain.le_5_pg4.text() != '':
-                    # Define parâmetros da função que transforma .rst(ascii) para geotiff: Cria arquivos de saída no diretório fornecido pelo user
-
-                    if self.dlg_exc_rain.ch_1_pg4.isChecked() == True:
-                        # watershed pixels ID
+                    if self.dlg_exc_rain.ch_1_pg4.isChecked():
+                        output_path = self.caminho_completo(
+                            self.dlg_exc_rain.le_3_pg1.text(), self.dlg_exc_rain.le_1_pg4.text())
                         self.leh_rst_escreve_geotiff(
-                            self.output1_exec_rain, self.dlg_exc_rain.le_1_pg4.text(), 'int')
+                            self.output1_exec_rain, output_path, 'int')
 
-                    if self.dlg_exc_rain.ch_2_pg4.isChecked() == True:
-                        # Map_of_maximum_potential_retention
+                    if self.dlg_exc_rain.ch_2_pg4.isChecked():
+                        output_path = self.caminho_completo(
+                            self.dlg_exc_rain.le_3_pg1.text(), self.dlg_exc_rain.le_2_pg4.text())
                         self.leh_rst_escreve_geotiff(
-                            self.output2_exec_rain, self.dlg_exc_rain.le_2_pg4.text(), 'float')
+                            self.output2_exec_rain, output_path, 'float')
 
-                    if self.dlg_exc_rain.ch_3_pg4.isChecked() == True:
-                        # Map_of_initial_abstraction
+                    if self.dlg_exc_rain.ch_3_pg4.isChecked():
+                        output_path = self.caminho_completo(
+                            self.dlg_exc_rain.le_3_pg1.text(), self.dlg_exc_rain.le_3_pg4.text())
                         self.leh_rst_escreve_geotiff(
-                            self.output3_exec_rain, self.dlg_exc_rain.le_3_pg4.text(), 'float')
+                            self.output3_exec_rain, output_path, 'float')
 
-                    if self.dlg_exc_rain.ch_4_pg4.isChecked() == True:
-                        # Map_of_total_rainfall
+                    if self.dlg_exc_rain.ch_4_pg4.isChecked():
+                        output_path = self.caminho_completo(
+                            self.dlg_exc_rain.le_3_pg1.text(), self.dlg_exc_rain.le_4_pg4.text())
                         self.leh_rst_escreve_geotiff(
-                            self.output4_exec_rain, self.dlg_exc_rain.le_4_pg4.text(), 'float')
+                            self.output4_exec_rain, output_path, 'float')
 
-                    if self.dlg_exc_rain.ch_5_pg4.isChecked() == True:
-                        # Map_of_total_excess_rainfall
+                    if self.dlg_exc_rain.ch_5_pg4.isChecked():
+                        output_path = self.caminho_completo(
+                            self.dlg_exc_rain.le_3_pg1.text(), self.dlg_exc_rain.le_5_pg4.text())
                         self.leh_rst_escreve_geotiff(
-                            self.output5_exec_rain, self.dlg_exc_rain.le_5_pg4.text(), 'float')
+                            self.output5_exec_rain, output_path, 'float')
 
                     # Atualiza progressBar
                     self.dlg_exc_rain.progressBar.setValue(80)
 
-                    # Adição dos arquivos gerados ao QGIS
-                    if self.dlg_exc_rain.ch_7_pg4.isChecked() == True:
-                        # Adiciona ao QGIS o output: watershed pixels ID
-                        self.adiciona_layer(self.dlg_exc_rain.le_1_pg4.text())
+                    # Adiciona layers ao QGIS
+                    if self.dlg_exc_rain.ch_7_pg4.isChecked():
+                        layer_path = self.caminho_completo(
+                            self.dlg_exc_rain.le_3_pg1.text(), self.dlg_exc_rain.le_1_pg4.text())
+                        self.adiciona_layer(layer_path)
 
-                    if self.dlg_exc_rain.ch_8_pg4.isChecked() == True:
-                        # Adiciona ao QGIS o output: Map_of_maximum_potential_retention
-                        self.adiciona_layer(self.dlg_exc_rain.le_2_pg4.text())
+                    if self.dlg_exc_rain.ch_8_pg4.isChecked():
+                        layer_path = self.caminho_completo(
+                            self.dlg_exc_rain.le_3_pg1.text(), self.dlg_exc_rain.le_2_pg4.text())
+                        self.adiciona_layer(layer_path)
 
-                    if self.dlg_exc_rain.ch_9_pg4.isChecked() == True:
-                        # Adiciona ao QGIS o output: Map_of_initial_abstraction
-                        self.adiciona_layer(self.dlg_exc_rain.le_3_pg4.text())
+                    if self.dlg_exc_rain.ch_9_pg4.isChecked():
+                        layer_path = self.caminho_completo(
+                            self.dlg_exc_rain.le_3_pg1.text(), self.dlg_exc_rain.le_3_pg4.text())
+                        self.adiciona_layer(layer_path)
 
-                    if self.dlg_exc_rain.ch_10_pg4.isChecked() == True:
-                        # Adiciona ao QGIS o output: Map_of_total_rainfall
-                        self.adiciona_layer(self.dlg_exc_rain.le_4_pg4.text())
+                    if self.dlg_exc_rain.ch_10_pg4.isChecked():
+                        layer_path = self.caminho_completo(
+                            self.dlg_exc_rain.le_3_pg1.text(), self.dlg_exc_rain.le_4_pg4.text())
+                        self.adiciona_layer(layer_path)
 
-                    if self.dlg_exc_rain.ch_11_pg4.isChecked() == True:
-                        # Adiciona ao QGIS o output: Map_of_total_excess_rainfall
-                        self.adiciona_layer(self.dlg_exc_rain.le_5_pg4.text())
+                    if self.dlg_exc_rain.ch_11_pg4.isChecked():
+                        layer_path = self.caminho_completo(
+                            self.dlg_exc_rain.le_3_pg1.text(), self.dlg_exc_rain.le_5_pg4.text())
+                        self.adiciona_layer(layer_path)
 
                     # Adiciona as informação ao text edit
                     self.dlg_exc_rain.te_logg.append(
@@ -2415,64 +2487,80 @@ class HidroPixel:
 
                     # Move e renomeia arquivo txt com as características dos trechos de rios semelhantes
                     if self.dlg_flow_tt.ch_8_pg4.isChecked() == True and os.path.isfile(self.output3_flow_tt) == True:
-                        shutil.copy(self.output3_flow_tt,
-                                    self.dlg_flow_tt.le_8_pg4.text())
+
+                        # Verifica se o user enviou o diretorio do arquivo ou apenas o nome (nesse caso, working folder != '')
+                        is_basename = self.is_basename_only(
+                            self.dlg_flow_tt.le_8_pg4.text())
+                        # Se for apenas basename, concatena working folder com valor informado (deve ter extensao)
+                        if is_basename == True:
+                            output_file_1 = os.path.join(
+                                self.dlg_flow_tt.le_21_pg1.text(), self.dlg_flow_tt.le_8_pg4.text())
+                            shutil.copy(self.output3_flow_tt,
+                                        output_file_1)
+                        else:
+                            shutil.copy(self.output3_flow_tt,
+                                        self.dlg_flow_tt.le_8_pg4.text())
 
                     if os.path.isfile(self.output6_flow_tt) == True:
                         # Define parâmetros da função que transforma .rst(ascii) para geotiff: Cria arquivos de saída no diretório fornecido pelo user
-                        if self.dlg_flow_tt.ch_6_pg4.isChecked() == True:
-                            # slope
+                        # Slope
+                        if self.dlg_flow_tt.ch_6_pg4.isChecked():
+                            output_path = self.caminho_completo(self.dlg_flow_tt.le_21_pg1.text(),
+                                                                self.dlg_flow_tt.le_6_pg4.text())
                             self.leh_rst_escreve_geotiff(
-                                self.output1_flow_tt, self.dlg_flow_tt.le_6_pg4.text(), 'float')
+                                self.output1_flow_tt, output_path, 'float')
 
-                        if self.dlg_flow_tt.ch_7_pg4.isChecked() == True:
-                            # river_segmentsself.
+                        # River segments
+                        if self.dlg_flow_tt.ch_7_pg4.isChecked():
+                            output_path = self.caminho_completo(self.dlg_flow_tt.le_21_pg1.text(),
+                                                                self.dlg_flow_tt.le_7_pg4.text())
                             self.leh_rst_escreve_geotiff(
-                                self.output2_flow_tt, self.dlg_flow_tt.le_7_pg4.text(), 'int')
+                                self.output2_flow_tt, output_path, 'int')
 
-                        if self.dlg_flow_tt.ch_9_pg4.isChecked() == True:
-                            # River_cross-sectional_area
+                        # River cross-sectional area
+                        if self.dlg_flow_tt.ch_9_pg4.isChecked():
+                            output_path = self.caminho_completo(self.dlg_flow_tt.le_21_pg1.text(),
+                                                                self.dlg_flow_tt.le_9_pg4.text())
                             self.leh_rst_escreve_geotiff(
-                                self.output4_flow_tt, self.dlg_flow_tt.le_9_pg4.text(), 'float')
+                                self.output4_flow_tt, output_path, 'float')
 
-                        if self.dlg_flow_tt.ch_10_pg4.isChecked() == True:
-                            # River_bankfull_width
+                        # River bankfull width
+                        if self.dlg_flow_tt.ch_10_pg4.isChecked():
+                            output_path = self.caminho_completo(self.dlg_flow_tt.le_21_pg1.text(),
+                                                                self.dlg_flow_tt.le_10_pg4.text())
                             self.leh_rst_escreve_geotiff(
-                                self.output5_flow_tt, self.dlg_flow_tt.le_10_pg4.text(), 'float')
+                                self.output5_flow_tt, output_path, 'float')
 
-                        if self.dlg_flow_tt.ch_11_pg4.isChecked() == True:
-                            # Flow_travel_time
+                        # Flow travel time
+                        if self.dlg_flow_tt.ch_11_pg4.isChecked():
+                            output_path = self.caminho_completo(self.dlg_flow_tt.le_21_pg1.text(),
+                                                                self.dlg_flow_tt.le_11_pg4.text())
                             self.leh_rst_escreve_geotiff(
-                                self.output6_flow_tt, self.dlg_flow_tt.le_11_pg4.text(), 'float')
+                                self.output6_flow_tt, output_path, 'float')
 
                         # Atualiza progressBar
                         self.dlg_flow_tt.progressBar.setValue(80)
 
-                        # Adição dos arquivos gerados ao QGIS
-                        if self.dlg_flow_tt.ch_17_pg4.isChecked() == True:
-                            # Adiciona ao QGIS o output: slope
-                            self.adiciona_layer(
-                                self.dlg_flow_tt.le_6_pg4.text())
+                        # Adiciona arquivos ao QGIS
+                        if self.dlg_flow_tt.ch_17_pg4.isChecked():
+                            self.adiciona_layer(self.caminho_completo(self.dlg_flow_tt.le_21_pg1.text(),
+                                                                      self.dlg_flow_tt.le_6_pg4.text()))
 
-                        if self.dlg_flow_tt.ch_18_pg4.isChecked() == True:
-                            # Adiciona ao QGIS o output: river_segments
-                            self.adiciona_layer(
-                                self.dlg_flow_tt.le_7_pg4.text())
+                        if self.dlg_flow_tt.ch_18_pg4.isChecked():
+                            self.adiciona_layer(self.caminho_completo(self.dlg_flow_tt.le_21_pg1.text(),
+                                                                      self.dlg_flow_tt.le_7_pg4.text()))
 
-                        if self.dlg_flow_tt.ch_20_pg4.isChecked() == True:
-                            # Adiciona ao QGIS o output: River_cross-sectional_area
-                            self.adiciona_layer(
-                                self.dlg_flow_tt.le_9_pg4.text())
+                        if self.dlg_flow_tt.ch_20_pg4.isChecked():
+                            self.adiciona_layer(self.caminho_completo(self.dlg_flow_tt.le_21_pg1.text(),
+                                                                      self.dlg_flow_tt.le_9_pg4.text()))
 
-                        if self.dlg_flow_tt.ch_21_pg4.isChecked() == True:
-                            # Adiciona ao QGIS o output: River_bankfull_width
-                            self.adiciona_layer(
-                                self.dlg_flow_tt.le_10_pg4.text())
+                        if self.dlg_flow_tt.ch_21_pg4.isChecked():
+                            self.adiciona_layer(self.caminho_completo(self.dlg_flow_tt.le_21_pg1.text(),
+                                                                      self.dlg_flow_tt.le_10_pg4.text()))
 
-                        if self.dlg_flow_tt.ch_22_pg4.isChecked() == True:
-                            # Adiciona ao QGIS o output: flow travel time
-                            self.adiciona_layer(
-                                self.dlg_flow_tt.le_11_pg4.text())
+                        if self.dlg_flow_tt.ch_22_pg4.isChecked():
+                            self.adiciona_layer(self.caminho_completo(self.dlg_flow_tt.le_21_pg1.text(),
+                                                                      self.dlg_flow_tt.le_11_pg4.text()))
 
                         # Adiciona as informação ao text edit
                         self.dlg_flow_tt.te_logg.append(
@@ -2510,7 +2598,7 @@ class HidroPixel:
         direct_temp = self.diretorio_atual + r'\temp'
 
         # Escreve arquivos de parâmetros
-        parameters_flow_rout = direct_temp + r'\parameters_exc_rainf.txt'
+        parameters_flow_rout = direct_temp + r'\parameters_flow_rout.txt'
         with open(parameters_flow_rout, 'w', encoding='utf-8') as arquivo_txt:
             arquivo_txt.write(
                 f"Rainfall time step (min),{self.dlg_flow_rout.le_2_pg1.text()}\n")
@@ -2536,7 +2624,7 @@ class HidroPixel:
             self.lista_rasters_dir[self.dlg_flow_rout.cb_3_pg2.currentIndex()], flow_tt_file, 'float')
 
         hietograma_file = direct_temp + r'\excess_hyetographs.txt'
-        shutil.copy(self.dlg_flow_rout.le_4_pg2.text(), hietograma_file)
+        shutil.copy2(self.dlg_flow_rout.le_4_pg2.text(), hietograma_file)
 
         total_exc_rain_file = direct_temp + r'\total_excess_rainfall.rst'
         self.leh_geotiff_escreve_ascii(
@@ -2585,10 +2673,96 @@ class HidroPixel:
 
     def plot_hidrogramas_e_metricas(self):
         """Esta função gera o hidrograma calculado vs observado e adiciona as métricas de comparação"""
+
         # leh hidrograma observado
         cont = 0
-        if self.dlg_flow_rout.ch_12_pg4.isChecked() == True and self.dlg_flow_rout.le_6_pg4.text() != '' and self.dlg_flow_rout.le_7_pg4.text() == '':
-            hidrograma_calc = self.dlg_flow_rout.le_6_pg4.text()
+        # Plota, se marcado, o hidrograma calculado e o observado e calcula as metricas
+        if self.dlg_flow_rout.ch_12_pg4.isChecked() == True and self.dlg_flow_rout.le_6_pg4.text() != '' and self.dlg_flow_rout.le_7_pg4.text() != '':
+            hidrograma_obs = self.caminho_completo(
+                self.dlg_flow_rout.le_3_pg1.text(), self.dlg_flow_rout.le_7_pg4.text())
+            hidrograma_calc = self.output3_flow_rout
+
+            # Leitura do hidrograma observado
+            with open(hidrograma_obs, 'r', encoding='ISO-8859-1') as f:
+                header_obs = f.readline().strip().split(',')
+                nomes_obs = header_obs[1:]  # descarta o tempo
+                data_obs = np.loadtxt(f, delimiter=',')
+            tempos_obs = data_obs[:, 0]
+            vazoes_obs = data_obs[:, 1:]  # pode ter várias colunas
+
+            # Leitura do hidrograma calculado
+            with open(hidrograma_calc, 'r', encoding='ISO-8859-1') as f:
+                header_calc = f.readline().strip().split(',')
+                nomes_calc = header_calc[1:]
+                data_calc = np.loadtxt(f, delimiter=',')
+            tempos_calc = data_calc[:, 0]
+            vazoes_calc = data_calc[:, 1:]
+
+            # reshape caso o usuario envie um arquivo com dimensao maior
+            n_obs = vazoes_obs.shape[0]
+            n_calc = vazoes_calc.shape[0]
+            n = min(n_obs, n_calc)
+
+            vazoes_obs = vazoes_obs[:n]
+            tempos_obs = tempos_obs[:n]
+
+            vazoes_calc = vazoes_calc[:n]
+            tempos_calc = tempos_calc[:n]
+
+            #  Cálculo de delta_t
+            delta_t = tempos_obs[1] - tempos_obs[0]
+
+            # Plotagem
+            plt.figure(figsize=(8, 6))
+            plt.gcf().canvas.manager.window.setWindowTitle('Resulting Watershed Hydrograph')
+            plt.title('HYDROGRAPH')
+
+            # Observado (primeira coluna de vazões observadas) em preto
+            plt.plot(tempos_obs, vazoes_obs[:, 0], color='black',
+                     linestyle='-', label='Observed Runoff')
+
+            # Calculado total (primeira coluna de vazões calculadas) em vermelho
+            plt.plot(tempos_calc, vazoes_calc[:, 0], color='red',
+                     linestyle='-', label='Calculated Runoff')
+
+            plt.xlabel('time (min)')
+            plt.ylabel('Q(m³/s)')
+
+            # legenda no canto superior direito, vertical e fonte reduzida
+            plt.legend(loc='upper right', fontsize='small')
+
+            plt.grid()
+
+            # Métricas de comparação
+            q_obs = vazoes_obs[:, 0]
+            q_calc = vazoes_calc[:, 0]
+            er_vazao_pico = (np.max(q_calc) - np.max(q_obs)) / \
+                np.max(q_obs) * 100
+            er_tempo_pico = ((tempos_calc[np.argmax(
+                q_calc)] - tempos_obs[np.argmax(q_obs)]) / tempos_obs[np.argmax(q_obs)]) * 100
+            nse = 1 - (np.sum((q_calc - q_obs)**2) /
+                       np.sum((q_obs - np.mean(q_obs))**2))
+            rmse = np.sqrt(np.mean((q_calc - q_obs)**2))
+            vol_obs = np.sum(q_obs) * delta_t
+            vol_calc = np.sum(q_calc) * delta_t
+            er_vol = (vol_calc - vol_obs) / vol_obs * 100
+
+            # mantém as posições originais das métricas
+            plt.figtext(0.1, 0.25, f'RMSE: {rmse:.2f}m³/s', fontsize=10)
+            plt.figtext(0.1, 0.20, f'NS coefficient: {nse:.2f}', fontsize=10)
+            plt.figtext(
+                0.1, 0.15, f'relative peak error: {er_vazao_pico:.2f}%', fontsize=10)
+            plt.figtext(
+                0.1, 0.10, f'relative time to peak error: {er_tempo_pico:.2f}%', fontsize=10)
+            plt.figtext(
+                0.1, 0.05, f'relative volume error: {er_vol:.2f}%', fontsize=10)
+
+            plt.subplots_adjust(bottom=0.40)
+            plt.show()
+
+        else:
+            hidrograma_calc = self.output3_flow_rout
+
             with open(hidrograma_calc, 'r', encoding='ISO-8859-1') as f:
                 header = f.readline().strip().split(',')
 
@@ -2613,160 +2787,11 @@ class HidroPixel:
             plt.title('HYDROGRAPH')
 
             # Plot dos hidrogramas calculados
-            for i in range(1, data.shape[1]):
-                plt.plot(tempos, data[:, i], label=header[i].strip())
+            plt.plot(tempos, data[:, 1], label=header[1].strip())
             plt.xlabel('time (min)')
             plt.ylabel('Q (m³/s)')
             plt.legend()
             plt.grid()
-            plt.show()
-        # Plota, se marcado, o hidrograma calculado e o observado e calcula as metricas
-        elif self.dlg_flow_rout.ch_12_pg4.isChecked() == True and self.dlg_flow_rout.le_6_pg4.text() != '' and self.dlg_flow_rout.le_7_pg4.text() == '' and self.dlg_flow_rout.cb_4_pg2.currentText() == '':
-            hidrograma_obs = self.dlg_flow_rout.le_7_pg4.text()
-            hidrograma_calc = self.dlg_flow_rout.le_6_pg4.text()
-
-            # Leitura do hidrograma observado
-            with open(hidrograma_obs, 'r', encoding='ISO-8859-1') as f:
-                header_obs = f.readline().strip().split(',')
-                nomes_obs = header_obs[1:]  # descarta o tempo
-                data_obs = np.loadtxt(f, delimiter=',')
-            tempos_obs = data_obs[:, 0]
-            vazoes_obs = data_obs[:, 1:]  # pode ter várias colunas
-
-            # Leitura do hidrograma calculado
-            with open(hidrograma_calc, 'r', encoding='ISO-8859-1') as f:
-                header_calc = f.readline().strip().split(',')
-                nomes_calc = header_calc[1:]
-                data_calc = np.loadtxt(f, delimiter=',')
-            tempos_calc = data_calc[:, 0]
-            vazoes_calc = data_calc[:, 1:]
-
-            #  Cálculo de delta_t
-            delta_t = tempos_obs[1] - tempos_obs[0]
-
-            # Plotagem
-            plt.figure(figsize=(8, 6))
-            plt.gcf().canvas.manager.window.setWindowTitle('Resulting Watershed Hydrograph')
-            plt.title('HYDROGRAPH')
-
-            # Observado (primeira coluna de vazões observadas) em preto
-            plt.plot(tempos_obs, vazoes_obs[:, 0], color='black',
-                     linestyle='-', label='Observed Runoff')
-
-            # Calculado total (primeira coluna de vazões calculadas) em vermelho
-            plt.plot(tempos_calc, vazoes_calc[:, 0], color='red',
-                     linestyle='-', label='Calculated Runoff')
-
-            plt.xlabel('time (min)')
-            plt.ylabel('Q(m³/s)')
-
-            # legenda no canto superior direito, vertical e fonte reduzida
-            plt.legend(loc='upper right', fontsize='small')
-
-            plt.grid()
-
-            # Métricas de comparação
-            q_obs = vazoes_obs[:, 0]
-            q_calc = vazoes_calc[:, 0]
-            er_vazao_pico = (np.max(q_calc) - np.max(q_obs)) / \
-                np.max(q_obs) * 100
-            er_tempo_pico = ((tempos_calc[np.argmax(
-                q_calc)] - tempos_obs[np.argmax(q_obs)]) / tempos_obs[np.argmax(q_obs)]) * 100
-            nse = 1 - (np.sum((q_calc - q_obs)**2) /
-                       np.sum((q_obs - np.mean(q_obs))**2))
-            rmse = np.sqrt(np.mean((q_calc - q_obs)**2))
-            vol_obs = np.sum(q_obs) * delta_t
-            vol_calc = np.sum(q_calc) * delta_t
-            er_vol = (vol_calc - vol_obs) / vol_obs * 100
-
-            # mantém as posições originais das métricas
-            plt.figtext(0.1, 0.25, f'RMSE: {rmse:.2f}m³/s', fontsize=10)
-            plt.figtext(0.1, 0.20, f'NS coefficient: {nse:.2f}', fontsize=10)
-            plt.figtext(
-                0.1, 0.15, f'relative peak error: {er_vazao_pico:.2f}%', fontsize=10)
-            plt.figtext(
-                0.1, 0.10, f'relative time to peak error: {er_tempo_pico:.2f}%', fontsize=10)
-            plt.figtext(
-                0.1, 0.05, f'relative volume error: {er_vol:.2f}%', fontsize=10)
-
-            plt.subplots_adjust(bottom=0.40)
-            plt.show()
-
-        # Plota, se marcado, o hidrograma observado, calculado e tambem as vazoes por classe e calcula as metricas da vazao obs e calculada (sera extinto)
-        elif self.dlg_flow_rout.ch_12_pg4.isChecked() == True and self.dlg_flow_rout.le_6_pg4.text() != '' and self.dlg_flow_rout.le_7_pg4.text() != '' and self.dlg_flow_rout.cb_4_pg2.currentText() != '':
-            hidrograma_obs = self.dlg_flow_rout.le_7_pg4.text()
-            hidrograma_calc = self.dlg_flow_rout.le_6_pg4.text()
-
-            # Leitura do hidrograma observado
-            with open(hidrograma_obs, 'r', encoding='ISO-8859-1') as f:
-                header_obs = f.readline().strip().split(',')
-                nomes_obs = header_obs[1:]  # descarta o tempo
-                data_obs = np.loadtxt(f, delimiter=',')
-            tempos_obs = data_obs[:, 0]
-            vazoes_obs = data_obs[:, 1:]  # pode ter várias colunas
-
-            # Leitura do hidrograma calculado
-            with open(hidrograma_calc, 'r', encoding='ISO-8859-1') as f:
-                header_calc = f.readline().strip().split(',')
-                nomes_calc = header_calc[1:]
-                data_calc = np.loadtxt(f, delimiter=',')
-            tempos_calc = data_calc[:, 0]
-            vazoes_calc = data_calc[:, 1:]
-
-            #  Cálculo de delta_t
-            delta_t = tempos_obs[1] - tempos_obs[0]
-
-            # Plotagem
-            plt.figure(figsize=(8, 6))
-            plt.gcf().canvas.manager.window.setWindowTitle('Resulting Watershed Hydrograph')
-            plt.title('HYDROGRAPH')
-
-            # Observado (primeira coluna de vazões observadas) em preto
-            plt.plot(tempos_obs, vazoes_obs[:, 0], color='black',
-                     linestyle='-', label='Observed Runoff')
-
-            # Calculado total (primeira coluna de vazões calculadas) em vermelho
-            plt.plot(tempos_calc, vazoes_calc[:, 0], color='red',
-                     linestyle='-', label='Calculated Runoff')
-
-            # As demais classes calculadas, cada uma com estilo contínuo e cor padrão do matplotlib
-            for j in range(1, vazoes_calc.shape[1]):
-                plt.plot(tempos_calc, vazoes_calc[:, j],
-                         linestyle='-', label=nomes_calc[j])
-
-            plt.xlabel('time (min)')
-            plt.ylabel('Q(m³/s)')
-
-            # legenda no canto superior direito, vertical e fonte reduzida
-            plt.legend(loc='upper right', fontsize='small')
-
-            plt.grid()
-
-            # Métricas de comparação
-            q_obs = vazoes_obs[:, 0]
-            q_calc = vazoes_calc[:, 0]
-            er_vazao_pico = (np.max(q_calc) - np.max(q_obs)) / \
-                np.max(q_obs) * 100
-            er_tempo_pico = ((tempos_calc[np.argmax(
-                q_calc)] - tempos_obs[np.argmax(q_obs)]) / tempos_obs[np.argmax(q_obs)]) * 100
-            nse = 1 - (np.sum((q_calc - q_obs)**2) /
-                       np.sum((q_obs - np.mean(q_obs))**2))
-            rmse = np.sqrt(np.mean((q_calc - q_obs)**2))
-            vol_obs = np.sum(q_obs) * delta_t
-            vol_calc = np.sum(q_calc) * delta_t
-            er_vol = (vol_calc - vol_obs) / vol_obs * 100
-
-            # mantém as posições originais das métricas
-            plt.figtext(0.1, 0.25, f'RMSE: {rmse:.2f}m³/s', fontsize=10)
-            plt.figtext(0.1, 0.20, f'NS coefficient: {nse:.2f}', fontsize=10)
-            plt.figtext(
-                0.1, 0.15, f'relative peak error: {er_vazao_pico:.2f}%', fontsize=10)
-            plt.figtext(
-                0.1, 0.10, f'relative time to peak error: {er_tempo_pico:.2f}%', fontsize=10)
-            plt.figtext(
-                0.1, 0.05, f'relative volume error: {er_vol:.2f}%', fontsize=10)
-
-            plt.subplots_adjust(bottom=0.40)
             plt.show()
 
     def run_flow_routing(self):
@@ -2828,33 +2853,48 @@ class HidroPixel:
 
                 # Copia e renomeia arquivo txt do hidrograma final
                 if self.dlg_flow_rout.ch_6_pg4.isChecked() == True and self.dlg_flow_rout.le_6_pg4.text() != '':
-                    shutil.copy(self.output3_flow_rout,
-                                self.dlg_flow_rout.le_6_pg4.text())
+                    # Verifica se o user enviou o diretorio do arquivo ou apenas o nome (nesse caso, working folder != '')
+                    is_basename = self.is_basename_only(
+                        self.dlg_flow_rout.le_6_pg4.text())
 
-                if self.dlg_flow_rout.le_6_pg4.text() != '':
+                    # Se for apenas basename, concatena working folder com valor informado (deve ter extensao)
+                    if is_basename == True:
+                        output_file_1 = os.path.join(
+                            self.dlg_flow_rout.le_3_pg1.text(), self.dlg_flow_rout.le_6_pg4.text())
+                        shutil.copy2(self.output3_flow_rout, output_file_1)
+
+                    else:
+                        shutil.copy2(self.output3_flow_rout,
+                                     self.dlg_flow_rout.le_6_pg4.text())
+
                     # Define parâmetros da função que transforma .rst(ascii) para geotiff: Cria arquivos de saída no diretório fornecido pelo user
-                    if self.dlg_flow_rout.ch_4_pg4.isChecked() == True:
-                        # peak discharge
+                    # Peak discharge
+                    if self.dlg_flow_rout.ch_4_pg4.isChecked():
+                        output_path = self.caminho_completo(
+                            self.dlg_flow_rout.le_3_pg1.text(), self.dlg_flow_rout.le_4_pg4.text())
                         self.leh_rst_escreve_geotiff(
-                            self.output1_flow_rout, self.dlg_flow_rout.le_4_pg4.text(), 'float')
+                            self.output1_flow_rout, output_path, 'float')
 
-                    if self.dlg_flow_rout.ch_5_pg4.isChecked() == True:
-                        # runboff volume
+                    # Runoff volume
+                    if self.dlg_flow_rout.ch_5_pg4.isChecked():
+                        output_path = self.caminho_completo(
+                            self.dlg_flow_rout.le_3_pg1.text(), self.dlg_flow_rout.le_5_pg4.text())
                         self.leh_rst_escreve_geotiff(
-                            self.output2_flow_rout, self.dlg_flow_rout.le_5_pg4.text(), 'float')
+                            self.output2_flow_rout, output_path, 'float')
 
-                        # Adição dos arquivos gerados ao QGIS
-                    if self.dlg_flow_rout.ch_10_pg4.isChecked() == True:
-                        # Adiciona ao QGIS o output: slope
-                        self.adiciona_layer(self.dlg_flow_rout.le_4_pg4.text())
+                    # Adição dos arquivos gerados ao QGIS
+                    if self.dlg_flow_rout.ch_10_pg4.isChecked():
+                        layer_path = self.caminho_completo(
+                            self.dlg_flow_rout.le_3_pg1.text(), self.dlg_flow_rout.le_4_pg4.text())
+                        self.adiciona_layer(layer_path)
 
-                    if self.dlg_flow_rout.ch_11_pg4.isChecked() == True:
-                        # Adiciona ao QGIS o output: slope
-                        self.adiciona_layer(self.dlg_flow_rout.le_5_pg4.text())
+                    if self.dlg_flow_rout.ch_11_pg4.isChecked():
+                        layer_path = self.caminho_completo(
+                            self.dlg_flow_rout.le_3_pg1.text(), self.dlg_flow_rout.le_5_pg4.text())
+                        self.adiciona_layer(layer_path)
 
-                    # Chama função que gera hidrograma final
-                    if self.dlg_flow_rout.ch_12_pg4.isChecked() == True:
-                        self.plot_hidrogramas_e_metricas()
+                    # Chama funcao para plot dos hidrogramas
+                    self.plot_hidrogramas_e_metricas()
 
                     # Adiciona as informação ao text edit
                     self.dlg_flow_rout.te_logg.append(
@@ -3083,7 +3123,20 @@ class HidroPixel:
         """Organiza logica de execucao da rotina que salva projeto .hpx"""
         # So salva se nome e diretorio do projeto for fornecido
         if interface.le_1_pg1.text() != '' and interface.le_2_pg1.text() != '':
-            self.save_to_project(function, interface.le_2_pg1.text())
+
+            txt2 = interface.le_2_pg1.text()
+
+            if os.path.isdir(txt2):
+                file_name = os.path.join(txt2, interface.le_1_pg1.text())
+                file_name = self.define_extensao_hpx(file_name)
+
+            else:
+                file_name = txt2
+                # Se não tiver extensão, adiciona
+                file_name = self.define_extensao_hpx(file_name)
+
+            self.save_to_project(function, file_name)
+
             QMessageBox.information(
                 None, "Project saved", "Operation completed successfully", QMessageBox.Ok)
         else:
@@ -3142,8 +3195,6 @@ class HidroPixel:
 
             # self.dlg_hidro_pixel.btn_help.clicked.connect()
             '''Configura os botões da página da rotina do flow travel time'''
-            # Conecte os botões à função de destaque
-
             # Chama páginas da GUI e função de mudanca de estilo dos botoes
             self.dlg_flow_tt.btn_config.clicked.connect(
                 lambda: self.SsButoes(self.dlg_flow_tt.btn_config, self.dlg_flow_tt))
@@ -3205,10 +3256,19 @@ class HidroPixel:
                 lambda: self.save_buttons(self.dlg_flow_tt.le_11_pg4))
 
             # configura botões de salvar e salvar para um arquivo: flow travel time
+            # Chama funcao para definir valor de path da GUI save to project
+            self.dlg_flow_tt.btn_save_file_pg1.clicked.connect(
+                lambda: self.project_path())
             self.dlg_flow_tt.btn_save_file_pg1.clicked.connect(
                 lambda: self.dlg_save_project_flow_tt.show())
+
+            self.dlg_flow_tt.btn_save_file_pg2.clicked.connect(
+                lambda: self.project_path())
             self.dlg_flow_tt.btn_save_file_pg2.clicked.connect(
                 lambda: self.dlg_save_project_flow_tt.show())
+
+            self.dlg_flow_tt.btn_save_file_pg4.clicked.connect(
+                lambda: self.project_path())
             self.dlg_flow_tt.btn_save_file_pg4.clicked.connect(
                 lambda: self.dlg_save_project_flow_tt.show())
 
@@ -3284,7 +3344,6 @@ class HidroPixel:
                 lambda: self.close_gui(1))
 
             '''Configura os botões da página da rotina excess rainfall'''
-
             # Configura botões gerais das páginas da rotina excess rainfall e a função de mudança de estilo
             self.dlg_exc_rain.btn_config.clicked.connect(lambda: self.SsButoes(
                 self.dlg_exc_rain.btn_config, self.dlg_exc_rain, page=1))
@@ -3342,12 +3401,24 @@ class HidroPixel:
                 lambda: self.carregaArquivos(self.dlg_exc_rain.le_4_pg2, 0, file_type='text'))
 
             # configura botões de salvar e salvar para um arquivo: excess rainfall
+            # Chama funcao para definir valor de path da GUI save to project
+            self.dlg_exc_rain.btn_save_file_pg1.clicked.connect(
+                lambda: self.project_path())
             self.dlg_exc_rain.btn_save_file_pg1.clicked.connect(
                 lambda: self.dlg_save_project_exc_rain.show())
+
+            self.dlg_exc_rain.btn_save_file_pg_ri.clicked.connect(
+                lambda: self.project_path())
             self.dlg_exc_rain.btn_save_file_pg_ri.clicked.connect(
                 lambda: self.dlg_save_project_exc_rain.show())
+
+            self.dlg_exc_rain.btn_save_file_pg2.clicked.connect(
+                lambda: self.project_path())
             self.dlg_exc_rain.btn_save_file_pg2.clicked.connect(
                 lambda: self.dlg_save_project_exc_rain.show())
+
+            self.dlg_exc_rain.btn_save_file_pg4.clicked.connect(
+                lambda: self.project_path())
             self.dlg_exc_rain.btn_save_file_pg4.clicked.connect(
                 lambda: self.dlg_save_project_exc_rain.show())
 
@@ -3451,9 +3522,17 @@ class HidroPixel:
 
             # configura botões de salvar e salvar para um arquivo: flow travel time
             self.dlg_flow_rout.btn_save_file_pg1.clicked.connect(
+                lambda: self.project_path())
+            self.dlg_flow_rout.btn_save_file_pg1.clicked.connect(
                 lambda: self.dlg_save_project_flow_rout.show())
+
+            self.dlg_flow_rout.btn_save_file_pg2.clicked.connect(
+                lambda: self.project_path())
             self.dlg_flow_rout.btn_save_file_pg2.clicked.connect(
                 lambda: self.dlg_save_project_flow_rout.show())
+
+            self.dlg_flow_rout.btn_save_file_pg4.clicked.connect(
+                lambda: self.project_path())
             self.dlg_flow_rout.btn_save_file_pg4.clicked.connect(
                 lambda: self.dlg_save_project_flow_rout.show())
 
