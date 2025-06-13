@@ -957,8 +957,9 @@ class HidroPixel:
 
                     # Atribui os valores do arquivo enviado a tabela em questão
                     self.dlg_flow_tt.le_8_pg2.setText(str(values[24]))
-                    self.read_tb_from_file_2(
-                        self.dlg_flow_tt.tbw_1_pg2, values[24], 1, 2)
+                    if str(values[24]) != '':
+                        self.read_tb_from_file_2(
+                            self.dlg_flow_tt.tbw_1_pg2, values[24], 1, 2)
 
                     self.dlg_flow_tt.cb_7_pg2.setCurrentText(
                         os.path.basename(str(values[25])))
@@ -1764,6 +1765,8 @@ class HidroPixel:
                 item = table.item(lin, col)
                 if item is not None:
                     item.setText('')
+        table.setRowCount(0)
+
         # Limpa a lineEdit
         lineEdit.clear()
 
@@ -2304,7 +2307,9 @@ class HidroPixel:
                 f'Minimum slope,{self.dlg_flow_tt.le_1_pg1.text()}')
 
         # Escreve arquivos contendo as informações das tabelas referentes aos segmentos homogêneos da rede de drenagem e das características do uso e cobertura do solo
-        self.save_table_to_file(1)
+        if self.dlg_flow_tt.le_8_pg2.text() != '' or self.dlg_flow_tt.tbw_1_pg2.rowCount() != 0:
+            self.save_table_to_file(1)
+
         self.save_table_to_file(2)
 
         # Chama funções para tranformação do raster em geotiff para rst tipo ascii
@@ -2324,9 +2329,12 @@ class HidroPixel:
         self.leh_geotiff_escreve_ascii(
             self.lista_rasters_dir[self.dlg_flow_tt.cb_4_pg2.currentIndex()], drainage_file, 'int')
 
-        river_segments_file = direct_temp + r'\river_segments.rst'
-        self.leh_geotiff_escreve_ascii(
-            self.lista_rasters_dir[self.dlg_flow_tt.cb_5_pg2.currentIndex()], river_segments_file, 'int')
+        if self.dlg_flow_tt.cb_5_pg2.currentText() != '':
+            river_segments_file = direct_temp + r'\river_segments.rst'
+            self.leh_geotiff_escreve_ascii(
+                self.lista_rasters_dir[self.dlg_flow_tt.cb_5_pg2.currentIndex()], river_segments_file, 'int')
+        else:
+            river_segments_file = 'No file'
 
         DA_km2_file = direct_temp + r'\DA_km2.rst'
         self.leh_geotiff_escreve_ascii(
@@ -2348,15 +2356,14 @@ class HidroPixel:
             arquivo_txt.write(
                 f'{1 if self.dlg_flow_tt.cb_3_pg2.currentText() !="" else 0},Flow_Dir,{Flow_Dir_file}\n')
             arquivo_txt.write(
-                f'{1 if self.dlg_flow_tt.cb_4_pg2.currentText() !="" else 0},DA_km2,{DA_km2_file}\n')
+                f'{1 if self.dlg_flow_tt.cb_6_pg2.currentText() !="" else 0},DA_km2,{DA_km2_file}\n')
             arquivo_txt.write(
-                f'{1 if self.dlg_flow_tt.cb_5_pg2.currentText() !="" else 0},drainage,{drainage_file}\n')
+                f'{1 if self.dlg_flow_tt.cb_4_pg2.currentText() !="" else 0},drainage,{drainage_file}\n')
             arquivo_txt.write(
-                f'{1 if self.dlg_flow_tt.cb_6_pg2.currentText() !="" else 0},river_segments,{river_segments_file}\n')
-
+                f'{1 if self.dlg_flow_tt.cb_5_pg2.currentText() !=""  else 0},river_segments,{river_segments_file}\n')
+            arquivo_txt.write(
+                f'{1 if self.dlg_flow_tt.cb_5_pg2.currentText() !="" else 0},segment_characteristics,{self.file_name_tb1}\n')
             # Arquivo obrigatório, condição apenas para manter o padrão e controle
-            arquivo_txt.write(
-                f'{1 if self.dlg_flow_tt.cb_1_pg2.currentText() !="" else 0},segment_characteristics,{self.file_name_tb1}\n')
             arquivo_txt.write(
                 f'{1 if self.dlg_flow_tt.cb_7_pg2.currentText() !="" else 0},LULC,{LULC_file}\n')
             # Arquivo obrigatório, condição apenas para manter o padrão e controle
@@ -3195,6 +3202,10 @@ class HidroPixel:
 
             # self.dlg_hidro_pixel.btn_help.clicked.connect()
             '''Configura os botões da página da rotina do flow travel time'''
+            # configura tabelas para inicar sem linhas: condicao para verificar altercao nas tabelas
+            self.dlg_flow_tt.tbw_1_pg2.setRowCount(0)
+            self.dlg_flow_tt.tbw_2_pg2.setRowCount(0)
+
             # Chama páginas da GUI e função de mudanca de estilo dos botoes
             self.dlg_flow_tt.btn_config.clicked.connect(
                 lambda: self.SsButoes(self.dlg_flow_tt.btn_config, self.dlg_flow_tt))

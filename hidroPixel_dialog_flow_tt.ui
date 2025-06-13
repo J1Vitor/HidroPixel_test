@@ -98,7 +98,7 @@
                <property name="geometry">
                 <rect>
                  <x>0</x>
-                 <y>0</y>
+                 <y>-34</y>
                  <width>641</width>
                  <height>590</height>
                 </rect>
@@ -1784,7 +1784,7 @@
                      <item row="0" column="0">
                       <widget class="QLabel" name="label_32">
                        <property name="text">
-                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;RDN segmentation into classes*:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;RDN segmentation into classes:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                        </property>
                       </widget>
                      </item>
@@ -1886,7 +1886,7 @@
                      <item>
                       <widget class="QLabel" name="label_37">
                        <property name="text">
-                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Characteristics of RDN classes*:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Characteristics of RDN classes:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                        </property>
                       </widget>
                      </item>
@@ -2126,7 +2126,7 @@
                          </row>
                          <column>
                           <property name="text">
-                           <string>Segment</string>
+                           <string>Class</string>
                           </property>
                           <property name="font">
                            <font>
@@ -2623,8 +2623,8 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>258</width>
-                 <height>61</height>
+                 <width>658</width>
+                 <height>430</height>
                 </rect>
                </property>
                <layout class="QGridLayout" name="gridLayout_30">
