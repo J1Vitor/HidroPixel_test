@@ -1922,7 +1922,7 @@ class HidroPixel:
         # Chama funções para tranformação do raster em geotiff para rst tipo ascii
         bacia_file = direct_temp + r'\Watershed.rst'
         self.leh_geotiff_escreve_ascii(
-            self.dlg_exc_rain.cb_1_pg_ri.currentText(), bacia_file, 'int')
+            self.lista_rasters_dir[self.dlg_exc_rain.cb_1_pg_ri.currentIndex()], bacia_file, 'int')
 
         # Cria uma cópia dos arquivos para a pasta temp: evita erros relacionados aos caracteries especiais
         rain_gauges = direct_temp + r'\rain_gauges.txt'
@@ -2794,7 +2794,7 @@ class HidroPixel:
             plt.title('HYDROGRAPH')
 
             # Plot dos hidrogramas calculados
-            plt.plot(tempos, data[:, 1], label=header[1].strip())
+            plt.plot(tempos, data[:, 1], label=header[1].strip(), color='red')
             plt.xlabel('time (min)')
             plt.ylabel('Q (m³/s)')
             plt.legend()
@@ -3052,7 +3052,7 @@ class HidroPixel:
 
     def CondicaoRunRainfall_inter(self, map_out):
         """Esta função verifica se para cada etapa do hidropixel ao menos o output recomendado foi selecionado, caso sim, o botão RUN será liberado; do contrário, não."""
-        if self.dlg_flow_tt.cb_1_pg_ri.currentText() != '' and self.dlg_flow_tt.le_2_pg_ri.text() != '' and self.dlg_flow_tt.le_3_pg_ri.text() != '':
+        if self.dlg_exc_rain.cb_1_pg_ri.currentText() != '' and self.dlg_exc_rain.le_2_pg_ri.text() != '' and self.dlg_exc_rain.le_3_pg_ri.text() != '':
             self.run_rainfall_interpolation(map_out)
 
         else:
