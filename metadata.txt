@@ -6,7 +6,7 @@
 name=Hidropixel
 qgisMinimumVersion=3.22.0
 description=This is a plugin of the distributed rainfall-runoff hydrological model Hidropixel.
-version=3.1.0
+version=3.2.0
 author=João Vitor Lima, Dário Lima & Adriano Paz
 email=jvdsl_off@outlook.com
 

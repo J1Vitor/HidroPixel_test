@@ -7,7 +7,7 @@
                               -------------------
         begin                : 2023-11-29
         git sha              : $Format:%H$
-        copyright            : (C) 2023 by João Vitor & Adriano Rolim
+        copyright            : (C) 2023 by Joao Vitor & Adriano Rolim
         email                : jvds@academico.ufpb.br
  ***************************************************************************/
 
@@ -24,7 +24,7 @@ from qgis.PyQt import uic
 from qgis.PyQt.QtCore import QSettings, QTranslator, QCoreApplication
 from qgis.PyQt.QtGui import QIcon, QIntValidator, QDoubleValidator, QFont, QPixmap
 from qgis.PyQt.QtWidgets import QApplication, QAction, QFileDialog, QMessageBox, QTableWidgetItem
-from qgis.core import QgsProject, QgsMapLayer, QgsRasterLayer
+from qgis.core import QgsProject, QgsMapLayer, QgsRasterLayer, QgsVectorLayer
 import qgis.utils
 
 
@@ -33,10 +33,11 @@ import os.path
 import shutil
 import os
 import glob
+import cv2
 from .hidroPixel_dialog import HidroPixelDialog
 from pathlib import Path
 from datetime import datetime
-# A importação dos módulos contendo as variáveis
+# A importacao dos modulos contendo as variaveis
 from hidropixel.modulos_files.RDC_variables import RDCVariables
 from hidropixel.modulos_files.global_variables import GlobalVariables
 
@@ -86,28 +87,28 @@ class HidroPixel:
         # Must be set in initGui() to survive plugin reloads
         self.first_start = None
 
-        # Criando instâncias das classes: apenas para inicalizar as variáveis que não são arrays. Estes dependem da dimensão do raster enviado
+        # Criando instancias das classes: apenas para inicalizar as variaveis que nao sao arrays. Estes dependem da dimensao do raster enviado
         self.global_vars = GlobalVariables(0, 0)
         self.rdc_vars = RDCVariables(0, 0)
 
-        # Seleciona o diretório atual do plugin
+        # Seleciona o diretorio atual do plugin
         file_path = os.path.dirname(__file__)
 
-        # Inicia a interface gráfica da rotina flow travel time
+        # Inicia a interface grafica da rotina flow travel time
         ui_file = os.path.join(file_path, 'hidroPixel_dialog_flow_tt.ui')
 
-        # Inicia a interface gráfica da rotina excess rainfall
+        # Inicia a interface grafica da rotina excess rainfall
         ui_file1 = os.path.join(
             file_path, 'hidroPixel_dialog_exec_rainfall.ui')
 
-        # Inicia a interface gráfica da rotina flow routing
+        # Inicia a interface grafica da rotina flow routing
         ui_file2 = os.path.join(file_path, 'hidroPixel_dialog_flow_rout.ui')
 
-        # Inicia a interface gráfica da pagina run da função rainfall interpolation
+        # Inicia a interface grafica da pagina run da funcao rainfall interpolation
         ui_file3 = os.path.join(
             file_path, 'hidroPixel_dialog_run_rainfall_interpol.ui')
 
-        # Inicia a interface gráfica da pagina run da função rainfall interpolation
+        # Inicia a interface grafica da pagina run da funcao rainfall interpolation
         ui_file4 = os.path.join(
             file_path, 'hidropixel_dialog_about.ui')
 
@@ -123,7 +124,7 @@ class HidroPixel:
         ui_file7 = os.path.join(
             file_path, 'hidropixel_dialog_save_project_flow_tt.ui')
 
-        # inicia instânica das diferentes routinas do plugin Hidropixel
+        # inicia instanica das diferentes routinas do plugin Hidropixel
         self.dlg_flow_tt = uic.loadUi(ui_file)
         self.dlg_exc_rain = uic.loadUi(ui_file1)
         self.dlg_flow_rout = uic.loadUi(ui_file2)
@@ -133,7 +134,7 @@ class HidroPixel:
         self.dlg_save_project_exc_rain = uic.loadUi(ui_file6)
         self.dlg_save_project_flow_rout = uic.loadUi(ui_file7)
 
-        # Cria outras variáveis necessárias
+        # Cria outras variaveis necessarias
         self.save_result = None
         self.fn_n_conect_dren = None
         self.fn_num_pix_dren = None
@@ -184,6 +185,7 @@ class HidroPixel:
         self.output5_flow_rout = ''
         self.highlighted_style = "background-color: rgb(173, 216, 230)"
         self.lista_rasters_dir = [None]
+        self.shp_list_g = [None]
 
     # noinspection PyMethodMayBeStatic
     def tr(self, message):
@@ -276,7 +278,7 @@ class HidroPixel:
 
     def initGui(self):
         """Create the menu entries and toolbar icons inside the QGIS GUI."""
-        # Armazena diretório do plugin
+        # Armazena diretorio do plugin
         icon_path = self.diretorio_atual + '\icons\icon3.png'
 
         self.add_action(
@@ -297,8 +299,8 @@ class HidroPixel:
             self.iface.removeToolBarIcon(action)
 
     def carrega_work_folder(self, line_edit):
-        '''Esta função define a pasta padrão tanto para buscar, quanto para salvar os arquivos'''
-        # Define as variáveis e configurações da janela de escolha do arquivo
+        '''Esta funcao define a pasta padrao tanto para buscar, quanto para salvar os arquivos'''
+        # Define as variaveis e configuracões da janela de escolha do arquivo
         pasta = None
         line_edit.setText('')
         options = QFileDialog.Options()
@@ -306,7 +308,7 @@ class HidroPixel:
             None, caption='Select your working folder!', options=options)
 
         if pasta != '':
-            # Se o usário enviar um arquivo, este será armazenado na sua referida line edit
+            # Se o usario enviar um arquivo, este sera armazenado na sua referida line edit
             line_edit.setText(pasta)
 
             # Define por padrao path == working folder
@@ -317,11 +319,35 @@ class HidroPixel:
             self.dlg_save_project_flow_rout.le_2_pg1.setText(
                 self.dlg_flow_rout.le_3_pg1.text())
         else:
-            # Caso contrário, será mostrada uma mensagem de aviso
+            # Caso contrario, sera mostrada uma mensagem de aviso
             result = "Wait! You did not select any folder."
             QMessageBox.warning(None, "No folder selected", result)
 
         return pasta
+
+    def carrega_POI_path(self, cond, line_edit):
+        """Carrega a pasta com o os "tempos de viagem para cada POI"""
+        # Define as variaveis e configuracões da janela de escolha do arquivo
+        pasta = None
+        line_edit.setText('')
+        options = QFileDialog.Options()
+        if cond == 1:
+            pasta = QFileDialog.getExistingDirectory(
+                None, caption='Select the path with flow travel time (min) for each POI!', options=options)
+        elif cond == 0:
+            pasta = QFileDialog.getExistingDirectory(
+                None, caption='Select the path to save flow travel time (min) for each POI!', options=options)
+        else:
+            pasta = QFileDialog.getExistingDirectory(
+                None, caption='Select the path to save resulting hydrograph (m³/s) for each POI!', options=options)
+
+        if pasta != '':
+            # Se o usario enviar um arquivo, este sera armazenado na sua referida line edit
+            line_edit.setText(pasta)
+        else:
+            # Caso contrario, sera mostrada uma mensagem de aviso
+            result = "Wait! You did not select any folder."
+            QMessageBox.warning(None, "No folder selected", result)
 
     def project_path(self):
         """Define por padrao path == working folder para a GUI do save to project"""
@@ -334,15 +360,15 @@ class HidroPixel:
             self.dlg_flow_rout.le_3_pg1.text())
 
     def carregaArquivos(self, line_edit, combobox, file_type="raster"):
-        """Esta função é utilizada para adicionar os arquivos enviados pelo usuário ao plugin"""
-        # Define as variáveis e configurações da janela de escolha do arquivo
+        """Esta funcao é utilizada para adicionar os arquivos enviados pelo usuario ao plugin"""
+        # Define as variaveis e configuracões da janela de escolha do arquivo
         file_ = None
         options = QFileDialog.Options()
         directory = self.dlg_flow_tt.le_21_pg1.text()
 
-        while True:  # Loop até que o usuário selecione um arquivo ou cancele
+        while True:  # Loop até que o usuario selecione um arquivo ou cancele
 
-            # Janela de diálogo com o Usuário
+            # Janela de dialogo com o Usuario
             if file_type == "raster":
                 file_, _ = QFileDialog.getOpenFileName(
                     None, "Select a file!", directory, "GeoTIFF (*.tif)", options=options)
@@ -351,7 +377,7 @@ class HidroPixel:
                         None, "No file selected", "Wait! You did not select any file.")
                     return None
 
-                # Se o raster não estiver no projeto, adiciona
+                # Se o raster nao estiver no projeto, adiciona
                 if file_ not in [layer.source() for layer in QgsProject.instance().mapLayers().values()]:
                     layer = QgsRasterLayer(
                         file_, os.path.basename(file_), "gdal")
@@ -362,7 +388,7 @@ class HidroPixel:
 
                 # Agora, seleciona no combo o novo raster
                 nome = os.path.basename(file_)
-                # Combobox guarda apenas nomes, então:
+                # Combobox guarda apenas nomes, entao:
                 idx = combobox.findText(nome)
                 if idx != -1:
                     combobox.setCurrentIndex(idx)
@@ -384,11 +410,55 @@ class HidroPixel:
                     if reply == QMessageBox.Ok:
                         break
 
+            elif file_type == "bin".lower():
+                file_, _ = QFileDialog.getOpenFileName(
+                    None, caption="Select a file!", directory=directory, filter="Binary (*.bin)", options=options)
+
+                # Verificar se algum arquivo foi selecionado
+                if file_:
+                    line_edit.setText(file_)
+                    break
+
+                else:
+                    result = "Wait! You did not select any file."
+                    reply = QMessageBox.warning(
+                        None, "No file selected", result, QMessageBox.Ok)
+                    if reply == QMessageBox.Ok:
+                        break
+
+            elif file_type == "shp".lower():
+                # seleciona apenas arquivos shapefile
+                file_, _ = QFileDialog.getOpenFileName(
+                    None, "Select a file!", directory, "Shapefile (*.shp)", options=options)
+                if not file_:
+                    QMessageBox.warning(
+                        None, "No file selected", "Wait! You did not select any file.")
+                    return None
+
+                # Se o shp nao estiver no projeto, adiciona
+                if file_ not in [layer.source() for layer in QgsProject.instance().mapLayers().values()]:
+                    layer = QgsVectorLayer(
+                        file_, os.path.basename(file_), "ogr")
+                    QgsProject.instance().addMapLayer(layer)
+
+                # Recarrega os combos
+                self.carrega_shp()
+
+                # Agora, seleciona no combo o novo raster
+                nome = os.path.basename(file_)
+
+                # Combobox guarda apenas nomes, entao:
+                idx = combobox.findText(nome)
+                # if idx != -1:
+                combobox.setCurrentIndex(idx)
+
+                return file_
+
     def save_buttons(self, line_edit, file_type='raster'):
-        '''Esta função configura os botões da salvar (criar arquivo)'''
-        # Seleciona o arquivo enviado pelo usuário
+        '''Esta funcao configura os botões da salvar (criar arquivo)'''
+        # Seleciona o arquivo enviado pelo usuario
         while True:
-            # Obtendo o caminho do arquivo a ser salvo usando um diálogo de arquivo
+            # Obtendo o caminho do arquivo a ser salvo usando um dialogo de arquivo
             if file_type == 'raster':
                 file_name, _ = QFileDialog.getSaveFileName(
                     None, "Save the file", '', "GeoTIFF(*.tif)")
@@ -396,12 +466,27 @@ class HidroPixel:
                     line_edit.setText(file_name)
                     break
                 else:
-                    # O usuário não solucionou um arquivo (um caminho para salvar o arquivo de saída)
+                    # O usuario nao solucionou um arquivo (um caminho para salvar o arquivo de saida)
                     result = "Wait! You did not select any file."
                     reply = QMessageBox.warning(
                         None, "No file selected", result, QMessageBox.Ok)
                     if reply == QMessageBox.Ok:
                         break
+
+            elif file_type == 'bin':
+                file_name, _ = QFileDialog.getSaveFileName(
+                    None, "Save the file", '', "Binary (*.bin)")
+                if file_name:
+                    line_edit.setText(file_name)
+                    break
+                else:
+                    # O usuario nao solucionou um arquivo (um caminho para salvar o arquivo de saida)
+                    result = "Wait! You did not select any file."
+                    reply = QMessageBox.warning(
+                        None, "No file selected", result, QMessageBox.Ok)
+                    if reply == QMessageBox.Ok:
+                        break
+
             elif file_type == 'text':
                 file_name, _ = QFileDialog.getSaveFileName(
                     None, "Save the file", '', "Text (*.txt)")
@@ -409,7 +494,7 @@ class HidroPixel:
                     line_edit.setText(file_name)
                     break
                 else:
-                    # O usuário não solucionou um arquivo (um caminho para salvar o arquivo de saída)
+                    # O usuario nao solucionou um arquivo (um caminho para salvar o arquivo de saida)
                     result = "Wait! You did not select any file."
                     reply = QMessageBox.warning(
                         None, "No file selected", result, QMessageBox.Ok)
@@ -417,7 +502,7 @@ class HidroPixel:
                         break
 
     def selciona_pasta(self, line_edit):
-        """Esta função solicita ao usuário a pasta para salvar os mapas da precipitação interpolada por cada delta_t"""
+        """Esta funcao solicita ao usuario a pasta para salvar os mapas da precipitacao interpolada por cada delta_t"""
         while True:
             file_name = QFileDialog.getExistingDirectory(
                 None, "Select a folder")
@@ -425,7 +510,7 @@ class HidroPixel:
                 line_edit.setText(file_name)
                 break
             else:
-                # O usuário não solucionou um arquivo (um caminho para salvar o arquivo de saída)
+                # O usuario nao solucionou um arquivo (um caminho para salvar o arquivo de saida)
                 result = "Wait! You did not select any file."
                 reply = QMessageBox.warning(
                     None, "No file selected", result, QMessageBox.Ok)
@@ -434,9 +519,9 @@ class HidroPixel:
 
     def save_to_project(self, function, file_name):
         """
-        Gera um arquivo de texto único contendo todas as informações 
-        apresentadas nas diferentes páginas do plugin.
-        Function: Indica qual função a página pertence
+        Gera um arquivo de texto unico contendo todas as informacões 
+        apresentadas nas diferentes paginas do plugin.
+        Function: Indica qual funcao a pagina pertence
             function == 1: Flow travel time;
             function == 2: Excess rainfall;
             function == 3: Flow routing
@@ -453,7 +538,7 @@ class HidroPixel:
                 self.dlg_flow_tt.le_12_pg4.setText(
                     self.dlg_save_project_flow_tt.le_1_pg1.text())
 
-                # Seção: Flow Travel Time - Configuration (Página 1)
+                # Secao: Flow Travel Time - Configuration (Pagina 1)
 
                 arquivo_txt.write(
                     f"Project name: {self.dlg_save_project_flow_tt.le_1_pg1.text()}\n")
@@ -514,13 +599,16 @@ class HidroPixel:
                 arquivo_txt.write(
                     "lineage: Este arquivo foi criado automaticamente pelo Hidropixel\n")
 
-                # Seção: Flow Travel Time - Input Data (Página 2)
+                # Secao: Flow Travel Time - Input Data (Pagina 2)
                 arquivo_txt.write("Flow Travel Time - Input Data\n")
                 arquivo_txt.write(
                     "-------------------------------------------------\n")
                 arquivo_txt.write("Watershed delineation:\n")
                 arquivo_txt.write(
                     f"={self.lista_rasters_dir[self.dlg_flow_tt.cb_1_pg2.currentIndex()]}\n")
+                arquivo_txt.write("\nPoint of Interest (POI) Location:\n")
+                arquivo_txt.write(
+                    f"={self.shp_list_g[self.dlg_flow_tt.cb_8_pg2.currentIndex()]}\n")
                 arquivo_txt.write("\nDigital elevation model:\n")
                 arquivo_txt.write(
                     f"={self.lista_rasters_dir[self.dlg_flow_tt.cb_2_pg2.currentIndex()]}\n")
@@ -550,13 +638,13 @@ class HidroPixel:
                 arquivo_txt.write(
                     f"={self.dlg_flow_tt.le_11_pg2.text()}\n")
 
-                # Seção: Flow Travel Time - Run page (Página 4)
+                # Secao: Flow Travel Time - Run page (Pagina 4)
                 arquivo_txt.write("Flow Travel Time - Run page\n")
                 arquivo_txt.write(
                     "-------------------------------------------------\n")
                 arquivo_txt.write("Slope relative to downstream pixel:\n")
                 arquivo_txt.write(
-                    f"={self.dlg_flow_tt.le_6_pg4.text()}\n")
+                    f"={os.path.join(self.dlg_flow_tt.le_21_pg1.text(),self.dlg_flow_tt.le_6_pg4.text()) if self.dlg_flow_tt.le_21_pg1.text()!= '' and self.dlg_flow_tt.le_6_pg4.text()!= '' else self.dlg_flow_tt.le_6_pg4.text()}\n")
                 arquivo_txt.write("Selected:\n")
                 arquivo_txt.write(
                     f"={self.dlg_flow_tt.ch_6_pg4.isChecked()}\n")
@@ -566,7 +654,7 @@ class HidroPixel:
                 arquivo_txt.write(
                     "All river segments with similar hydrologic conditions:\n")
                 arquivo_txt.write(
-                    f"={self.dlg_flow_tt.le_7_pg4.text()}\n")
+                    f"={os.path.join(self.dlg_flow_tt.le_21_pg1.text(),self.dlg_flow_tt.le_7_pg4.text()) if self.dlg_flow_tt.le_21_pg1.text()!= '' and self.dlg_flow_tt.le_7_pg4.text()!= ''  else self.dlg_flow_tt.le_7_pg4.text()}\n")
                 arquivo_txt.write("Selected:\n")
                 arquivo_txt.write(
                     f"={self.dlg_flow_tt.ch_7_pg4.isChecked()}\n")
@@ -575,14 +663,14 @@ class HidroPixel:
                 arquivo_txt.write(
                     "Hydraulic radius, roughness and slope for all river segments:\n")
                 arquivo_txt.write(
-                    f"={self.dlg_flow_tt.le_8_pg4.text()}\n")
+                    f"={os.path.join(self.dlg_flow_tt.le_21_pg1.text(),self.dlg_flow_tt.le_8_pg4.text()) if self.dlg_flow_tt.le_21_pg1.text()!= '' and self.dlg_flow_tt.le_8_pg4.text()!= '' else self.dlg_flow_tt.le_8_pg4.text()}\n")
                 arquivo_txt.write("Selected:\n")
                 arquivo_txt.write(
                     f"={self.dlg_flow_tt.ch_8_pg4.isChecked()}\n")
                 arquivo_txt.write(
                     "River cross-sectional area calculated by regional curves (m²):\n")
                 arquivo_txt.write(
-                    f"={self.dlg_flow_tt.le_9_pg4.text()}\n")
+                    f"={os.path.join(self.dlg_flow_tt.le_21_pg1.text(),self.dlg_flow_tt.le_9_pg4.text()) if self.dlg_flow_tt.le_21_pg1.text()!= '' and self.dlg_flow_tt.le_9_pg4.text()!= '' else self.dlg_flow_tt.le_9_pg4.text()}\n")
                 arquivo_txt.write("Selected:\n")
                 arquivo_txt.write(
                     f"={self.dlg_flow_tt.ch_9_pg4.isChecked()}\n")
@@ -592,7 +680,7 @@ class HidroPixel:
                 arquivo_txt.write(
                     "River cross-sectional area calculated by regional curves (m):\n")
                 arquivo_txt.write(
-                    f"={self.dlg_flow_tt.le_10_pg4.text()}\n")
+                    f"={os.path.join(self.dlg_flow_tt.le_21_pg1.text(),self.dlg_flow_tt.le_10_pg4.text()) if self.dlg_flow_tt.le_21_pg1.text()!= '' and self.dlg_flow_tt.le_10_pg4.text()!= '' else self.dlg_flow_tt.le_10_pg4.text()}\n")
                 arquivo_txt.write("Selected:\n")
                 arquivo_txt.write(
                     f"={self.dlg_flow_tt.ch_10_pg4.isChecked()}\n")
@@ -601,13 +689,20 @@ class HidroPixel:
                     f"={self.dlg_flow_tt.ch_21_pg4.isChecked()}\n")
                 arquivo_txt.write("Flow travel time (min):\n")
                 arquivo_txt.write(
-                    f"={self.dlg_flow_tt.le_11_pg4.text()}\n")
+                    f"={os.path.join(self.dlg_flow_tt.le_21_pg1.text(),self.dlg_flow_tt.le_11_pg4.text()) if self.dlg_flow_tt.le_21_pg1.text()!= '' and self.dlg_flow_tt.le_11_pg4.text()!= '' else self.dlg_flow_tt.le_11_pg4.text()}\n")
                 arquivo_txt.write("Selected:\n")
                 arquivo_txt.write(
                     f"={self.dlg_flow_tt.ch_11_pg4.isChecked()}\n")
                 arquivo_txt.write("Add:\n")
                 arquivo_txt.write(
                     f"={self.dlg_flow_tt.ch_22_pg4.isChecked()}\n")
+                arquivo_txt.write("Flow travel time (min) for each POI:\n")
+                arquivo_txt.write(
+                    f"={os.path.join(self.dlg_flow_tt.le_21_pg1.text(),self.dlg_flow_tt.le_13_pg4.text()) if self.dlg_flow_tt.le_21_pg1.text()!= '' and self.dlg_flow_tt.le_13_pg4.text()!= '' else self.dlg_flow_tt.le_13_pg4.text()}\n")
+                arquivo_txt.write("Selected:\n")
+                arquivo_txt.write(
+                    f"={self.dlg_flow_tt.ch_12_pg4.isChecked()}\n")
+
                 # Escreve working folder
                 arquivo_txt.write("Working Folder:\n")
                 arquivo_txt.write(f'={self.dlg_flow_tt.le_21_pg1.text()}')
@@ -623,7 +718,7 @@ class HidroPixel:
                 self.dlg_exc_rain.le_7_pg4.setText(
                     self.dlg_save_project_exc_rain.le_1_pg1.text())
 
-                # Seção: Excess Rainfall - Configuration page (Função 2, Página 1)
+                # Secao: Excess Rainfall - Configuration page (Funcao 2, Pagina 1)
                 arquivo_txt.write(
                     f"Project name: {self.dlg_save_project_exc_rain.le_1_pg1.text()}\n")
                 arquivo_txt.write("Excess Rainfall - Configuration page\n")
@@ -640,7 +735,7 @@ class HidroPixel:
                 arquivo_txt.write(
                     f"   ={self.dlg_exc_rain.rb_2_pg1.isChecked()}\n")
 
-                # Seção: Excess Rainfall - Rainfall interpolation (Função 2, Página 2)
+                # Secao: Excess Rainfall - Rainfall interpolation (Funcao 2, Pagina 2)
                 arquivo_txt.write("Excess Rainfall - Rainfall interpolation\n")
                 arquivo_txt.write(
                     "-------------------------------------------------\n")
@@ -660,7 +755,7 @@ class HidroPixel:
                 arquivo_txt.write(
                     f"={self.dlg_exc_rain.le_5_pg_ri.text()}\n")
 
-                # Seção: Excess Rainfall - Input Data (Função 2, Página 3)
+                # Secao: Excess Rainfall - Input Data (Funcao 2, Pagina 3)
                 arquivo_txt.write("Excess Rainfall - Input Data\n")
                 arquivo_txt.write(
                     "-------------------------------------------------\n")
@@ -680,13 +775,13 @@ class HidroPixel:
                     arquivo_txt.write(
                         f"={self.dlg_exc_rain.le_4_pg2.text()}\n")
 
-                # Seção: Excess Rainfall - Run page (Função 2, Página 4)
+                # Secao: Excess Rainfall - Run page (Funcao 2, Pagina 4)
                 arquivo_txt.write("Excess Rainfall - Run page\n")
                 arquivo_txt.write(
                     "-------------------------------------------------\n")
                 arquivo_txt.write("Numbering of watershed pixels:\n")
                 arquivo_txt.write(
-                    f"={self.dlg_exc_rain.le_1_pg4.text()}\n")
+                    f"={os.path.join(self.dlg_exc_rain.le_3_pg1.text(),self.dlg_exc_rain.le_1_pg4.text()) if self.dlg_exc_rain.le_3_pg1.text()!= '' and self.dlg_exc_rain.le_1_pg4.text()!= '' else self.dlg_exc_rain.le_1_pg4.text()}\n")
                 arquivo_txt.write("Selected:\n")
                 arquivo_txt.write(
                     f"={self.dlg_exc_rain.ch_1_pg4.isChecked()}\n")
@@ -695,7 +790,7 @@ class HidroPixel:
                     f"={self.dlg_exc_rain.ch_7_pg4.isChecked()}\n")
                 arquivo_txt.write("Maximum potential retention (mm):\n")
                 arquivo_txt.write(
-                    f"={self.dlg_exc_rain.le_2_pg4.text()}\n")
+                    f"={os.path.join(self.dlg_exc_rain.le_3_pg1.text(),self.dlg_exc_rain.le_2_pg4.text()) if self.dlg_exc_rain.le_3_pg1.text()!= '' and self.dlg_exc_rain.le_2_pg4.text()!= '' else self.dlg_exc_rain.le_2_pg4.text()}\n")
                 arquivo_txt.write("Selected:\n")
                 arquivo_txt.write(
                     f"={self.dlg_exc_rain.ch_2_pg4.isChecked()}\n")
@@ -704,7 +799,7 @@ class HidroPixel:
                     f"={self.dlg_exc_rain.ch_8_pg4.isChecked()}\n")
                 arquivo_txt.write("Initial abstraction (mm):\n")
                 arquivo_txt.write(
-                    f"={self.dlg_exc_rain.le_3_pg4.text()}\n")
+                    f"={os.path.join(self.dlg_exc_rain.le_3_pg1.text(),self.dlg_exc_rain.le_3_pg4.text()) if self.dlg_exc_rain.le_3_pg1.text()!= '' and self.dlg_exc_rain.le_3_pg4.text()!= '' else self.dlg_exc_rain.le_3_pg4.text()}\n")
                 arquivo_txt.write("Selected:\n")
                 arquivo_txt.write(
                     f"={self.dlg_exc_rain.ch_3_pg4.isChecked()}\n")
@@ -713,7 +808,7 @@ class HidroPixel:
                     f"={self.dlg_exc_rain.ch_9_pg4.isChecked()}\n")
                 arquivo_txt.write("Total rainfall (mm):\n")
                 arquivo_txt.write(
-                    f"={self.dlg_exc_rain.le_4_pg4.text()}\n")
+                    f"={os.path.join(self.dlg_exc_rain.le_3_pg1.text(),self.dlg_exc_rain.le_4_pg4.text()) if self.dlg_exc_rain.le_3_pg1.text()!= '' and self.dlg_exc_rain.le_4_pg4.text()!= '' else self.dlg_exc_rain.le_4_pg4.text()}\n")
                 arquivo_txt.write("Selected:\n")
                 arquivo_txt.write(
                     f"={self.dlg_exc_rain.ch_4_pg4.isChecked()}\n")
@@ -722,7 +817,7 @@ class HidroPixel:
                     f"={self.dlg_exc_rain.ch_10_pg4.isChecked()}\n")
                 arquivo_txt.write("Total excess rainfall (mm):\n")
                 arquivo_txt.write(
-                    f"={self.dlg_exc_rain.le_5_pg4.text()}\n")
+                    f"={os.path.join(self.dlg_exc_rain.le_3_pg1.text(),self.dlg_exc_rain.le_5_pg4.text()) if self.dlg_exc_rain.le_3_pg1.text()!= '' and self.dlg_exc_rain.le_5_pg4.text()!= '' else self.dlg_exc_rain.le_5_pg4.text()}\n")
                 arquivo_txt.write("Selected:\n")
                 arquivo_txt.write(
                     f"={self.dlg_exc_rain.ch_5_pg4.isChecked()}\n")
@@ -731,7 +826,7 @@ class HidroPixel:
                     f"={self.dlg_exc_rain.ch_11_pg4.isChecked()}\n")
                 arquivo_txt.write("Excess hyetographs per pixel (mm):\n")
                 arquivo_txt.write(
-                    f"={self.dlg_exc_rain.le_6_pg4.text()}\n")
+                    f"={os.path.join(self.dlg_exc_rain.le_3_pg1.text(),self.dlg_exc_rain.le_6_pg4.text()) if self.dlg_exc_rain.le_3_pg1.text()!= '' and self.dlg_exc_rain.le_6_pg4.text()!= '' else self.dlg_exc_rain.le_6_pg4.text()}\n")
                 arquivo_txt.write("Selected:\n")
                 arquivo_txt.write(
                     f"={self.dlg_exc_rain.ch_6_pg4.isChecked()}\n")
@@ -752,7 +847,7 @@ class HidroPixel:
                 self.dlg_flow_rout.le_8_pg4.setText(
                     self.dlg_save_project_flow_rout.le_1_pg1.text())
 
-                # Seção: Flow Routing - Configuration page (Função 3, Página 1)
+                # Secao: Flow Routing - Configuration page (Funcao 3, Pagina 1)
                 arquivo_txt.write(
                     f"Project name: {self.dlg_save_project_flow_rout.le_1_pg1.text()}\n")
                 arquivo_txt.write("Flow Routing - Configuration page\n")
@@ -772,19 +867,19 @@ class HidroPixel:
                 arquivo_txt.write(
                     f"={self.dlg_flow_rout.le_2_pg1.text()}\n")
 
-                # Seção: Flow Routing - Input Data page (Função 3, Página 2)
+                # Secao: Flow Routing - Input Data page (Funcao 3, Pagina 2)
                 arquivo_txt.write("Flow Routing - Input Data page\n")
                 arquivo_txt.write(
                     "-------------------------------------------------\n")
                 arquivo_txt.write("Watershed delineation:\n")
                 arquivo_txt.write(
                     f"={self.lista_rasters_dir[self.dlg_flow_rout.cb_1_pg2.currentIndex()]}\n")
-                arquivo_txt.write("Numbering of watershed pixels:\n")
-                arquivo_txt.write(
-                    f"={self.dlg_flow_rout.cb_2_pg2.currentText()}\n")
                 arquivo_txt.write("Flow travel time:\n")
                 arquivo_txt.write(
                     f"={self.lista_rasters_dir[self.dlg_flow_rout.cb_3_pg2.currentIndex()]}\n")
+                arquivo_txt.write("Flow travel time (min) for each POI:\n")
+                arquivo_txt.write(
+                    f"={self.dlg_flow_rout.le_3_pg2.text()}\n")
                 arquivo_txt.write("Excess hyetographs per pixel:\n")
                 arquivo_txt.write(
                     f"={self.dlg_flow_rout.le_4_pg2.text()}\n")
@@ -799,13 +894,13 @@ class HidroPixel:
                 arquivo_txt.write(
                     f"={self.dlg_flow_rout.cb_4_pg2.currentText()}\n")
 
-                # Seção: Flow Routing - Run page (Função 3, Página 4)
+                # Secao: Flow Routing - Run page (Funcao 3, Pagina 4)
                 arquivo_txt.write("Flow Routing - Run page\n")
                 arquivo_txt.write(
                     "-------------------------------------------------\n")
                 arquivo_txt.write("TUH peak discharge per pixel:\n")
                 arquivo_txt.write(
-                    f"={self.dlg_flow_rout.le_1_pg4.text()}\n")
+                    f"={os.path.join(self.dlg_flow_rout.le_3_pg1.text(),self.dlg_flow_rout.le_1_pg4.text()) if self.dlg_flow_rout.le_3_pg1.text()!= '' and self.dlg_flow_rout.le_1_pg4.text()!= '' else self.dlg_flow_rout.le_1_pg4.text()}\n")
                 arquivo_txt.write("Selected:\n")
                 arquivo_txt.write(
                     f"={self.dlg_flow_rout.ch_1_pg4.isChecked()}\n")
@@ -821,7 +916,7 @@ class HidroPixel:
                     f"={self.dlg_flow_rout.rb_2_pg4.isChecked()}\n")
                 arquivo_txt.write("TUH base time per pixel (min):\n")
                 arquivo_txt.write(
-                    f"={self.dlg_flow_rout.le_2_pg4.text()}\n")
+                    f"={os.path.join(self.dlg_flow_rout.le_3_pg1.text(),self.dlg_flow_rout.le_2_pg4.text()) if self.dlg_flow_rout.le_3_pg1.text()!= '' and self.dlg_flow_rout.le_2_pg4.text()!= '' else self.dlg_flow_rout.le_2_pg4.text()}\n")
                 arquivo_txt.write("Selected:\n")
                 arquivo_txt.write(
                     f"={self.dlg_flow_rout.ch_2_pg4.isChecked()}\n")
@@ -830,7 +925,7 @@ class HidroPixel:
                     f"={self.dlg_flow_rout.ch_8_pg4.isChecked()}\n")
                 arquivo_txt.write("Map of TUH base time (min):\n")
                 arquivo_txt.write(
-                    f"={self.dlg_flow_rout.le_3_pg4.text()}\n")
+                    f"={os.path.join(self.dlg_flow_rout.le_3_pg1.text(),self.dlg_flow_rout.le_3_pg4.text()) if self.dlg_flow_rout.le_3_pg1.text()!= '' and self.dlg_flow_rout.le_3_pg4.text()!= '' else self.dlg_flow_rout.le_3_pg4.text()}\n")
                 arquivo_txt.write("Selected:\n")
                 arquivo_txt.write(
                     f"={self.dlg_flow_rout.ch_3_pg4.isChecked()}\n")
@@ -839,7 +934,7 @@ class HidroPixel:
                     f"={self.dlg_flow_rout.ch_9_pg4.isChecked()}\n")
                 arquivo_txt.write("Resulting peak discharge per pixel:\n")
                 arquivo_txt.write(
-                    f"={self.dlg_flow_rout.le_4_pg4.text()}\n")
+                    f"={os.path.join(self.dlg_flow_rout.le_3_pg1.text(),self.dlg_flow_rout.le_4_pg4.text()) if self.dlg_flow_rout.le_3_pg1.text()!= '' and self.dlg_flow_rout.le_4_pg4.text()!= '' else self.dlg_flow_rout.le_4_pg4.text()}\n")
                 arquivo_txt.write("Selected:\n")
                 arquivo_txt.write(
                     f"={self.dlg_flow_rout.ch_4_pg4.isChecked()}\n")
@@ -855,7 +950,7 @@ class HidroPixel:
                     f"={self.dlg_flow_rout.rb_4_pg4.isChecked()}\n")
                 arquivo_txt.write("Resulting runoff volume per pixel (m³):\n")
                 arquivo_txt.write(
-                    f"={self.dlg_flow_rout.le_5_pg4.text()}\n")
+                    f"={os.path.join(self.dlg_flow_rout.le_3_pg1.text(),self.dlg_flow_rout.le_5_pg4.text()) if self.dlg_flow_rout.le_3_pg1.text()!= '' and self.dlg_flow_rout.le_5_pg4.text()!= '' else self.dlg_flow_rout.le_5_pg4.text()}\n")
                 arquivo_txt.write("Selected:\n")
                 arquivo_txt.write(
                     f"={self.dlg_flow_rout.ch_5_pg4.isChecked()}\n")
@@ -864,7 +959,7 @@ class HidroPixel:
                     f"={self.dlg_flow_rout.ch_11_pg4.isChecked()}\n")
                 arquivo_txt.write("Resulting watershed hydrograph (m³/s):\n")
                 arquivo_txt.write(
-                    f"={self.dlg_flow_rout.le_6_pg4.text()}\n")
+                    f"={os.path.join(self.dlg_flow_rout.le_3_pg1.text(),self.dlg_flow_rout.le_6_pg4.text()) if self.dlg_flow_rout.le_3_pg1.text()!= '' and self.dlg_flow_rout.le_6_pg4.text()!= '' else self.dlg_flow_rout.le_6_pg4.text()}\n")
                 arquivo_txt.write("Selected:\n")
                 arquivo_txt.write(
                     f"={self.dlg_flow_rout.ch_6_pg4.isChecked()}\n")
@@ -874,19 +969,74 @@ class HidroPixel:
                 if self.dlg_flow_rout.ch_12_pg4.isChecked():
                     arquivo_txt.write("Observed runoff (m³/s):\n")
                     arquivo_txt.write(
-                        f"={self.dlg_flow_rout.le_7_pg4.text()}\n")
+                        f"={os.path.join(self.dlg_flow_rout.le_3_pg1.text(),self.dlg_flow_rout.le_7_pg4.text()) if self.dlg_flow_rout.le_3_pg1.text()!= '' and self.dlg_flow_rout.le_7_pg4.text()!= '' else self.dlg_flow_rout.le_7_pg4.text()}\n")
+                arquivo_txt.write(
+                    "Resulting hydrograph (m³/s) for each POI:\n")
+                arquivo_txt.write(
+                    f"={self.dlg_flow_rout.le_9_pg4.text()}\n")
+                arquivo_txt.write("Selected:\n")
+                arquivo_txt.write(
+                    f"={self.dlg_flow_rout.ch_13_pg4.isChecked()}\n")
+
                 # Escreve working folder
                 arquivo_txt.write("Working Folder:\n")
                 arquivo_txt.write(f'={self.dlg_flow_rout.le_3_pg1.text()}')
 
+    def list_index(self, list_, file_type):
+        # Compara listas para verificar se existem arquivos que nao estao no QGIS mas estao no proj.hpx
+        # dai adiciona no qgis e atualiza comboxes
+        # Retorna uma lista com indices para ordenar os arquivos do proj.hpx e os do QGIS
+
+        if file_type == 'tif':
+            dif_lists = list(set(list_) - set(self.lista_rasters_dir))
+            if len(dif_lists) > 0:
+                # Se o raster nao estiver no projeto, adiciona
+                for file_ in dif_lists:
+                    if file_ not in [layer.source() for layer in QgsProject.instance().mapLayers().values()]:
+                        layer = QgsRasterLayer(
+                            file_, os.path.basename(file_), "gdal")
+                        QgsProject.instance().addMapLayer(layer)
+
+            self.carrega_rasters()
+
+            #  Cria um dict com os indices dos arquivos do proj.hpx
+            posicoes = {v: i for i, v in enumerate(
+                self.lista_rasters_dir)}
+
+            # Gera os indices correspondentes na ordem de projetos do qgis
+            indexes_ = [posicoes[x] for x in list_]
+
+            return indexes_
+
+        else:
+            dif_lists = list(set(list_) - set(self.shp_list_g))
+            if len(dif_lists) > 0:
+                # Se o raster nao estiver no projeto, adiciona
+                for file_ in dif_lists:
+                    if file_ not in [layer.source() for layer in QgsProject.instance().mapLayers().values()]:
+                        layer = QgsVectorLayer(
+                            file_, os.path.basename(file_), "ogr")
+                        QgsProject.instance().addMapLayer(layer)
+
+            self.carrega_shp()
+
+            #  Cria um dict com os indices dos arquivos do proj.hpx
+            posicoes = {v: i for i, v in enumerate(
+                self.shp_list_g)}
+
+            # Gera os indices correspondentes na ordem de projetos do qgis
+            indexes_ = [posicoes[x] for x in list_]
+
+            return indexes_
+
     def read_from_project(self, function, directory):
-        '''Obtem as informações a partir projeto .hpx enviado pelo usuário
-        Function: Indica qual função a página pertence
+        '''Obtem as informacões a partir projeto .hpx enviado pelo usuario
+        Function: Indica qual funcao a pagina pertence
                 function == 1: Flow travel time;
                 function == 2: Excess rainfall;
                 function == 3: Flow routing
         '''
-        # Seleciona o arquivo enviado pelo usuário
+        # Seleciona o arquivo enviado pelo usuario
         while True:
             options = QFileDialog.Options()
             file_, _ = QFileDialog.getOpenFileName(
@@ -894,17 +1044,29 @@ class HidroPixel:
 
             if file_:
                 if function == 1:
-                    # Ler as informações da página 1: configuration
+                    # Ler as informacões da pagina 1: configuration
                     with open(file_, 'r', encoding='utf-8') as arquivo_txt:
-                        # Armazena as informações do arquivo enviado em uma lista
+                        # Armazena as informacões do arquivo enviado em uma lista
                         cabecalho = arquivo_txt.readline().split(":")[1]
                         values = []
+                        tif_val = [None]
+                        shp_val = [None]
                         for line in arquivo_txt:
                             if '=' in line:
                                 value_ = line.split("=")[1].strip()
                                 values.append(value_)
+                                if '.tif' in line:
+                                    tif_file = line.split("=")[1].strip()
+                                    tif_val.append(tif_file)
+                                if '.shp' in line:
+                                    shp_file = line.split("=")[1].strip()
+                                    shp_val.append(shp_file)
 
-                    # Adiciona as informações lidas nas suas respectivas
+                    # Lista com indices comparativos entre os arquivos do projeto.hpx e os atuais do QGIS
+                    indexes_tif = self.list_index(tif_val, "tif")
+                    indexes_shp = self.list_index(shp_val, "shp")
+
+                    # Adiciona as informacões lidas nas suas respectivas
                     self.dlg_flow_tt.le_12_pg2.setText(
                         cabecalho)
                     self.dlg_flow_tt.le_1_pg3.setText(
@@ -939,86 +1101,106 @@ class HidroPixel:
                     self.dlg_flow_tt.le_18_pg1.setText(str(values[16]))
                     self.dlg_flow_tt.le_19_pg1.setText(str(values[17]))
 
-                    # Input data
+                    # ---Input data---
 
-                    # Adiciona as informações lidas à seus respectivos campos
-                    self.dlg_flow_tt.cb_1_pg2.setCurrentText(
-                        os.path.basename(str(values[18])))
-                    self.dlg_flow_tt.cb_2_pg2.setCurrentText(
-                        os.path.basename(str(values[19])))
-                    self.dlg_flow_tt.cb_3_pg2.setCurrentText(
-                        os.path.basename(str(values[20])))
-                    self.dlg_flow_tt.cb_4_pg2.setCurrentText(
-                        os.path.basename(str(values[21])))
-                    self.dlg_flow_tt.cb_5_pg2.setCurrentText(
-                        os.path.basename(str(values[22])))
-                    self.dlg_flow_tt.cb_6_pg2.setCurrentText(
-                        os.path.basename(str(values[23])))
+                    # Adiciona as informacões lidas a seus respectivos campos
+                    self.dlg_flow_tt.cb_1_pg2.setCurrentIndex(indexes_tif[1])
+                    self.dlg_flow_tt.cb_8_pg2.setCurrentIndex(indexes_shp[1])
+                    self.dlg_flow_tt.cb_2_pg2.setCurrentIndex(indexes_tif[2])
+                    self.dlg_flow_tt.cb_3_pg2.setCurrentIndex(indexes_tif[3])
+                    self.dlg_flow_tt.cb_4_pg2.setCurrentIndex(indexes_tif[4])
 
-                    # Atribui os valores do arquivo enviado a tabela em questão
-                    self.dlg_flow_tt.le_8_pg2.setText(str(values[24]))
-                    if str(values[24]) != '':
+                    # Valor opcional, se nao informado, adiciona None ao indice correspondente
+                    if values[23] == 'None':
+                        # indexes_tif.insert(5,None)
+                        self.dlg_flow_tt.cb_5_pg2.setCurrentIndex(
+                            indexes_tif[0])
+                        self.dlg_flow_tt.cb_6_pg2.setCurrentIndex(
+                            indexes_tif[5])
+                    else:
+                        self.dlg_flow_tt.cb_5_pg2.setCurrentIndex(
+                            indexes_tif[5])
+                        self.dlg_flow_tt.cb_6_pg2.setCurrentIndex(
+                            indexes_tif[6])
+
+                    # ------
+
+                    # Atribui os valores do arquivo enviado a tabela em questao
+                    self.dlg_flow_tt.le_8_pg2.setText(str(values[25]))
+                    if str(values[25]) != '':
                         self.read_tb_from_file_2(
-                            self.dlg_flow_tt.tbw_1_pg2, values[24], 1, 2)
+                            self.dlg_flow_tt.tbw_1_pg2, values[25], 1, 2)
 
                     self.dlg_flow_tt.cb_7_pg2.setCurrentText(
-                        os.path.basename(str(values[25])))
+                        os.path.basename(str(values[26])))
 
-                    # Atribui os valores do arquivo enviado a tabela em questão
-                    self.dlg_flow_tt.le_10_pg2.setText(str(values[26]))
+                    # Atribui os valores do arquivo enviado a tabela em questao
+                    self.dlg_flow_tt.le_10_pg2.setText(str(values[27]))
                     self.read_tb_from_file_2(
-                        self.dlg_flow_tt.tbw_2_pg2, values[26], 1, 1)
+                        self.dlg_flow_tt.tbw_2_pg2, values[27], 1, 1)
 
-                    self.dlg_flow_tt.le_11_pg2.setText(str(values[27]))
+                    self.dlg_flow_tt.le_11_pg2.setText(str(values[28]))
 
-                    # Ler arquivos página 4 - run
-                    # Adiciona as informações lidas à seus respectivos campos
-                    self.dlg_flow_tt.le_6_pg4.setText(str(values[28]))
+                    # Ler arquivos pagina 4 - run
+                    # Adiciona as informacões lidas a seus respectivos campos
+                    self.dlg_flow_tt.le_6_pg4.setText(str(values[29]))
                     self.dlg_flow_tt.ch_6_pg4.setChecked(
-                        str(values[29]) == 'True')
-                    self.dlg_flow_tt.ch_17_pg4.setChecked(
                         str(values[30]) == 'True')
+                    self.dlg_flow_tt.ch_17_pg4.setChecked(
+                        str(values[31]) == 'True')
 
-                    self.dlg_flow_tt.le_7_pg4.setText(str(values[31]))
+                    self.dlg_flow_tt.le_7_pg4.setText(str(values[32]))
                     self.dlg_flow_tt.ch_7_pg4.setChecked(
-                        str(values[32]) == 'True')
-                    self.dlg_flow_tt.ch_18_pg4.setChecked(
                         str(values[33]) == 'True')
+                    self.dlg_flow_tt.ch_18_pg4.setChecked(
+                        str(values[34]) == 'True')
 
-                    self.dlg_flow_tt.le_8_pg4.setText(str(values[34]))
+                    self.dlg_flow_tt.le_8_pg4.setText(str(values[35]))
                     self.dlg_flow_tt.ch_8_pg4.setChecked(
-                        str(values[35]) == 'True')
+                        str(values[36]) == 'True')
 
-                    self.dlg_flow_tt.le_9_pg4.setText(str(values[36]))
+                    self.dlg_flow_tt.le_9_pg4.setText(str(values[37]))
                     self.dlg_flow_tt.ch_9_pg4.setChecked(
-                        str(values[37]) == 'True')
-                    self.dlg_flow_tt.ch_20_pg4.setChecked(
                         str(values[38]) == 'True')
+                    self.dlg_flow_tt.ch_20_pg4.setChecked(
+                        str(values[39]) == 'True')
 
-                    self.dlg_flow_tt.le_10_pg4.setText(str(values[39]))
+                    self.dlg_flow_tt.le_10_pg4.setText(str(values[40]))
                     self.dlg_flow_tt.ch_10_pg4.setChecked(
-                        str(values[40]) == 'True')
-                    self.dlg_flow_tt.ch_21_pg4.setChecked(
                         str(values[41]) == 'True')
+                    self.dlg_flow_tt.ch_21_pg4.setChecked(
+                        str(values[42]) == 'True')
 
-                    self.dlg_flow_tt.le_11_pg4.setText(str(values[42]))
+                    self.dlg_flow_tt.le_11_pg4.setText(str(values[43]))
                     self.dlg_flow_tt.ch_11_pg4.setChecked(
-                        str(values[43]) == 'True')
-                    self.dlg_flow_tt.ch_22_pg4.setChecked(
                         str(values[44]) == 'True')
-                    self.dlg_flow_tt.le_21_pg1.setText(str(values[45]))
+                    self.dlg_flow_tt.ch_22_pg4.setChecked(
+                        str(values[45]) == 'True')
+
+                    self.dlg_flow_tt.le_13_pg4.setText(str(values[46]))
+                    self.dlg_flow_tt.ch_12_pg4.setChecked(
+                        str(values[47]) == 'True')
+
+                    self.dlg_flow_tt.le_21_pg1.setText(str(values[48]))
                     break
 
                 elif function == 2:
-                    # Lê os dados do arquivo e extrai as linhas que contenham o caractere "="
+                    # Le os dados do arquivo e extrai as linhas que contenham o caractere "="
                     with open(file_, 'r', encoding='utf-8') as arquivo_txt:
                         cabecalho = arquivo_txt.readline().split(":")[1]
                         values = []
+                        tif_val2 = [None]
                         for line in arquivo_txt:
                             if '=' in line:
-                                # Remove o caractere "=" e espaços em branco no início/fim da linha
+                                # Remove o caractere "=" e espacos em branco no inicio/fim da linha
                                 value = line.replace('=', '').strip()
                                 values.append(value)
+                                if '.tif' in line:
+                                    tif_file = line.split("=")[1].strip()
+                                    tif_val2.append(tif_file)
+
+                    # Lista com indeces comparativos entre os arquivos do projeto.hpx e os atuais do QGIS
+                    indexes_tif = self.list_index(tif_val2, "tif")
 
                     self.dlg_exc_rain.le_6_pg_ri.setText(
                         cabecalho)
@@ -1029,16 +1211,16 @@ class HidroPixel:
                     self.dlg_exc_rain.le_7_pg4.setText(
                         cabecalho)
 
-                    # Seção: Excess Rainfall - Configuration page
+                    # Secao: Excess Rainfall - Configuration page
                     self.dlg_exc_rain.le_1_pg1.setText(str(values[0]))
                     self.dlg_exc_rain.rb_1_pg1.setChecked(
                         str(values[1]) == 'True')
                     self.dlg_exc_rain.rb_2_pg1.setChecked(
                         str(values[2]) == 'True')
 
-                    # Seção: Excess Rainfall - Rainfall interpolation
-                    self.dlg_exc_rain.cb_1_pg_ri.setCurrentText(
-                        os.path.basename(str(values[3])))
+                    # Secao: Excess Rainfall - Rainfall interpolation
+                    self.dlg_exc_rain.cb_1_pg_ri.setCurrentIndex(
+                        indexes_tif[1])
                     self.dlg_exc_rain.le_2_pg_ri.setText(
                         os.path.basename(str(values[4])))
                     self.dlg_exc_rain.le_3_pg_ri.setText(
@@ -1048,18 +1230,16 @@ class HidroPixel:
                     self.dlg_exc_rain.le_5_pg_ri.setText(
                         os.path.basename(str(values[7])))
 
-                    # Seção: Excess Rainfall - Input Data
-                    self.dlg_exc_rain.cb_1_pg2.setCurrentText(
-                        os.path.basename(str(values[8])))
-                    self.dlg_exc_rain.cb_2_pg2.setCurrentText(
-                        os.path.basename(str(values[9])))
-                    # Se o rb_1_pg1 estiver marcado, usa um campo; senão, usa o outro
+                    # Secao: Excess Rainfall - Input Data
+                    self.dlg_exc_rain.cb_1_pg2.setCurrentIndex(indexes_tif[1])
+                    self.dlg_exc_rain.cb_2_pg2.setCurrentIndex(indexes_tif[2])
+                    # Se o rb_1_pg1 estiver marcado, usa um campo; senao, usa o outro
                     if self.dlg_exc_rain.rb_1_pg1.isChecked():
                         self.dlg_exc_rain.le_3_pg2.setText(str(values[10]))
                     else:
                         self.dlg_exc_rain.le_4_pg2.setText(str(values[10]))
 
-                    # Seção: Excess Rainfall - Run page
+                    # Secao: Excess Rainfall - Run page
                     self.dlg_exc_rain.le_1_pg4.setText(str(values[11]))
                     self.dlg_exc_rain.ch_1_pg4.setChecked(
                         str(values[12]) == 'True')
@@ -1093,21 +1273,26 @@ class HidroPixel:
                     self.dlg_exc_rain.le_6_pg4.setText(str(values[26]))
                     self.dlg_exc_rain.ch_6_pg4.setChecked(
                         str(values[27]) == 'True')
+
                     self.dlg_exc_rain.le_3_pg1.setText(str(values[28]))
                     break
 
                 elif function == 3:
-                    # Lê os arquivos da primeira página
+                    # Le os arquivos da primeira pagina
                     with open(file_, 'r', encoding='utf-8') as arquivo_txt:
                         cabecalho = arquivo_txt.readline().split(":")[1]
-                        # Armazenará os valores das linhas
+                        # Armazenara os valores das linhas
                         values = []
+                        tif_val3 = [None]
                         for line in arquivo_txt:
                             if '=' in line:
-                                # Substitui o identificador =por uma string fazia e retira os espaços da linha
+                                # Substitui o identificador =por uma string fazia e retira os espacos da linha
                                 value = line.replace('=', '').strip()
                                 values.append(value)
-
+                                if '.tif' in line:
+                                    tif_file = line.split("=")[1].strip()
+                                    tif_val3.append(tif_file)
+                        # Adiciona project name a gui
                         self.dlg_flow_rout.le_6_pg2.setText(
                             cabecalho)
 
@@ -1117,6 +1302,10 @@ class HidroPixel:
                         self.dlg_flow_rout.le_8_pg4.setText(
                             cabecalho)
 
+                    # Lista com indeces comparativos entre os arquivos do projeto.hpx e os atuais do QGIS
+                    indexes_tif = self.list_index(tif_val3, "tif")
+
+                    # Parametros
                     self.dlg_flow_rout.rb_2_pg1.setChecked(
                         str(values[0]) == 'True')
                     self.dlg_flow_rout.rb_3_pg1.setChecked(
@@ -1124,22 +1313,22 @@ class HidroPixel:
                     self.dlg_flow_rout.le_5_pg1.setText(str(values[2]))
                     self.dlg_flow_rout.le_2_pg1.setText(str(values[3]))
 
-                    # Lê os arquivos da segunda página
-                    self.dlg_flow_rout.cb_1_pg2.setCurrentText(
-                        os.path.basename(str(values[4])))
-                    self.dlg_flow_rout.cb_2_pg2.setCurrentText(
-                        os.path.basename(str(values[5])))
-                    self.dlg_flow_rout.cb_3_pg2.setCurrentText(
-                        os.path.basename(str(values[6])))
+                    # Le os arquivos Input data
+                    self.dlg_flow_rout.cb_1_pg2.setCurrentIndex(indexes_tif[1])
+                    self.dlg_flow_rout.cb_3_pg2.setCurrentIndex(indexes_tif[2])
+                    self.dlg_flow_rout.le_3_pg2.setText(str(values[6]))
                     self.dlg_flow_rout.le_4_pg2.setText(str(values[7]))
-                    self.dlg_flow_rout.cb_5_pg2.setCurrentText(
-                        os.path.basename(str(values[8])))
-                    self.dlg_flow_rout.groupBox_2.setChecked(
-                        str(values[9]) == "True")
-                    self.dlg_flow_rout.cb_4_pg2.setCurrentText(
-                        os.path.basename(str(values[10])))
+                    self.dlg_flow_rout.cb_5_pg2.setCurrentIndex(indexes_tif[3])
+                    if values[9] == "True":
+                        self.dlg_flow_rout.groupBox_2.setChecked(True)
+                        self.dlg_flow_rout.cb_4_pg2.setCurrentIndex(
+                            indexes_tif[4])
+                    else:
+                        self.dlg_flow_rout.groupBox_2.setChecked(False)
+                        self.dlg_flow_rout.cb_4_pg2.setCurrentIndex(
+                            indexes_tif[0])
 
-                    # Lê os arquivos da quarta página
+                    # Le os arquivos Run
 
                     # Output1
                     self.dlg_flow_rout.le_1_pg4.setText(str(values[11]))
@@ -1191,13 +1380,20 @@ class HidroPixel:
 
                     # hidrograma observado
                     if self.dlg_flow_rout.ch_12_pg4.isChecked():
-                        self.dlg_flow_rout.le_7_pg4.setText(
-                            str(values[33]))
-                        self.dlg_flow_rout.le_3_pg1.setText(str(values[34]))
+                        self.dlg_flow_rout.le_7_pg4.setText(str(values[33]))
+                        self.dlg_flow_rout.le_9_pg4.setText(str(values[34]))
+                        self.dlg_flow_rout.ch_13_pg4.setChecked(
+                            str(values[35]) == 'True')
+                        self.dlg_flow_rout.le_3_pg1.setText(str(values[36]))
                         break
+
                     else:
-                        self.dlg_flow_rout.le_3_pg1.setText(str(values[33]))
+                        self.dlg_flow_rout.le_9_pg4.setText(str(values[33]))
+                        self.dlg_flow_rout.ch_13_pg4.setChecked(
+                            str(values[34]) == 'True')
+                        self.dlg_flow_rout.le_3_pg1.setText(str(values[35]))
                         break
+
             else:
                 result = "Wait! You did not select any file."
                 reply = QMessageBox.warning(
@@ -1206,12 +1402,12 @@ class HidroPixel:
                     break
 
     def save_table_to_file_btn(self, table):
-        '''Esta função lê as informações adicionadas às tabelas e as armazena em um arquivo após o usuário clicar no botão de salvar
-            table == 1: a tabela de referência é a tabelea das caracteristicas da rede de drenagem
+        '''Esta funcao le as informacões adicionadas as tabelas e as armazena em um arquivo apos o usuario clicar no botao de salvar
+            table == 1: a tabela de referencia é a tabelea das caracteristicas da rede de drenagem
             table == 2 referencia a tabela das classes e coeficientes de manning.'''
         while True:
             if table == 1:
-                # Solicita um local de salvamento para o usuário
+                # Solicita um local de salvamento para o usuario
                 file_name, _ = QFileDialog.getSaveFileName(
                     None, "Save the file", "RDN_classes", "Text (*.txt)")
                 if file_name:
@@ -1220,10 +1416,10 @@ class HidroPixel:
                     nlin_tb1 = self.dlg_flow_tt.tbw_1_pg2.rowCount()
                     ncol_tb1 = self.dlg_flow_tt.tbw_1_pg2.columnCount()
 
-                    # Escreve o arquivo de saída
+                    # Escreve o arquivo de saida
                     with open(file_name, 'w', encoding='utf-8') as arquivo_txt_csv:
                         arquivo_txt_csv.write(f'Trecho,Rh (m),n,S (m/m)\n')
-                        # Adicionando as informações das linhas e colunas ao arquivo de saída
+                        # Adicionando as informacões das linhas e colunas ao arquivo de saida
                         for lin in range(nlin_tb1):
                             for col in range(ncol_tb1):
                                 item = self.dlg_flow_tt.tbw_1_pg2.item(
@@ -1253,11 +1449,11 @@ class HidroPixel:
                     nlin_tb1 = self.dlg_flow_tt.tbw_2_pg2.rowCount()
                     ncol_tb1 = self.dlg_flow_tt.tbw_2_pg2.columnCount()
 
-                    # Escreve o arquivo de saída
+                    # Escreve o arquivo de saida
                     with open(file_name, 'w', encoding='utf-8') as arquivo_txt_csv:
                         arquivo_txt_csv.write(
                             'Land Cover Type Code,Land Cover Type Name,Manning (Sheet Flow),Coefficient k (Shallow concentrated flow)\n')
-                        # Adicionando as informações das linhas e colunas ao arquivo de saída
+                        # Adicionando as informacões das linhas e colunas ao arquivo de saida
                         for lin in range(nlin_tb1):
                             for col in range(ncol_tb1):
                                 item = self.dlg_flow_tt.tbw_2_pg2.item(
@@ -1279,12 +1475,12 @@ class HidroPixel:
                         break
 
     def save_table_to_file(self, table):
-        '''Esta função lê as informações adicionadas às tabelas e as armazena em um arquivo, sendo essas para leitura do visual basic
-            table == 1: a tabela de referência é a tabelea das caracteristicas da rede de drenagem
+        '''Esta funcao le as informacões adicionadas as tabelas e as armazena em um arquivo, sendo essas para leitura do visual basic
+            table == 1: a tabela de referencia é a tabelea das caracteristicas da rede de drenagem
             table == 2 referencia a tabela das classes e coeficientes de manning.'''
 
         if table == 1:
-            # Solicita um local de salvamento para o usuário
+            # Solicita um local de salvamento para o usuario
             self.file_name_tb1 = self.diretorio_atual + \
                 r'\temp' + r'\segment_characteristics.txt'
             if self.file_name_tb1:
@@ -1292,10 +1488,10 @@ class HidroPixel:
                 nlin_tb1 = self.dlg_flow_tt.tbw_1_pg2.rowCount()
                 ncol_tb1 = self.dlg_flow_tt.tbw_1_pg2.columnCount()
 
-                # Escreve o arquivo de saída
+                # Escreve o arquivo de saida
                 with open(self.file_name_tb1, 'w', encoding='utf-8') as arquivo_txt_csv:
                     arquivo_txt_csv.write(f'Trecho,Rh (m),n,S (m/m)\n')
-                    # Adicionando as informações das linhas e colunas ao arquivo de saída
+                    # Adicionando as informacões das linhas e colunas ao arquivo de saida
                     for lin in range(nlin_tb1):
                         for col in range(ncol_tb1):
                             item = self.dlg_flow_tt.tbw_1_pg2.item(lin, col)
@@ -1314,11 +1510,11 @@ class HidroPixel:
                 nlin_tb1 = self.dlg_flow_tt.tbw_2_pg2.rowCount()
                 ncol_tb1 = self.dlg_flow_tt.tbw_2_pg2.columnCount()
 
-                # Escreve o arquivo de saída
+                # Escreve o arquivo de saida
                 with open(self.file_name_tb2, 'w', encoding='utf-8') as arquivo_txt_csv:
                     arquivo_txt_csv.write(
                         'Land Cover Type Code,Land Cover Type Name,Manning (Sheet Flow),Coefficient k (Shallow concentrated flow)\n')
-                    # Adicionando as informações das linhas e colunas ao arquivo de saída
+                    # Adicionando as informacões das linhas e colunas ao arquivo de saida
                     for lin in range(nlin_tb1):
                         for col in range(ncol_tb1):
                             item = self.dlg_flow_tt.tbw_2_pg2.item(lin, col)
@@ -1331,11 +1527,11 @@ class HidroPixel:
                         arquivo_txt_csv.write('\n')
 
     def read_tb_from_file(self, table, lineEdit, table_ordem):
-        '''Esta função adiciona os valores do arquivo enviado pelo usuário à respectiva tabela
-            table == 1: a tabela de referência é a tabelea das caracteristicas da rede de drenagem
+        '''Esta funcao adiciona os valores do arquivo enviado pelo usuario a respectiva tabela
+            table == 1: a tabela de referencia é a tabelea das caracteristicas da rede de drenagem
             table == 2 referencia a tabela das classes e coeficientes de manning.'''
 
-        # Seleciona o arquivo enviado pelo usuário
+        # Seleciona o arquivo enviado pelo usuario
         options = QFileDialog.Options()
         directory = self.dlg_flow_tt.le_21_pg1.text()
         # Atualiza a flag para leitura dos dados da tabela
@@ -1353,10 +1549,10 @@ class HidroPixel:
                     lineEdit.setText(file_)
                     # Abre o arquivo e processa as linhas
                     with open(file_, 'r', encoding='utf-8') as arquivo_txt_csv:
-                        # Lê a linha e o cabeçalho
+                        # Le a linha e o cabecalho
                         arquivo_txt_csv.readline()
 
-                        # Inicializa as listas para armazenamento das informações
+                        # Inicializa as listas para armazenamento das informacões
                         id_class_list = []
                         Sclasse_list = []
                         Mannclasse_list = []
@@ -1365,19 +1561,19 @@ class HidroPixel:
                         # Iterando sobre as linhas do arquivo
                         for line in arquivo_txt_csv:
                             info = line.strip().split(',')
-                            # Armazenando os valores das linhas nas suas respectivas variáveis
+                            # Armazenando os valores das linhas nas suas respectivas variaveis
                             if info[0] != '' and info[1] != '' and info[2] != '' and info[3]:
                                 indice = info[0]
                                 Scla = info[1]
                                 Mann = info[2]
                                 Rh = info[3]
-                                # Adiciona os valores às listas
+                                # Adiciona os valores as listas
                                 id_class_list.append(indice)
                                 Sclasse_list.append(Scla)
                                 Mannclasse_list.append(Mann)
                                 Rhclasse_list.append(Rh)
 
-                    # Atualiza no número de linhas da tabela (recebe o número de classes dos rios da bacia hidrográfica)
+                    # Atualiza no numero de linhas da tabela (recebe o numero de classes dos rios da bacia hidrografica)
                     table.setRowCount(len(Mannclasse_list))
 
                     # Coleta as dimensões da tabela
@@ -1403,7 +1599,7 @@ class HidroPixel:
                                     str(Mannclasse_list[lin]))
                                 table.setItem(lin, col, item)
                             elif col == 3:
-                                # Adiciona a coluna do raio hidráulico
+                                # Adiciona a coluna do raio hidraulico
                                 item = QTableWidgetItem(
                                     str(Rhclasse_list[lin]))
                                 table.setItem(lin, col, item)
@@ -1412,9 +1608,9 @@ class HidroPixel:
                 # Configura a segunda tabela
                 else:
 
-                    # Criando variável extra, para armazenar os tipos de uso e coeficente de Manning
+                    # Criando variavel extra, para armazenar os tipos de uso e coeficente de Manning
                     lineEdit.setText(file_)
-                    # Criando variável extra, para armazenar os tipos de uso e coeficente de Manning
+                    # Criando variavel extra, para armazenar os tipos de uso e coeficente de Manning
                     class_id = 0
                     class_val = []
                     class_name_val = []
@@ -1426,21 +1622,21 @@ class HidroPixel:
 
                     # Abrindo o arquivo que contém o coeficiente de Manning para os diferentes usos do solo
                     with open(file_, 'r', encoding='utf-8') as arquivo_txt_csv:
-                        # Amazena a linha do cabeçalho
+                        # Amazena a linha do cabecalho
                         firt_line = arquivo_txt_csv.readline().strip()
 
-                        # Lê as informações de uso do solo e coeficiente de Manning
+                        # Le as informacões de uso do solo e coeficiente de Manning
                         for line in arquivo_txt_csv:
-                            # Coletando as informações de cada linha
+                            # Coletando as informacões de cada linha
                             info = line.strip().split(',')
-                            # Armazenando os valores das linhas nas suas respectivas variáveis
+                            # Armazenando os valores das linhas nas suas respectivas variaveis
                             if info[0] != '' and info[1] != '' and info[2] != '' and info[3]:
                                 classe_id_key = int(info[0])
                                 classe_name = str(info[1])
                                 coef_maning = float(info[2])
                                 coef_K = float(info[3])
 
-                                # Adicionando os valores nas variáveis destinadas
+                                # Adicionando os valores nas variaveis destinadas
                                 coef_maning_val = np.append(
                                     coef_maning_val, coef_maning)
                                 class_name_val = np.append(
@@ -1450,14 +1646,14 @@ class HidroPixel:
                                 uso_manning_val[classe_id_key] = class_id
                                 class_id += 1
 
-                    # Atualiza no número de linhas da tabela (recebe o número de classes dos rios da bacia hidrográfica)
+                    # Atualiza no numero de linhas da tabela (recebe o numero de classes dos rios da bacia hidrografica)
                     table.setRowCount(len(uso_manning_val))
 
                     # Coleta as dimensões da tabela
                     n_row = table.rowCount()
                     n_column = table.columnCount()
 
-                    # Adiciona as informações à tabela
+                    # Adiciona as informacões a tabela
                     for col in range(n_column):
                         for lin in range(n_row):
                             if col == 0:
@@ -1490,19 +1686,19 @@ class HidroPixel:
                     break
 
     def read_tb_from_file_2(self, table, line_edit, table_ordem, tb2):
-        '''Esta função adiciona os valores do arquivo enviado pelo usuário à tabela quando se clica no botão READ FROM FILE (da página 2)
-            table == 1: a tabela de referência é a tabelea das caracteristicas da rede de drenagem
+        '''Esta funcao adiciona os valores do arquivo enviado pelo usuario a tabela quando se clica no botao READ FROM FILE (da pagina 2)
+            table == 1: a tabela de referencia é a tabelea das caracteristicas da rede de drenagem
             table == 2: referencia a tabela das classes e coeficientes de manning. 
             '''
-        # Atribui os valores do arquivo enviado à tabela das características
+        # Atribui os valores do arquivo enviado a tabela das caracteristicas
         file_ = str(line_edit)
         if table_ordem == 1:
             # Abre o arquivo e processa as linhas
             with open(file_, 'r', encoding='utf-8') as arquivo_txt_csv:
-                # Lê a linha e o cabeçalho
+                # Le a linha e o cabecalho
                 arquivo_txt_csv.readline()
 
-                # Inicializa as listas para armazenamento das informações
+                # Inicializa as listas para armazenamento das informacões
                 id_class_list = []
                 Sclasse_list = []
                 Mannclasse_list = []
@@ -1511,7 +1707,7 @@ class HidroPixel:
                 # Iterando sobre as linhas do arquivo
                 for line in arquivo_txt_csv:
                     info = line.strip().split(',')
-                    # Armazenando os valores das linhas nas suas respectivas variáveis
+                    # Armazenando os valores das linhas nas suas respectivas variaveis
                     if info[0] != '' and info[1] != '' and info[2] != '' and info[3]:
                         if tb2 != 1:
                             indice = int(info[0])
@@ -1525,13 +1721,13 @@ class HidroPixel:
                             Mann = float(info[2])
                             Rh = float(info[3])
 
-                        # Adiciona os valores às listas
+                        # Adiciona os valores as listas
                         id_class_list.append(indice)
                         Sclasse_list.append(Scla)
                         Mannclasse_list.append(Mann)
                         Rhclasse_list.append(Rh)
 
-            # Atualiza no número de linhas da tabela (recebe o número de classes dos rios da bacia hidrográfica)
+            # Atualiza no numero de linhas da tabela (recebe o numero de classes dos rios da bacia hidrografica)
             table.setRowCount(len(Mannclasse_list))
 
             # Coleta as dimensões da tabela
@@ -1555,21 +1751,21 @@ class HidroPixel:
                         item = QTableWidgetItem(str(Mannclasse_list[lin]))
                         table.setItem(lin, col, item)
                     elif col == 3:
-                        # Adiciona a coluna do raio hidráulico
+                        # Adiciona a coluna do raio hidraulico
                         item = QTableWidgetItem(str(Rhclasse_list[lin]))
                         table.setItem(lin, col, item)
 
         # Configura a segunda tabela
         else:
-            # não sei o motivo de não ter funcionado para a segunda tabela. mas funcionou e deixei assim
+            # nao sei o motivo de nao ter funcionado para a segunda tabela. mas funcionou e deixei assim
             a = True
 
     def leh_geotiff_escreve_ascii(self, arquivo, arquivo2, int_float, mapa_classes='n'):
-        '''Esta função realiza a leitura do arquivo .tif enviado pelo user e o converte em .rst tipo ascii para leitura no visual basic
-            arquivo1 = diretório do arquivo arquivo raster tiff
-            arquivo2 = arquivo raster tipo rst ascii (será criado)'''
+        '''Esta funcao realiza a leitura do arquivo .tif enviado pelo user e o converte em .rst tipo ascii para leitura no visual basic
+            arquivo1 = diretorio do arquivo arquivo raster tiff
+            arquivo2 = arquivo raster tipo rst ascii (sera criado)'''
 
-        # Lê o arquivo .tiff enviado
+        # Le o arquivo .tiff enviado
         raster_enviado = gdal.Open(arquivo)
 
         # Lendo os dados raster como um array
@@ -1577,7 +1773,7 @@ class HidroPixel:
 
         # Tratamento de erro: verifica se o arquivo foi aberto corretamente
         if raster_enviado is not None:
-            # Obtenção da dimensão da imagem raster
+            # Obtencao da dimensao da imagem raster
             self.rdc_vars.nlin = raster_enviado.RasterYSize
             self.rdc_vars.ncol = raster_enviado.RasterXSize
             self.rdc_vars.geotransform = raster_enviado.GetGeoTransform()
@@ -1589,7 +1785,7 @@ class HidroPixel:
             self.x_min = self.rdc_vars.geotransform[0]
             self.y_max = self.rdc_vars.geotransform[3]
 
-            # Captura resoluções espaciais da imagem (sentido vertical e horizontal)
+            # Captura resolucões espaciais da imagem (sentido vertical e horizontal)
             self.dx = self.rdc_vars.geotransform[1]
             self.dy = self.rdc_vars.geotransform[5]
 
@@ -1631,9 +1827,9 @@ class HidroPixel:
                 arquivo_rdc.write(f'watershed_classes,{qtd_classes}\n')
 
     def leh_rst_escreve_geotiff(self, arquivo1, arquivo2, file_type):
-        '''Esta função lê os arquivos processados nas rotinas em visual basic, no formato .rst(ascii) e os escreve em geotiff (no diretório informado)
-            arquivo1 = diretório do arquivo raster tipo rst ascii
-            arquivo2 = arquivo raster tiff (será criado)'''
+        '''Esta funcao le os arquivos processados nas rotinas em visual basic, no formato .rst(ascii) e os escreve em geotiff (no diretorio informado)
+            arquivo1 = diretorio do arquivo raster tipo rst ascii
+            arquivo2 = arquivo raster tiff (sera criado)'''
 
         # Convertendo arquivo ascii para geotiff
         rst_to_raster = np.zeros((self.rdc_vars.nlin, self.rdc_vars.ncol))
@@ -1678,19 +1874,14 @@ class HidroPixel:
         driver = None
         tipo_dados = None
 
-    def leh_asc_escreve_geotiff(self, arquivo1):
-        '''Esta função lê os arquivos processados nas rotinas em visual basic, no formato .rst(ascii) e os escreve em geotiff (no diretório informado)
-            arquivo1 = diretório do arquivo raster tipo rst ascii
-            arquivo2 = arquivo raster tiff (será criado)'''
-        # Modifica extensão do arquivo de saída para tif
-        arquivo_atual = os.path.basename(arquivo1)
-        arquivo_atual_tif = arquivo_atual.replace('.asc', '.tif')
-        arquivo2 = os.path.join(
-            self.dlg_exc_rain.le_5_pg_ri.text(), arquivo_atual_tif)
-
-        # Convertendo arquivo ascii para geotiff
+    def leh_asc_to_np_array(self, arquivo1):
+        '''Esta funcao le os arquivos processados nas rotinas em visual basic, no formato .rst(ascii) e os escreve em geotiff (no diretorio informado)
+            arquivo1 = diretorio do arquivo raster tipo rst ascii
+            arquivo2 = arquivo raster tiff (sera criado)'''
+        # Convertendo arquivo ascii para um array numpy
         rst_to_raster = np.zeros((self.rdc_vars.nlin, self.rdc_vars.ncol))
         bobo = [0 for x in range(6)]
+
         # Leitura do arquivo ascii
         with open(arquivo1, 'r') as arquivo_ascii:
             for i in range(6):
@@ -1699,36 +1890,15 @@ class HidroPixel:
                 for col in range(self.rdc_vars.ncol):
                     rst_to_raster[lin, col] = float(arquivo_ascii.readline())
 
-        # Define os dados a serem escritos
-        tipo_dados = gdalconst.GDT_Float32
-
-        # Obtendo o driver para escrita do arquivo em GeoTiff
-        fn_geotiff = arquivo2
-        driver = gdal.GetDriverByName('GTiff')
-
-        # Cria arquivo final
-        dataset = driver.Create(
-            fn_geotiff, self.rdc_vars.ncol, self.rdc_vars.nlin, 1, tipo_dados)
-        dataset.SetGeoTransform(self.rdc_vars.geotransform)
-        dataset.SetProjection(self.rdc_vars.projection)
-
-        # Escreve os dados na banda do arquivo
-        banda = dataset.GetRasterBand(1)
-        banda.WriteArray(rst_to_raster)
-
-        # Fechando o arquivo
-        dataset = None
-        banda = None
-        driver = None
-        tipo_dados = None
+        return rst_to_raster
 
     def add_new_row(self, table):
-        '''Está função adiciona uma linha a uma tabela relecionada'''
+        '''Esta funcao adiciona uma linha a uma tabela relecionada'''
         last_row = table.rowCount()
         table.insertRow(last_row)
 
     def delete_row(self, table):
-        '''Esta função deleta uma linha de uma referida tabela'''
+        '''Esta funcao deleta uma linha de uma referida tabela'''
         selected_row = table.currentRow()
         if selected_row >= 0:
             table.removeRow(selected_row)
@@ -1736,7 +1906,7 @@ class HidroPixel:
             QMessageBox.warning(None, "Warning", "You did not select any row.")
 
     def close_gui(self, function):
-        '''Está função é usada para torna nulo (limpar) as informações adicionadas nos diferentes objetos das funções do Hidropixel Plugin
+        '''Esta funcao é usada para torna nulo (limpar) as informacões adicionadas nos diferentes objetos das funcões do Hidropixel Plugin
            - Function = 1 : Flow travel time
            - Function = 2 : Excess rainfall
            - Function = 3 : Flow routing'''
@@ -1754,8 +1924,8 @@ class HidroPixel:
             self.dlg_flow_rout.close()
 
     def clear_table(self, table, lineEdit):
-        '''Esta função limpa os valores armazenados na respectiva tabela'''
-        # Limpando as informações armazenadas: tables widgets
+        '''Esta funcao limpa os valores armazenados na respectiva tabela'''
+        # Limpando as informacões armazenadas: tables widgets
         nlin_tb1 = table.rowCount()
         ncol_tb1 = table.columnCount()
 
@@ -1771,7 +1941,7 @@ class HidroPixel:
         lineEdit.clear()
 
     def adiciona_layer(self, file_path):
-        '''Esta função adiciona um arquivo enviado às layers do atual projeto do usuário no QGIS'''
+        '''Esta funcao adiciona um arquivo enviado as layers do atual projeto do usuario no QGIS'''
         # Adiciona o arquivo raster ao projeto do QGIS
         file_name = os.path.basename(file_path)
         layer = QgsRasterLayer(file_path, 'gdal')
@@ -1819,38 +1989,38 @@ class HidroPixel:
             self.dlg_flow_tt.ch_21_pg4.setEnabled(False)
 
     def rain_def_condition(self, rain_condition):
-        '''Esta função verifica a condição da variável precipitação para execução da rotina Excess rainfall
+        '''Esta funcao verifica a condicao da variavel precipitacao para execucao da rotina Excess rainfall
            - rain_condition == 1 : areal averaged
            - rain_condition == 2 : spatiallu distributed'''
 
         if rain_condition == 1:
-            # Objetos ligado a opção de precipitação média na área da baica ficam ativos
+            # Objetos ligado a opcao de precipitacao média na area da baica ficam ativos
             self.dlg_exc_rain.le_3_pg2.setEnabled(True)
             self.dlg_exc_rain.label_31.setEnabled(True)
             self.dlg_exc_rain.tbtn_pg2_3.setEnabled(True)
             self.dlg_exc_rain.label_35.setEnabled(True)
 
-            # Objetos ligado a opção de precipitação distribuida espacialmente ficam inativos
+            # Objetos ligado a opcao de precipitacao distribuida espacialmente ficam inativos
             self.dlg_exc_rain.le_4_pg2.setEnabled(False)
             self.dlg_exc_rain.label_32.setEnabled(False)
             self.dlg_exc_rain.tbtn_pg2_4.setEnabled(False)
             self.dlg_exc_rain.label_36.setEnabled(False)
 
         elif rain_condition == 2:
-            # Objetos ligado a opção de precipitação distribuida espacialmente ficam ativos
+            # Objetos ligado a opcao de precipitacao distribuida espacialmente ficam ativos
             self.dlg_exc_rain.le_4_pg2.setEnabled(True)
             self.dlg_exc_rain.label_32.setEnabled(True)
             self.dlg_exc_rain.tbtn_pg2_4.setEnabled(True)
             self.dlg_exc_rain.label_36.setEnabled(True)
 
-            # Objetos ligado a opção de precipitação média na área da baica ficam inativos
+            # Objetos ligado a opcao de precipitacao média na area da baica ficam inativos
             self.dlg_exc_rain.le_3_pg2.setEnabled(False)
             self.dlg_exc_rain.label_31.setEnabled(False)
             self.dlg_exc_rain.tbtn_pg2_3.setEnabled(False)
             self.dlg_exc_rain.label_35.setEnabled(False)
 
     def cancel_log_page(self, text_edit, pg_parameters, pg_logge):
-        '''Esta função configura o botão de cancelar da página de log'''
+        '''Esta funcao configura o botao de cancelar da pagina de log'''
         mensagem_log1 = None
         # Cria texto formatado para adicionar ao text edit? mensagem de aviso
         mensagem_log1 = '<font>\nATTENTION: stopping FLOW TRAVEL TIME process...</font>'
@@ -1858,28 +2028,29 @@ class HidroPixel:
         # Adiciona o texto formatado no QTextEdit
         text_edit.insertHtml(mensagem_log1)
 
-        # Reativa a página de parametros
+        # Reativa a pagina de parametros
         pg_parameters.setEnabled(True)
 
-        # Desativa a página de logge
+        # Desativa a pagina de logge
         pg_logge.setEnabled(False)
 
     def cancel_rainfall_interpol(self):
-        '''Esta configura o botão cancel da página run da função rainfall interpolation'''
+        '''Esta configura o botao cancel da pagina run da funcao rainfall interpolation'''
         # Adiciona mensagem de cancelamento do processo
         self.dlg_rain_interpl_run.te_rain_int(
             'BREAKING THE RAINFALL INTERPOLATION PROCESSING...')
         self.dlg_rain_interpl_run.close()
 
     def apaga_arquivos_temp(self):
-        '''Esta função exclui os arquivos temporários criados durante a execução do plugin'''
-        # Muda para o diretório temp
+        '''Esta funcao exclui os arquivos temporarios criados durante a execucao do plugin'''
+        # Muda para o diretorio temp
         os.chdir(self.diretorio_atual + r'\temp')
-        # Obtém todos os arquivos com a extensão .txt, .rst, .rdc
+        # Obtém todos os arquivos com a extensao .txt, .rst, .rdc
         arquivos_txt = glob.glob('*.txt')
         arquivos_rst = glob.glob('*.rst')
         arquivos_rdc = glob.glob('*.rdc')
         arquivos_tif = glob.glob('*.tif')
+        arquivos_bin = glob.glob('*.bin')
 
         # Apaga todos os arquivos
         for txt in arquivos_txt:
@@ -1894,8 +2065,69 @@ class HidroPixel:
         for tif in arquivos_tif:
             os.remove(tif)
 
+        for bin in arquivos_bin:
+            os.remove(bin)
+
+    def apaga_arquivos_tv(self):
+        '''Esta funcao exclui os arquivos temporarios criados durante a execucao do plugin'''
+        # Muda para o diretorio temp
+        os.chdir(self.diretorio_atual + r'\temp\tv_for_each_poi')
+        # Obtém todos os arquivos com a extensao .txt, .rst, .rdc
+        arquivos_rst = glob.glob('*.rst')
+        arquivos_tif = glob.glob('*.tif')
+
+        # Apaga todos os arquivos
+        for rst in arquivos_rst:
+            os.remove(rst)
+
+        for tif in arquivos_tif:
+            os.remove(tif)
+
+    def apaga_arquivos_maps(self):
+        '''Esta funcao exclui os arquivos temporarios criados durante a execucao do plugin'''
+        # Muda para o diretorio temp
+        os.chdir(self.diretorio_atual + r'\temp\maps')
+        # Obtém todos os arquivos com a extensao .txt, .rst, .rdc
+        arquivos_rst = glob.glob('*.rst')
+        arquivos_tif = glob.glob('*.tif')
+        # Apaga todos os arquivos
+        for rst in arquivos_rst:
+            os.remove(rst)
+
+        for tif in arquivos_tif:
+            os.remove(tif)
+
+    def apaga_arquivos_hydrographs(self):
+        '''Esta funcao exclui os arquivos temporarios criados durante a execucao do plugin'''
+        # Muda para o diretorio temp
+        os.chdir(self.diretorio_atual + r'\temp\hydrographs')
+        # Obtém todos os arquivos com a extensao .txt, .rst, .rdc
+        arquivos_txt = glob.glob('*.txt')
+        arquivos_tif = glob.glob('*.tif')
+
+        # Apaga todos os arquivos
+        for txt in arquivos_txt:
+            os.remove(txt)
+
+    def apaga_arquivos_tv_for_each_poi(self):
+        '''Esta funcao exclui os arquivos temporarios criados durante a execucao do plugin'''
+        # Muda para o diretorio temp
+        os.chdir(self.diretorio_atual + r'\temp\tv_for_each_poi')
+        # Obtém todos os arquivos com a extensao .txt, .rst, .rdc
+        arquivos_txt = glob.glob('*.txt')
+        arquivos_rdc = glob.glob('*.rdc')
+        arquivos_rst = glob.glob('*.rst')
+
+        # Apaga todos os arquivos
+        for txt in arquivos_txt:
+            os.remove(txt)
+        for rdc in arquivos_rdc:
+            os.remove(rdc)
+        for rst in arquivos_rst:
+            os.remove(rst)
+
     def replace_tif_rst(self, arquivo1):
-        '''Esta função modifica a extensão do parâmetro de .tif para .rst'''
+        '''Esta funcao modifica a extensao do parametro de .tif para .rst'''
         arquivo2 = arquivo1.replace('.tif', '.rst')
         return arquivo2
 
@@ -1915,37 +2147,37 @@ class HidroPixel:
         return caminho
 
     def run_process_rainfall_interpol(self):
-        """Esta função configura a execução da rotina Rainfall Interpolation do vb.net, gerando os arquivos necessários à execução daquela"""
-        # Captura diretório dos arquivo txt (pasta temp)
+        """Esta funcao configura a execucao da rotina Rainfall Interpolation do vb.net, gerando os arquivos necessarios a execucao daquela"""
+        # Captura diretorio dos arquivo txt (pasta temp)
         direct_temp = self.diretorio_atual + r'\temp'
 
-        # Chama funções para tranformação do raster em geotiff para rst tipo ascii
+        # Chama funcões para tranformacao do raster em geotiff para rst tipo ascii
         bacia_file = direct_temp + r'\Watershed.rst'
         self.leh_geotiff_escreve_ascii(
             self.lista_rasters_dir[self.dlg_exc_rain.cb_1_pg_ri.currentIndex()], bacia_file, 'int')
 
-        # Cria uma cópia dos arquivos para a pasta temp: evita erros relacionados aos caracteries especiais
+        # Cria uma copia dos arquivos para a pasta temp: evita erros relacionados aos caracteries especiais
         rain_gauges = direct_temp + r'\rain_gauges.txt'
         shutil.copy(self.dlg_exc_rain.le_2_pg_ri.text(), rain_gauges)
 
         rainfall_data = direct_temp + r'\rainfall_data.txt'
         shutil.copy(self.dlg_exc_rain.le_3_pg_ri.text(), rainfall_data)
 
-        # Escreve arquivo txt com os diretórios e nome dos inputs enviados pelo user
+        # Escreve arquivo txt com os diretorios e nome dos inputs enviados pelo user
         direct_in_files = direct_temp + r'\input_files_config_rain_inte.txt'
         with open(direct_in_files, 'w', encoding='utf-8') as arquivo_txt:
-            # Escreve cabeçalho
+            # Escreve cabecalho
             arquivo_txt.write("Selected input file directory\n")
             arquivo_txt.write(f"watershed,{bacia_file}\n")
             arquivo_txt.write(f"rain_gauges,{rain_gauges}\n")
             arquivo_txt.write(f"rainfall_data,{rainfall_data}\n")
             arquivo_txt.write(f"map_condiction,{self.map_cond}")
 
-        # Organiza os caminhos dos arquivos de saída enviados pelo user: modifica a extensão de .tif para .rst
-        self.output1_ri = direct_temp + r'\rainfall_interpolated.txt'
+        # Organiza os caminhos dos arquivos de saida enviados pelo user: modifica a extensao de .tif para .rst
+        self.output1_ri = direct_temp + r'\rainfall_interpolated.bin'
         map_output_path = direct_temp + r'\maps'
 
-        # Escreve aquivo txt contendo o diretório informado pelo user: será fornecido para a rotina em visual basic
+        # Escreve aquivo txt contendo o diretorio informado pelo user: sera fornecido para a rotina em visual basic
         direct_out_files = direct_temp + r'\output_files_config_rain_inte.txt'
         with open(direct_out_files, 'w', encoding='utf-8') as arquivo_txt:
             arquivo_txt.write("Select output file directory\n")
@@ -1955,55 +2187,60 @@ class HidroPixel:
                 f"rainfall_interpolated_maps_path,{map_output_path}")
 
     def run_rainfall_interpolation(self, condicao):
-        """Esta estrutura a ordem de execução da rontina que gera a chuva interpolada por pixel da bacia hidrográfica"""
+        """Esta estrutura a ordem de execucao da rontina que gera a chuva interpolada por pixel da bacia hidrografica"""
         self.map_cond = condicao
         self.run_process_rainfall_interpol()
-        # Chama executável vb para iniciar o processamento
-        rainfall_interpol_vb = self.diretorio_atual + r'\temp\Rainfall_Interpolation.exe'
+        # Chama executavel vb para iniciar o processamento
+        rainfall_interpol_vb = self.diretorio_atual + r'\temp\rainfall_interpolation.exe'
         rainfall_iterp_exe = subprocess.run([rainfall_interpol_vb])
 
         # verifica se houve algum erro no processamento das rotinas no vb ou se o usuario clicou em cancelar
-        # Caso não, a execução continua no python
+        # Caso nao, a execucao continua no python
         if rainfall_iterp_exe.returncode == 0:
 
-            # Se o usuário escolheu a opção para gerar o arquivo da chuva interpolada em txt, ele será salvo no caminho fornecido
-            if self.map_cond == 0:
+            # Se o usuario escolheu a opcao para gerar o arquivo da chuva interpolada em txt, ele sera salvo no caminho fornecido
+            if self.map_cond == 0 and os.path.isfile(self.output1_ri) == True:
                 output_fin = self.caminho_completo(
                     self.dlg_exc_rain.le_3_pg1.text(), self.dlg_exc_rain.le_4_pg_ri.text())
                 shutil.move(self.output1_ri,
                             output_fin)
 
-            # Se o usuário escolheu para gerar os mapas da precipitação interpolada, eles serão enviados para a pasta informada
-            else:
+                QMessageBox.information(
+                    None, "Information", "Operation completed successfully!", )
+
+            # Se o usuario escolheu para gerar os mapas da precipitacao interpolada, eles serao enviados para a pasta informada
+            elif self.map_cond == 1:
                 # Captura os arquivos da pasta map
                 os.chdir(self.diretorio_atual + r'\temp\maps')
                 lista_mapas = glob.glob('*.asc')
-                for mapa in lista_mapas:
-                    self.leh_asc_escreve_geotiff(mapa)
 
-            QMessageBox.information(
-                None, "Information", "Operation completed successfully!", )
+                QMessageBox.information(
+                    None, "Information", "Operation completed successfully!", )
+
+            else:
+                QMessageBox.information(
+                    None, "Information", "The Hidropixel process has been canceled!", )
 
         else:
             QMessageBox.information(
                 None, "Information", "There was an inconsistency, please verify if all files were sent!", )
 
     def processa_arquivo_chuva_med(self, input_file, output_file):
-        # Lê todo o conteúdo do arquivo
+        # Le todo o conteudo do arquivo
         with open(input_file, 'r', encoding='utf-8') as f:
             linhas = f.readlines()
 
-        # Verifica se o arquivo não está vazio
+        # Verifica se o arquivo nao esta vazio
         if not linhas:
             raise Exception("Arquivo vazio!")
 
-        # A primeira linha é o cabeçalho
+        # A primeira linha é o cabecalho
         cabecalho = linhas[0].strip()
 
-        # Linhas de dados (excluindo o cabeçalho)
+        # Linhas de dados (excluindo o cabecalho)
         dados = [linha.strip() for linha in linhas[1:] if linha.strip()]
 
-        # Número de linhas de dados
+        # Numero de linhas de dados
         num_linhas = len(dados)
 
         # Calcula o delta_t a partir das duas primeiras linhas de dados
@@ -2013,7 +2250,7 @@ class HidroPixel:
             segundo_valor = float(dados[1].split(',')[0])
             delta_t = segundo_valor - primeiro_valor
         else:
-            delta_t = 0  # ou lança exceção, caso seja necessário
+            delta_t = 0  # ou lanca excecao, caso seja necessario
 
         # Escreve o novo arquivo com a primeira linha contendo "num_linhas,delta_t"
         with open(output_file, 'w', encoding='utf-8') as f_out:
@@ -2022,12 +2259,57 @@ class HidroPixel:
             for linha in dados:
                 f_out.write(linha + "\n")
 
+    def gera_exu_shp_txt(self):
+        """Esta funcao le o arquivo shp com os POIs e gera a linha e coluna de cada ponto com base na matriz da bacia hidrografica"""
+        # Abrir shapefile
+        ds_shp = ogr.Open(
+            self.shp_list_g[self.dlg_flow_tt.cb_8_pg2.currentIndex()])
+        layer = ds_shp.GetLayer()
+        gt = self.rdc_vars.geotransform
+
+        # Resultado
+        exutorios_pix = {}
+
+        for feature in layer:
+            id_exu = feature.GetField("id")
+            geom = feature.GetGeometryRef()
+            x, y = geom.GetX(), geom.GetY()
+
+            # Conversão considerando centro do pixel
+            col = int((x - gt[0]) / gt[1])
+            lin = int((y - gt[3]) / gt[5])
+
+            exutorios_pix[id_exu] = (lin, col)
+        # Exibir resultado
+        exutorio_txt = self.diretorio_atual + r'\temp' + r'\exutorios.txt'
+        with open(exutorio_txt, 'w') as file:
+            file.write(str(len(exutorios_pix))+"\n")
+            file.write("lin,col\n")
+            for id_exu, (lin, col) in exutorios_pix.items():
+                file.write(f"{lin},{col}\n")
+
+    def converte_tv_sub_POI_tif(self):
+        """Converte os arquivos ascii com o TV e sub-bacia para cada POI. A funcao tambem salva os arquivos na pasta envia pelo user"""
+        exu_path = self.diretorio_atual + r'\temp' + r'\tv_for_each_poi'
+        os.chdir(exu_path)
+        tvs = glob.glob('*.rst')
+        rst_to_raster = np.zeros((self.rdc_vars.nlin, self.rdc_vars.ncol))
+        cont = 0
+        for tv in tvs:
+            tv_basename = os.path.basename(tv)
+            tv_tif = self.dlg_flow_tt.le_13_pg4.text() + f"\{tv_basename}.tif"
+            # Chama funcao que leh rst e escreve geotif
+            if 'travel' in tv_basename:
+                self.leh_rst_escreve_geotiff(tv, tv_tif, 'float')
+            else:
+                self.leh_rst_escreve_geotiff(tv, tv_tif, 'int')
+
     def run_process_excess_rainfall(self):
-        """Esta função organiza os arquivos enviados pelo user e os configura para serem lidos nas rotinas em visual basic"""
-        # Captura diretório dos arquivo txt (pasta temp)
+        """Esta funcao organiza os arquivos enviados pelo user e os configura para serem lidos nas rotinas em visual basic"""
+        # Captura diretorio dos arquivo txt (pasta temp)
         direct_temp = self.diretorio_atual + r'\temp'
 
-        # Chama funções para tranformação do raster em geotiff para rst tipo ascii
+        # Chama funcões para tranformacao do raster em geotiff para rst tipo ascii
 
         # leh bacia tif gera bacia rst ascii
         bacia_file = direct_temp + r'\Watershed.rst'
@@ -2039,26 +2321,26 @@ class HidroPixel:
         self.leh_geotiff_escreve_ascii(
             self.lista_rasters_dir[self.dlg_exc_rain.cb_2_pg2.currentIndex()], cn_file, 'float')
 
-        # move arquivo da precipitação para a pasta temp
+        # move arquivo da precipitacao para a pasta temp
         if self.dlg_exc_rain.rb_1_pg1.isChecked():
             chuva_media = direct_temp + r'\Areal_averaged_rainfall.txt'
             self.processa_arquivo_chuva_med(
                 self.dlg_exc_rain.le_3_pg2.text(), chuva_media)
 
         if self.dlg_exc_rain.rb_2_pg1.isChecked():
-            chuva_distribuida = direct_temp + r'\Spatially_distributed_rainfall.txt'
+            chuva_distribuida = direct_temp + r'\Spatially_distributed_rainfall.bin'
             shutil.copy(self.dlg_exc_rain.le_4_pg2.text(), chuva_distribuida)
 
-        # Escreve arquivos de parâmetros
+        # Escreve arquivos de parametros
         direct_parameters = direct_temp + r'\parameters_exc_rainf.txt'
         with open(direct_parameters, 'w', encoding='utf-8') as arquivo_txt:
             arquivo_txt.write(
                 f"Initial abstraction (λ),{self.dlg_exc_rain.le_1_pg1.text()}")
 
-        # gera arquivo contendo os diretórios dos inputs
+        # gera arquivo contendo os diretorios dos inputs
         direct_in_files = direct_temp + r'\input_files_config_exc_rainf.txt'
         with open(direct_in_files, 'w', encoding='utf-8') as arquivo_txt:
-            # Escreve cabeçalho
+            # Escreve cabecalho
             arquivo_txt.write("Selected input file directory\n")
             arquivo_txt.write(
                 f'{1 if self.dlg_exc_rain.cb_1_pg2.currentText() !="" else 0},watershed,{bacia_file}\n')
@@ -2070,14 +2352,14 @@ class HidroPixel:
                 f'{1 if self.dlg_exc_rain.le_4_pg2.text() !="" else 0},Spatially_distributed_rainfall,{chuva_distribuida if self.dlg_exc_rain.rb_2_pg1.isChecked() == True else ""}\n')
             arquivo_txt.write(f'{1},parameters,{direct_parameters}\n')
 
-        # Escreve aquivos de saída
+        # Escreve aquivos de saida
         self.output1_exec_rain = direct_temp + r'\Map_of_watershed_pixels_ID.rst'
         self.output2_exec_rain = direct_temp + \
             r'\Map_of_maximum_potential_retention.rst'
         self.output3_exec_rain = direct_temp + r'\Map_of_initial_abstraction.rst'
         self.output4_exec_rain = direct_temp + r'\Map_of_total_rainfall.rst'
         self.output5_exec_rain = direct_temp + r'\Map_of_total_excess_rainfall.rst'
-        self.output6_exec_rain = direct_temp + r'\Excess_hyetographs_per_pixel.txt'
+        self.output6_exec_rain = direct_temp + r'\Excess_hyetographs_per_pixel.bin'
 
         direct_out_files = direct_temp + r'\output_files_config_exc_rainf.txt'
         with open(direct_out_files, "w", encoding="utf-8") as arquivo_txt:
@@ -2096,8 +2378,8 @@ class HidroPixel:
                 f"{1 if self.dlg_exc_rain.ch_6_pg4.isChecked() == True else 0},Excess hyetographs per pixel (mm),{self.output6_exec_rain}")
 
     def run_excess_rainfall(self):
-        '''Está função ativa a página de log e configura a ordem de execução das funções para o cálculo da chuva excedente'''
-        # Ativiva a página de log e limpa as informações passadas no text_edit
+        '''Esta funcao ativa a pagina de log e configura a ordem de execucao das funcões para o calculo da chuva excedente'''
+        # Ativiva a pagina de log e limpa as informacões passadas no text_edit
         mensagem_log1 = None
         self.dlg_exc_rain.tabWidget.setCurrentIndex(1)
         self.dlg_exc_rain.pg_log_exc_rain.setEnabled(True)
@@ -2108,7 +2390,7 @@ class HidroPixel:
         self.dlg_exc_rain.progressBar.setValue(0)
         self.dlg_exc_rain.progressBar.setValue(5)
 
-        # Configura as informações do textEdit da referida página
+        # Configura as informacões do textEdit da referida pagina
         font = QFont()
         font.setPointSize(11)
         version_info = {
@@ -2127,36 +2409,36 @@ class HidroPixel:
         mensagem_log1 += f"Algorithm started at: {datatime_started}\n"
         mensagem_log1 += "--------------------------------------------------------\n"
         self.dlg_exc_rain.progressBar.setValue(10)
-        # Cria condição de parada da execução: se o usuário clicar no botão cancel da página de log
+        # Cria condicao de parada da execucao: se o usuario clicar no botao cancel da pagina de log
         while True:
-            # Método usado para permitir a iteração do usuário enquanto o programa está em execução
+            # Método usado para permitir a iteracao do usuario enquanto o programa esta em execucao
             QApplication.processEvents()
             self.dlg_exc_rain.btn_cancel_log.clicked.connect(lambda: self.cancel_log_page(
                 self.dlg_exc_rain.te_logg, self.dlg_exc_rain.pg_par_exc_rain, self.dlg_exc_rain.pg_log_exc_rain))
 
-            # Se não existir erros nas informações enviadas, será mostrada a página de log e o programa será executado
+            # Se nao existir erros nas informacões enviadas, sera mostrada a pagina de log e o programa sera executado
             self.dlg_exc_rain.pg_par_exc_rain.setEnabled(False)
 
-            # Adiciona as mensagem de log ao text edit e configura a função run
+            # Adiciona as mensagem de log ao text edit e configura a funcao run
             self.dlg_exc_rain.te_logg.append(mensagem_log1)
             for cont in range(1, 26):
                 self.dlg_exc_rain.progressBar.setValue(cont)
 
-            # Chama função que cria arquivos necessários às rotinas em vb
+            # Chama funcao que cria arquivos necessarios as rotinas em vb
             self.run_process_excess_rainfall()
             self.dlg_exc_rain.progressBar.setValue(40)
 
-            # Chama executável vb para iniciar o processamento
+            # Chama executavel vb para iniciar o processamento
             exc_rain_vb = self.diretorio_atual + r'\temp\excess_rainfall.exe'
             exc_rain_exe = subprocess.run([exc_rain_vb])
 
             # verifica se houve algum erro no processamento das rotinas no vb ou se o usuario clicou em cancelar
-            # Caso não, a execução continua no python
+            # Caso nao, a execucao continua no python
             if exc_rain_exe.returncode == 0:
                 self.dlg_exc_rain.progressBar.setValue(60)
 
-                # move o arquivo txt contendo o hietograma de chuva excedente para o diretório informado
-                if self.dlg_exc_rain.ch_6_pg4.isChecked():
+                # move o arquivo txt contendo o hietograma de chuva excedente para o diretorio informado
+                if self.dlg_exc_rain.ch_6_pg4.isChecked() and os.path.isfile(self.output6_exec_rain) == True:
                     # Verifica se o user enviou o diretorio do arquivo ou apenas o nome (nesse caso, working folder != '')
                     is_basename = self.is_basename_only(
                         self.dlg_exc_rain.le_6_pg4.text())
@@ -2170,107 +2452,98 @@ class HidroPixel:
                         shutil.move(self.output6_exec_rain,
                                     self.dlg_exc_rain.le_6_pg4.text())
 
-                # Converte arquivos de saída de .rst ascii para geotif
-                if self.dlg_exc_rain.le_6_pg4.text() != '' or self.dlg_exc_rain.le_5_pg4.text() != '':
-                    if self.dlg_exc_rain.ch_1_pg4.isChecked():
-                        output_path = self.caminho_completo(
-                            self.dlg_exc_rain.le_3_pg1.text(), self.dlg_exc_rain.le_1_pg4.text())
-                        self.leh_rst_escreve_geotiff(
-                            self.output1_exec_rain, output_path, 'int')
+                    # Converte arquivos de saida de .rst ascii para geotif
+                    if os.path.isfile(self.output4_exec_rain) == True and os.path.isfile(self.output5_exec_rain) == True:
+                        if self.dlg_exc_rain.ch_1_pg4.isChecked():
+                            output_path = self.caminho_completo(
+                                self.dlg_exc_rain.le_3_pg1.text(), self.dlg_exc_rain.le_1_pg4.text())
+                            self.leh_rst_escreve_geotiff(
+                                self.output1_exec_rain, output_path, 'int')
 
-                    if self.dlg_exc_rain.ch_2_pg4.isChecked():
-                        output_path = self.caminho_completo(
-                            self.dlg_exc_rain.le_3_pg1.text(), self.dlg_exc_rain.le_2_pg4.text())
-                        self.leh_rst_escreve_geotiff(
-                            self.output2_exec_rain, output_path, 'float')
+                        if self.dlg_exc_rain.ch_2_pg4.isChecked():
+                            output_path = self.caminho_completo(
+                                self.dlg_exc_rain.le_3_pg1.text(), self.dlg_exc_rain.le_2_pg4.text())
+                            self.leh_rst_escreve_geotiff(
+                                self.output2_exec_rain, output_path, 'float')
 
-                    if self.dlg_exc_rain.ch_3_pg4.isChecked():
-                        output_path = self.caminho_completo(
-                            self.dlg_exc_rain.le_3_pg1.text(), self.dlg_exc_rain.le_3_pg4.text())
-                        self.leh_rst_escreve_geotiff(
-                            self.output3_exec_rain, output_path, 'float')
+                        if self.dlg_exc_rain.ch_3_pg4.isChecked():
+                            output_path = self.caminho_completo(
+                                self.dlg_exc_rain.le_3_pg1.text(), self.dlg_exc_rain.le_3_pg4.text())
+                            self.leh_rst_escreve_geotiff(
+                                self.output3_exec_rain, output_path, 'float')
 
-                    if self.dlg_exc_rain.ch_4_pg4.isChecked():
-                        output_path = self.caminho_completo(
-                            self.dlg_exc_rain.le_3_pg1.text(), self.dlg_exc_rain.le_4_pg4.text())
-                        self.leh_rst_escreve_geotiff(
-                            self.output4_exec_rain, output_path, 'float')
+                        if self.dlg_exc_rain.ch_4_pg4.isChecked():
+                            output_path = self.caminho_completo(
+                                self.dlg_exc_rain.le_3_pg1.text(), self.dlg_exc_rain.le_4_pg4.text())
+                            self.leh_rst_escreve_geotiff(
+                                self.output4_exec_rain, output_path, 'float')
 
-                    if self.dlg_exc_rain.ch_5_pg4.isChecked():
-                        output_path = self.caminho_completo(
-                            self.dlg_exc_rain.le_3_pg1.text(), self.dlg_exc_rain.le_5_pg4.text())
-                        self.leh_rst_escreve_geotiff(
-                            self.output5_exec_rain, output_path, 'float')
+                        if self.dlg_exc_rain.ch_5_pg4.isChecked():
+                            output_path = self.caminho_completo(
+                                self.dlg_exc_rain.le_3_pg1.text(), self.dlg_exc_rain.le_5_pg4.text())
+                            self.leh_rst_escreve_geotiff(
+                                self.output5_exec_rain, output_path, 'float')
 
-                    # Atualiza progressBar
-                    self.dlg_exc_rain.progressBar.setValue(80)
+                        # Atualiza progressBar
+                        self.dlg_exc_rain.progressBar.setValue(80)
 
-                    # Adiciona layers ao QGIS
-                    if self.dlg_exc_rain.ch_7_pg4.isChecked():
-                        layer_path = self.caminho_completo(
-                            self.dlg_exc_rain.le_3_pg1.text(), self.dlg_exc_rain.le_1_pg4.text())
-                        self.adiciona_layer(layer_path)
+                        # Adiciona layers ao QGIS
+                        if self.dlg_exc_rain.ch_7_pg4.isChecked():
+                            layer_path = self.caminho_completo(
+                                self.dlg_exc_rain.le_3_pg1.text(), self.dlg_exc_rain.le_1_pg4.text())
+                            self.adiciona_layer(layer_path)
 
-                    if self.dlg_exc_rain.ch_8_pg4.isChecked():
-                        layer_path = self.caminho_completo(
-                            self.dlg_exc_rain.le_3_pg1.text(), self.dlg_exc_rain.le_2_pg4.text())
-                        self.adiciona_layer(layer_path)
+                        if self.dlg_exc_rain.ch_8_pg4.isChecked():
+                            layer_path = self.caminho_completo(
+                                self.dlg_exc_rain.le_3_pg1.text(), self.dlg_exc_rain.le_2_pg4.text())
+                            self.adiciona_layer(layer_path)
 
-                    if self.dlg_exc_rain.ch_9_pg4.isChecked():
-                        layer_path = self.caminho_completo(
-                            self.dlg_exc_rain.le_3_pg1.text(), self.dlg_exc_rain.le_3_pg4.text())
-                        self.adiciona_layer(layer_path)
+                        if self.dlg_exc_rain.ch_9_pg4.isChecked():
+                            layer_path = self.caminho_completo(
+                                self.dlg_exc_rain.le_3_pg1.text(), self.dlg_exc_rain.le_3_pg4.text())
+                            self.adiciona_layer(layer_path)
 
-                    if self.dlg_exc_rain.ch_10_pg4.isChecked():
-                        layer_path = self.caminho_completo(
-                            self.dlg_exc_rain.le_3_pg1.text(), self.dlg_exc_rain.le_4_pg4.text())
-                        self.adiciona_layer(layer_path)
+                        if self.dlg_exc_rain.ch_10_pg4.isChecked():
+                            layer_path = self.caminho_completo(
+                                self.dlg_exc_rain.le_3_pg1.text(), self.dlg_exc_rain.le_4_pg4.text())
+                            self.adiciona_layer(layer_path)
 
-                    if self.dlg_exc_rain.ch_11_pg4.isChecked():
-                        layer_path = self.caminho_completo(
-                            self.dlg_exc_rain.le_3_pg1.text(), self.dlg_exc_rain.le_5_pg4.text())
-                        self.adiciona_layer(layer_path)
+                        if self.dlg_exc_rain.ch_11_pg4.isChecked():
+                            layer_path = self.caminho_completo(
+                                self.dlg_exc_rain.le_3_pg1.text(), self.dlg_exc_rain.le_5_pg4.text())
+                            self.adiciona_layer(layer_path)
 
-                    # Adiciona as informação ao text edit
-                    self.dlg_exc_rain.te_logg.append(
-                        'Operation completed successfully!')
-                    QMessageBox.information(
-                        None, "Information", "Operation completed successfully!", )
-                    self.dlg_exc_rain.progressBar.setValue(100)
-                    self.dlg_exc_rain.pg_log_exc_rain.setEnabled(False)
-                    self.dlg_exc_rain.pg_par_exc_rain.setEnabled(True)
-                    self.dlg_exc_rain.te_logg.clear()
-                    break
+                        # Adiciona as informacao ao text edit
+                        self.dlg_exc_rain.te_logg.append(
+                            'Operation completed successfully!')
+                        QMessageBox.information(
+                            None, "Information", "Operation completed successfully!", )
+                        self.dlg_exc_rain.progressBar.setValue(100)
+                        self.dlg_exc_rain.pg_log_exc_rain.setEnabled(False)
+                        self.dlg_exc_rain.pg_par_exc_rain.setEnabled(True)
+                        self.dlg_exc_rain.te_logg.clear()
+                        break
                 else:
-                    QMessageBox.information(
-                        None, "Information", "There was an inconsistency, please verify if all files were sent!", )
-                    self.dlg_exc_rain.progressBar.setValue(100)
+                    # Finaliza execucao do programa e elimina os arquivos temporarios criados
+                    self.apaga_arquivos_temp()
+                    self.dlg_exc_rain.progressBar.setValue(0)
                     self.dlg_exc_rain.te_logg.clear()
                     self.dlg_exc_rain.pg_par_exc_rain.setEnabled(True)
                     self.dlg_exc_rain.pg_log_exc_rain.setEnabled(False)
-                    self.apaga_arquivos_temp()
+                    end_msg = "The Hidropixel process has been canceled... Take a breath and go back to work!"
+                    self.dlg_exc_rain.te_logg.append(end_msg)
                     break
-
-            # Finaliza execução do programa e elimina os arquivos temporários criados
-            self.apaga_arquivos_temp()
-            self.dlg_exc_rain.progressBar.setValue(0)
-            self.dlg_exc_rain.te_logg.clear()
-            self.dlg_exc_rain.pg_par_exc_rain.setEnabled(True)
-            self.dlg_exc_rain.pg_log_exc_rain.setEnabled(False)
-            end_msg = "The Hidropixel process has been canceled... Take a breath and go back to work!"
-            self.dlg_exc_rain.te_logg.append(end_msg)
-            break
 
     def run_process_flow_tt(self):
-        """Esta função configura a escrita dos arquivos txt para integração com a linguagem visual basic"""
+        """Esta funcao configura a escrita dos arquivos txt para integracao com a linguagem visual basic"""
 
-        # Captura diretório dos arquivo txt (pasta temp)
+        # Captura diretorio dos arquivo txt (pasta temp)
         direct_temp = self.diretorio_atual + r'\temp'
 
-        # Escreve txt contendo código de direções de fluxo
+        # Escreve txt contendo codigo de direcões de fluxo
         flow_directions_code = direct_temp + r'\flow_directions_code.txt'
         with open(flow_directions_code, 'w', encoding='utf-8') as arquivo_txt:
-            # Escreve cabeçalho
+            # Escreve cabecalho
             arquivo_txt.write('Flow Directions Code\n')
             arquivo_txt.write(f'A,{self.dlg_flow_tt.le_5_pg1.text()}\n')
             arquivo_txt.write(f'B,{self.dlg_flow_tt.le_6_pg1.text()}\n')
@@ -2281,7 +2554,7 @@ class HidroPixel:
             arquivo_txt.write(f'G,{self.dlg_flow_tt.le_11_pg1.text()}\n')
             arquivo_txt.write(f'H,{self.dlg_flow_tt.le_12_pg1.text()}')
 
-        # Escreve arquivo txt contento os parâmetros do modelo
+        # Escreve arquivo txt contento os parametros do modelo
         parameters_file = direct_temp + r'\parameters_flow_tt.txt'
         with open(parameters_file, 'w', encoding='utf-8') as arquivo_txt:
             arquivo_txt.write('Regional curve method is checked,')
@@ -2306,13 +2579,13 @@ class HidroPixel:
             arquivo_txt.write(
                 f'Minimum slope,{self.dlg_flow_tt.le_1_pg1.text()}')
 
-        # Escreve arquivos contendo as informações das tabelas referentes aos segmentos homogêneos da rede de drenagem e das características do uso e cobertura do solo
+        # Escreve arquivos contendo as informacões das tabelas referentes aos segmentos homogeneos da rede de drenagem e das caracteristicas do uso e cobertura do solo
         if self.dlg_flow_tt.le_8_pg2.text() != '' or self.dlg_flow_tt.tbw_1_pg2.rowCount() != 0:
             self.save_table_to_file(1)
 
         self.save_table_to_file(2)
 
-        # Chama funções para tranformação do raster em geotiff para rst tipo ascii
+        # Chama funcões para tranformacao do raster em geotiff para rst tipo ascii
         bacia_file = direct_temp + r'\Watershed.rst'
         self.leh_geotiff_escreve_ascii(
             self.lista_rasters_dir[self.dlg_flow_tt.cb_1_pg2.currentIndex()], bacia_file, 'int')
@@ -2344,10 +2617,10 @@ class HidroPixel:
         self.leh_geotiff_escreve_ascii(
             self.lista_rasters_dir[self.dlg_flow_tt.cb_7_pg2.currentIndex()], LULC_file, 'int')
 
-        # Escreve arquivo txt com os diretórios e nome dos inputs enviados pelo user
+        # Escreve arquivo txt com os diretorios e nome dos inputs enviados pelo user
         direct_in_files = direct_temp + r'\input_files_config_flow_tt.txt'
         with open(direct_in_files, 'w', encoding='utf-8') as arquivo_txt:
-            # Escreve cabeçalho
+            # Escreve cabecalho
             arquivo_txt.write("Selected input file directory\n")
             arquivo_txt.write(
                 f'{1 if self.dlg_flow_tt.cb_1_pg2.currentText() !="" else 0},watershed,{bacia_file}\n')
@@ -2363,17 +2636,24 @@ class HidroPixel:
                 f'{1 if self.dlg_flow_tt.cb_5_pg2.currentText() !=""  else 0},river_segments,{river_segments_file}\n')
             arquivo_txt.write(
                 f'{1 if self.dlg_flow_tt.cb_5_pg2.currentText() !="" else 0},segment_characteristics,{self.file_name_tb1}\n')
-            # Arquivo obrigatório, condição apenas para manter o padrão e controle
+            # Arquivo obrigatorio, condicao apenas para manter o padrao e controle
             arquivo_txt.write(
                 f'{1 if self.dlg_flow_tt.cb_7_pg2.currentText() !="" else 0},LULC,{LULC_file}\n')
-            # Arquivo obrigatório, condição apenas para manter o padrão e controle
+            # Arquivo obrigatorio, condicao apenas para manter o padrao e controle
             arquivo_txt.write(
                 f'{1 if self.dlg_flow_tt.cb_1_pg2.currentText() !="" else 0},surface_roughness,{self.file_name_tb2}\n')
             arquivo_txt.write(f'{0},reservoirs,\n')
-            # Arquivo obrigatório, condição apenas para manter o padrão e controle
+            # Arquivo obrigatorio, condicao apenas para manter o padrao e controle
             arquivo_txt.write(f'{1},parameters,{parameters_file}')
 
-        # Organiza os caminhos dos arquivos de saída enviados pelo user: modifica a extensão de .tif para .rst
+        # Funcao que gera txt com os as coodenadas (lin,col) dos POIs
+        if (self.dlg_flow_tt.cb_8_pg2.currentText() != '' or self.dlg_flow_tt.cb_8_pg2.currentText() != None) and self.dlg_flow_tt.ch_12_pg4.isChecked() == True:
+            self.gera_exu_shp_txt()
+        else:
+            with open(direct_temp + r'\exutorios.txt', 'w') as file:
+                file.write("0")
+
+        # Organiza os caminhos dos arquivos de saida enviados pelo user: modifica a extensao de .tif para .rst
         self.output1_flow_tt = direct_temp + r'\Slope.rst'
         self.output2_flow_tt = direct_temp + r'\river_segments.rst'
         self.output3_flow_tt = direct_temp + r'\Hydraulic_radius-roughness_and_slope.txt'
@@ -2381,7 +2661,7 @@ class HidroPixel:
         self.output5_flow_tt = direct_temp + r'\River_bankfull_width.rst'
         self.output6_flow_tt = direct_temp + r'\Flow_travel_time.rst'
 
-        # Escreve aquivo txt contendo o diretório informado pelo user: será fornecido para a rotina em visual basic
+        # Escreve aquivo txt contendo o diretorio informado pelo user: sera fornecido para a rotina em visual basic
         direct_out_files = direct_temp + r'\output_files_config_flow_tt.txt'
         with open(direct_out_files, 'w', encoding='utf-8') as arquivo_txt:
             arquivo_txt.write("Select output file directory\n")
@@ -2400,8 +2680,8 @@ class HidroPixel:
                 f'{1 if self.dlg_flow_tt.ch_11_pg4.isChecked() == True else 0},Flow_travel_time,{self.output6_flow_tt}')  # rst
 
     def run_flow_tt(self):
-        '''Está função ativa a página de log e configura a ordem de execução das funções para o cálculo do tempo de viagem'''
-        # Ativiva a página de log e limpa as informações passadas no text_edit
+        '''Esta funcao ativa a pagina de log e configura a ordem de execucao das funcões para o calculo do tempo de viagem'''
+        # Ativiva a pagina de log e limpa as informacões passadas no text_edit
         mensagem_log1 = None
         self.dlg_flow_tt.tabWidget.setCurrentIndex(1)
         self.dlg_flow_tt.pg_log_ftt.setEnabled(True)
@@ -2412,7 +2692,7 @@ class HidroPixel:
         self.dlg_flow_tt.progressBar.setValue(0)
         self.dlg_flow_tt.progressBar.setValue(5)
 
-        # Configura as informações do textEdit da referida página
+        # Configura as informacões do textEdit da referida pagina
         font = QFont()
         font.setPointSize(11)
         version_info = {
@@ -2432,14 +2712,14 @@ class HidroPixel:
         mensagem_log1 += "--------------------------------------------------------\n"
         self.dlg_flow_tt.progressBar.setValue(10)
 
-        # Cria condição de parada da execução: se o usuário clicar no botão cancel da página de log
+        # Cria condicao de parada da execucao: se o usuario clicar no botao cancel da pagina de log
         while True:
-            # Método usado para permitir a iteração do usuário enquanto o programa está em execução
+            # Método usado para permitir a iteracao do usuario enquanto o programa esta em execucao
             QApplication.processEvents()
             self.dlg_flow_tt.btn_cancel_log.clicked.connect(lambda: self.cancel_log_page(
                 self.dlg_flow_tt.te_logg, self.dlg_flow_tt.pg_par_ftt, self.dlg_flow_tt.pg_log_ftt))
 
-            # Verifica a existência de incoerências nas informações (direções de fluxo) fornecidas pelo usuário
+            # Verifica a existencia de incoerencias nas informacões (direcões de fluxo) fornecidas pelo usuario
             list_line_edit_value_pg1 = [self.dlg_flow_tt.le_5_pg1.text(),
                                         self.dlg_flow_tt.le_6_pg1.text(),
                                         self.dlg_flow_tt.le_7_pg1.text(),
@@ -2450,7 +2730,7 @@ class HidroPixel:
                                         self.dlg_flow_tt.le_12_pg1.text()
                                         ]
             duplicate = []
-            # Verifica se há duplicatas no código
+            # Verifica se ha duplicatas no codigo
             for i in range(len(list_line_edit_value_pg1)):
                 for j in range(i+1, len(list_line_edit_value_pg1)):
                     if list_line_edit_value_pg1[i] == list_line_edit_value_pg1[j]:
@@ -2459,23 +2739,23 @@ class HidroPixel:
 
             if any(item == '' for item in duplicate):
                 self.dlg_flow_tt.pages_flow_tt.setCurrentIndex(0)
-                # Vefica se os códigos das diferções de drenagem foram corretamente enviados
+                # Vefica se os codigos das difercões de drenagem foram corretamente enviados
                 QMessageBox.warning(self.dlg_flow_tt, 'Warning',
                                     "Direction codes might not None.")
                 return
 
             elif duplicate and all(item != '' for item in duplicate):
                 self.dlg_flow_tt.pages_flow_tt.setCurrentIndex(0)
-                # O usuário enviou 2 valores semelhantes, será mostrado uma mensagem de erro
+                # O usuario enviou 2 valores semelhantes, sera mostrado uma mensagem de erro
                 QMessageBox.warning(
                     self.dlg_flow_tt, 'Warning', f"The value(s) '{duplicate}' is(are) (a) duplicate(s)! Direction codes do not accept duplicates.")
                 return
 
             else:
-                # Se não existir erros nas informações enviadas, será mostrada a página de log e o programa será executado
+                # Se nao existir erros nas informacões enviadas, sera mostrada a pagina de log e o programa sera executado
                 self.dlg_flow_tt.pg_par_ftt.setEnabled(False)
 
-                # Adiciona as mensagem de log ao text edit e configura a função run
+                # Adiciona as mensagem de log ao text edit e configura a funcao run
                 self.dlg_flow_tt.te_logg.append(mensagem_log1)
                 for cont in range(1, 26):
                     self.dlg_flow_tt.progressBar.setValue(cont)
@@ -2483,21 +2763,22 @@ class HidroPixel:
                 self.run_process_flow_tt()
                 self.dlg_flow_tt.progressBar.setValue(40)
 
-                # Chama executável vb para iniciar o processamento
-                travel_time_vb = self.diretorio_atual + r'\temp\Travel_Time.exe'
+                # Chama executavel vb para iniciar o processamento
+                travel_time_vb = self.diretorio_atual + r'\temp\travel_time.exe'
                 flow_tt_exe = subprocess.run([travel_time_vb])
 
                 # verifica se houve algum erro no processamento das rotinas no vb ou se o usuario clicou em cancelar
-                # Caso não, a execução continua no python
+                # Caso nao, a execucao continua no python
                 if flow_tt_exe.returncode == 0:
                     self.dlg_flow_tt.progressBar.setValue(60)
 
-                    # Move e renomeia arquivo txt com as características dos trechos de rios semelhantes
+                    # Move e renomeia arquivo txt com as caracteristicas dos trechos de rios semelhantes
                     if self.dlg_flow_tt.ch_8_pg4.isChecked() == True and os.path.isfile(self.output3_flow_tt) == True:
 
                         # Verifica se o user enviou o diretorio do arquivo ou apenas o nome (nesse caso, working folder != '')
                         is_basename = self.is_basename_only(
                             self.dlg_flow_tt.le_8_pg4.text())
+
                         # Se for apenas basename, concatena working folder com valor informado (deve ter extensao)
                         if is_basename == True:
                             output_file_1 = os.path.join(
@@ -2509,7 +2790,7 @@ class HidroPixel:
                                         self.dlg_flow_tt.le_8_pg4.text())
 
                     if os.path.isfile(self.output6_flow_tt) == True:
-                        # Define parâmetros da função que transforma .rst(ascii) para geotiff: Cria arquivos de saída no diretório fornecido pelo user
+                        # Define parametros da funcao que transforma .rst(ascii) para geotiff: Cria arquivos de saida no diretorio fornecido pelo user
                         # Slope
                         if self.dlg_flow_tt.ch_6_pg4.isChecked():
                             output_path = self.caminho_completo(self.dlg_flow_tt.le_21_pg1.text(),
@@ -2545,6 +2826,11 @@ class HidroPixel:
                             self.leh_rst_escreve_geotiff(
                                 self.output6_flow_tt, output_path, 'float')
 
+                        # Salva tvs e sub-bacias para cada POI
+                        if (self.dlg_flow_tt.cb_8_pg2.currentText() != '' or self.dlg_flow_tt.cb_8_pg2.currentText() != None) and self.dlg_flow_tt.ch_12_pg4.isChecked() == True:
+                            self.converte_tv_sub_POI_tif()
+                            self.apaga_arquivos_tv()
+
                         # Atualiza progressBar
                         self.dlg_flow_tt.progressBar.setValue(80)
 
@@ -2569,7 +2855,7 @@ class HidroPixel:
                             self.adiciona_layer(self.caminho_completo(self.dlg_flow_tt.le_21_pg1.text(),
                                                                       self.dlg_flow_tt.le_11_pg4.text()))
 
-                        # Adiciona as informação ao text edit
+                        # Adiciona as informacao ao text edit
                         self.dlg_flow_tt.te_logg.append(
                             'Operation completed successfully!')
                         QMessageBox.information(
@@ -2580,31 +2866,35 @@ class HidroPixel:
                         self.dlg_flow_tt.te_logg.clear()
                         break
                 else:
-                    QMessageBox.information(
-                        None, "Information", "There was an inconsistency, please verify if all files were sent!", )
-                    self.dlg_flow_tt.progressBar.setValue(100)
+                    # Finaliza execucao do programa e elimina os arquivos temporarios criados
                     self.dlg_flow_tt.te_logg.clear()
+                    self.dlg_flow_tt.progressBar.setValue(0)
                     self.dlg_flow_tt.pg_par_ftt.setEnabled(True)
                     self.dlg_flow_tt.pg_log_ftt.setEnabled(False)
+                    end_msg = "The Hidropixel process has been canceled... Take a breath and go back to work!"
+                    self.dlg_flow_tt.te_logg.append(end_msg)
                     self.apaga_arquivos_temp()
                     break
 
-            # Finaliza execução do programa e elimina os arquivos temporários criados
-            self.dlg_flow_tt.te_logg.clear()
-            self.dlg_flow_tt.progressBar.setValue(0)
-            self.dlg_flow_tt.pg_par_ftt.setEnabled(True)
-            self.dlg_flow_tt.pg_log_ftt.setEnabled(False)
-            end_msg = "The Hidropixel process has been canceled... Take a breath and go back to work!"
-            self.dlg_flow_tt.te_logg.append(end_msg)
-            self.apaga_arquivos_temp()
-            break
-
     def run_process_flow_rout(self):
-        """Esta função organiza os arquivos de entrada para as rotinas em vb apartir do plugin qgis"""
-        # Captura diretório dos arquivo txt (pasta temp)
+        """Esta funcao organiza os arquivos de entrada para as rotinas em vb apartir do plugin qgis"""
+        # Captura diretorio dos arquivo txt (pasta temp)
         direct_temp = self.diretorio_atual + r'\temp'
 
-        # Escreve arquivos de parâmetros
+        # Logica para conexao com vb
+        if (self.dlg_flow_rout.le_3_pg2.text() != '' or self.dlg_flow_rout.le_3_pg2.text() != None) and self.dlg_flow_rout.ch_13_pg4.isChecked() == True:
+            self.apaga_arquivos_tv()
+            os.chdir(self.dlg_flow_rout.le_3_pg2.text())
+            arquivos_tif = glob.glob('*.tif')
+            cont = 0
+            # converte para rst e move para a pasta tv_for_each_poi
+            for file in arquivos_tif:
+                file_basename = os.path.basename(file)
+                tv_file = direct_temp + \
+                    fr"\tv_for_each_poi\{file_basename.replace('.tif', '.rst')}"
+                self.leh_geotiff_escreve_ascii(file, tv_file, "float")
+
+        # Escreve arquivos de parametros
         parameters_flow_rout = direct_temp + r'\parameters_flow_rout.txt'
         with open(parameters_flow_rout, 'w', encoding='utf-8') as arquivo_txt:
             arquivo_txt.write(
@@ -2616,7 +2906,7 @@ class HidroPixel:
             arquivo_txt.write(
                 f"m3/s,{1 if self.dlg_flow_rout.rb_4_pg4.isChecked() == True else 0}")
 
-        # Chama funções para tranformação do raster em geotiff para rst tipo ascii
+        # Chama funcões para tranformacao do raster em geotiff para rst tipo ascii
         bacia_file = direct_temp + r'\Watershed.rst'
         self.leh_geotiff_escreve_ascii(
             self.lista_rasters_dir[self.dlg_flow_rout.cb_1_pg2.currentIndex()], bacia_file, 'int')
@@ -2630,7 +2920,7 @@ class HidroPixel:
         self.leh_geotiff_escreve_ascii(
             self.lista_rasters_dir[self.dlg_flow_rout.cb_3_pg2.currentIndex()], flow_tt_file, 'float')
 
-        hietograma_file = direct_temp + r'\excess_hyetographs.txt'
+        hietograma_file = direct_temp + r'\excess_hyetographs.bin'
         shutil.copy2(self.dlg_flow_rout.le_4_pg2.text(), hietograma_file)
 
         total_exc_rain_file = direct_temp + r'\total_excess_rainfall.rst'
@@ -2644,7 +2934,7 @@ class HidroPixel:
         else:
             watershed_into_classes = ""
 
-        # Escreve txt contendo código de direções de fluxo
+        # Escreve txt contendo codigo de direcões de fluxo
         flow_directions_code = direct_temp + r'\input_files_config_flow_rout.txt'
         with open(flow_directions_code, 'w', encoding='utf-8') as arquivo_txt:
             arquivo_txt.write("Selected input files directory\n")
@@ -2667,7 +2957,7 @@ class HidroPixel:
         self.output2_flow_rout = direct_temp + r'\map_of_resulting_runoff_volume.rst'
         self.output3_flow_rout = direct_temp + r'\resulting_watershed_hydrograph.txt'
 
-        # Escreve aquivo txt contendo o diretório informado pelo user: será fornecido para a rotina em visual basic
+        # Escreve aquivo txt contendo o diretorio informado pelo user: sera fornecido para a rotina em visual basic
         direct_out_files = direct_temp + r'\output_files_config_flow_rout.txt'
         with open(direct_out_files, 'w', encoding='utf-8') as arquivo_txt:
             arquivo_txt.write("Selected output files directory\n")
@@ -2679,7 +2969,7 @@ class HidroPixel:
                 f'{1 if self.dlg_flow_rout.ch_6_pg4.isChecked() == True else 0},resulting_watershed_hydrograph,{self.output3_flow_rout}')  # txt
 
     def plot_hidrogramas_e_metricas(self):
-        """Esta função gera o hidrograma calculado vs observado e adiciona as métricas de comparação"""
+        """Esta funcao gera o hidrograma calculado vs observado e adiciona as métricas de comparacao"""
 
         # leh hidrograma observado
         cont = 0
@@ -2695,7 +2985,7 @@ class HidroPixel:
                 nomes_obs = header_obs[1:]  # descarta o tempo
                 data_obs = np.loadtxt(f, delimiter=',')
             tempos_obs = data_obs[:, 0]
-            vazoes_obs = data_obs[:, 1:]  # pode ter várias colunas
+            vazoes_obs = data_obs[:, 1:]  # pode ter varias colunas
 
             # Leitura do hidrograma calculado
             with open(hidrograma_calc, 'r', encoding='ISO-8859-1') as f:
@@ -2716,7 +3006,7 @@ class HidroPixel:
             vazoes_calc = vazoes_calc[:n]
             tempos_calc = tempos_calc[:n]
 
-            #  Cálculo de delta_t
+            #  Calculo de delta_t
             delta_t = tempos_obs[1] - tempos_obs[0]
 
             # Plotagem
@@ -2740,7 +3030,7 @@ class HidroPixel:
 
             plt.grid()
 
-            # Métricas de comparação
+            # Métricas de comparacao
             q_obs = vazoes_obs[:, 0]
             q_calc = vazoes_calc[:, 0]
             er_vazao_pico = (np.max(q_calc) - np.max(q_obs)) / \
@@ -2754,7 +3044,7 @@ class HidroPixel:
             vol_calc = np.sum(q_calc) * delta_t
             er_vol = (vol_calc - vol_obs) / vol_obs * 100
 
-            # mantém as posições originais das métricas
+            # mantém as posicões originais das métricas
             plt.figtext(0.1, 0.25, f'RMSE: {rmse:.2f}m³/s', fontsize=10)
             plt.figtext(0.1, 0.20, f'NS coefficient: {nse:.2f}', fontsize=10)
             plt.figtext(
@@ -2776,7 +3066,7 @@ class HidroPixel:
             # Armazena a legenda do grafico
             header[1] = 'Calculated Runoff'
 
-            # Carrega as vazoes (pula a primeira linha, usa vírgula como separador)
+            # Carrega as vazoes (pula a primeira linha, usa virgula como separador)
             data = np.loadtxt(hidrograma_calc, skiprows=1, delimiter=',')
 
             # A primeira coluna e o tempo
@@ -2802,8 +3092,8 @@ class HidroPixel:
             plt.show()
 
     def run_flow_routing(self):
-        '''Está função ativa a página de log e configura a ordem de execução das funções para o cálculo do tempo de viagem'''
-        # Ativiva a página de log e limpa as informações passadas no text_edit
+        '''Esta funcao ativa a pagina de log e configura a ordem de execucao das funcões para o calculo do tempo de viagem'''
+        # Ativiva a pagina de log e limpa as informacões passadas no text_edit
         mensagem_log1 = None
         self.dlg_flow_rout.tabWidget.setCurrentIndex(1)
         self.dlg_flow_rout.pg_log_f_rout.setEnabled(True)
@@ -2814,7 +3104,7 @@ class HidroPixel:
         self.dlg_flow_rout.progressBar.setValue(0)
         self.dlg_flow_rout.progressBar.setValue(5)
 
-        # Configura as informações do textEdit da referida página
+        # Configura as informacões do textEdit da referida pagina
         font = QFont()
         font.setPointSize(11)
         version_info = {
@@ -2833,15 +3123,15 @@ class HidroPixel:
         mensagem_log1 += f"Algorithm started at: {datatime_started}\n"
         mensagem_log1 += "--------------------------------------------------------\n"
         self.dlg_flow_rout.progressBar.setValue(10)
-        # Cria condição de parada da execução: se o usuário clicar no botão cancel da página de log
+        # Cria condicao de parada da execucao: se o usuario clicar no botao cancel da pagina de log
         while True:
-            # Método usado para permitir a iteração do usuário enquanto o programa está em execução
+            # Método usado para permitir a iteracao do usuario enquanto o programa esta em execucao
             QApplication.processEvents()
             self.dlg_flow_rout.btn_cancel_log.clicked.connect(lambda: self.cancel_log_page(
                 self.dlg_flow_rout.te_logg, self.dlg_flow_rout.pg_par_f_rout, self.dlg_flow_rout.pg_log_f_rout))
             self.dlg_flow_rout.pg_par_f_rout.setEnabled(False)
 
-            # Adiciona as mensagem de log ao text edit e configura a função run
+            # Adiciona as mensagem de log ao text edit e configura a funcao run
             self.dlg_flow_rout.te_logg.append(mensagem_log1)
             for cont in range(1, 26):
                 self.dlg_flow_rout.progressBar.setValue(cont)
@@ -2849,32 +3139,19 @@ class HidroPixel:
             self.run_process_flow_rout()
             self.dlg_flow_rout.progressBar.setValue(40)
 
-            # Chama executável vb para iniciar o processamento
-            flow_rout_vb = self.diretorio_atual + r'\temp\HidropixelDLR.exe'
+            # Chama executavel vb para iniciar o processamento
+            flow_rout_vb = self.diretorio_atual + r'\temp\flow_routing.exe'
             flow_rout_exe = subprocess.run([flow_rout_vb])
 
             # verifica se houve algum erro no processamento das rotinas no vb ou se o usuario clicou em cancelar
-            # Caso não, a execução continua no python
+            # Caso nao, a execucao continua no python
             if flow_rout_exe.returncode == 0:
                 self.dlg_flow_rout.progressBar.setValue(60)
 
                 # Copia e renomeia arquivo txt do hidrograma final
-                if self.dlg_flow_rout.ch_6_pg4.isChecked() == True and self.dlg_flow_rout.le_6_pg4.text() != '':
-                    # Verifica se o user enviou o diretorio do arquivo ou apenas o nome (nesse caso, working folder != '')
-                    is_basename = self.is_basename_only(
-                        self.dlg_flow_rout.le_6_pg4.text())
+                if self.dlg_flow_rout.ch_6_pg4.isChecked() == True and os.path.isfile(self.output3_flow_rout) == True:
 
-                    # Se for apenas basename, concatena working folder com valor informado (deve ter extensao)
-                    if is_basename == True:
-                        output_file_1 = os.path.join(
-                            self.dlg_flow_rout.le_3_pg1.text(), self.dlg_flow_rout.le_6_pg4.text())
-                        shutil.copy2(self.output3_flow_rout, output_file_1)
-
-                    else:
-                        shutil.copy2(self.output3_flow_rout,
-                                     self.dlg_flow_rout.le_6_pg4.text())
-
-                    # Define parâmetros da função que transforma .rst(ascii) para geotiff: Cria arquivos de saída no diretório fornecido pelo user
+                    # Define parametros da funcao que transforma .rst(ascii) para geotiff: Cria arquivos de saida no diretorio fornecido pelo user
                     # Peak discharge
                     if self.dlg_flow_rout.ch_4_pg4.isChecked():
                         output_path = self.caminho_completo(
@@ -2889,7 +3166,7 @@ class HidroPixel:
                         self.leh_rst_escreve_geotiff(
                             self.output2_flow_rout, output_path, 'float')
 
-                    # Adição dos arquivos gerados ao QGIS
+                    # Adicao dos arquivos gerados ao QGIS
                     if self.dlg_flow_rout.ch_10_pg4.isChecked():
                         layer_path = self.caminho_completo(
                             self.dlg_flow_rout.le_3_pg1.text(), self.dlg_flow_rout.le_4_pg4.text())
@@ -2900,10 +3177,25 @@ class HidroPixel:
                             self.dlg_flow_rout.le_3_pg1.text(), self.dlg_flow_rout.le_5_pg4.text())
                         self.adiciona_layer(layer_path)
 
-                    # Chama funcao para plot dos hidrogramas
-                    self.plot_hidrogramas_e_metricas()
+                    # Verifica se o user enviou o diretorio do arquivo ou apenas o nome (nesse caso, working folder != '')
+                    is_basename = self.is_basename_only(
+                        self.dlg_flow_rout.le_6_pg4.text())
 
-                    # Adiciona as informação ao text edit
+                    # Se for apenas basename, concatena working folder com valor informado (deve ter extensao)
+                    if is_basename == True:
+                        output_file_1 = os.path.join(
+                            self.dlg_flow_rout.le_3_pg1.text(), self.dlg_flow_rout.le_6_pg4.text())
+                        shutil.copy2(self.output3_flow_rout, output_file_1)
+
+                    else:
+                        shutil.copy2(self.output3_flow_rout,
+                                     self.dlg_flow_rout.le_6_pg4.text())
+
+                    # Chama funcao para plot dos hidrogramas se opcao for selecionada
+                    if self.dlg_flow_rout.ch_12_pg4.isChecked() == True:
+                        self.plot_hidrogramas_e_metricas()
+
+                    # Adiciona as informacao ao text edit
                     self.dlg_flow_rout.te_logg.append(
                         'Operation completed successfully!')
                     QMessageBox.information(
@@ -2913,29 +3205,21 @@ class HidroPixel:
                     self.dlg_flow_rout.pg_par_f_rout.setEnabled(True)
                     self.dlg_flow_rout.te_logg.clear()
                     break
-            else:
-                QMessageBox.information(
-                    None, "Information", "There was an inconsistency, please verify if all files were sent!", )
-                self.dlg_flow_rout.progressBar.setValue(100)
-                self.dlg_flow_rout.te_logg.clear()
-                self.dlg_flow_rout.pg_par_f_rout.setEnabled(True)
-                self.dlg_flow_rout.pg_log_f_rout.setEnabled(False)
-                self.apaga_arquivos_temp()
-                break
 
-            # Caso nenhuma das condicoes acima sejam verdadeira, libera a interface grafica e limpa os arquivos
-            self.dlg_flow_rout.te_logg.clear()
-            self.dlg_flow_rout.progressBar.setValue(0)
-            self.dlg_flow_rout.pg_par_f_rout.setEnabled(True)
-            self.dlg_flow_rout.pg_log_f_rout.setEnabled(False)
-            end_msg = "The Hidropixel process has been canceled... Take a breath and go back to work!"
-            self.dlg_flow_rout.te_logg.append(end_msg)
-            self.apaga_arquivos_temp()
-            break
+                else:
+                    # Caso nenhuma das condicoes acima sejam verdadeira, libera a interface grafica e limpa os arquivos
+                    self.dlg_flow_rout.te_logg.clear()
+                    self.dlg_flow_rout.progressBar.setValue(0)
+                    self.dlg_flow_rout.pg_par_f_rout.setEnabled(True)
+                    self.dlg_flow_rout.pg_log_f_rout.setEnabled(False)
+                    end_msg = "The Hidropixel process has been canceled... Take a breath and go back to work!"
+                    self.dlg_flow_rout.te_logg.append(end_msg)
+                    self.apaga_arquivos_temp()
+                    break
 
     def atualiza_raster_list(self):
         """
-        Reconstrói do zero a lista única de (nome, path) na ordem do painel de camadas.
+        Reconstroi do zero a lista unica de (nome, path) na ordem do painel de camadas.
         Retorna apenas a lista de nomes (para popular os combos) e armazena em 
         self.lista_rasters_dir os paths na mesma ordem.
         """
@@ -2943,7 +3227,7 @@ class HidroPixel:
         self.lista_rasters_dir = [None]
         lista_rasters = [None]
 
-        # Percorre a árvore de camadas na ordem visual do QGIS
+        # Percorre a arvore de camadas na ordem visual do QGIS
         layer_tree_layers = QgsProject.instance().layerTreeRoot().findLayers()
         vistos = set()
         for node in layer_tree_layers:
@@ -2951,7 +3235,7 @@ class HidroPixel:
             if layer.type() == QgsMapLayer.RasterLayer:
                 nome = layer.name()
                 path = layer.source()
-                # garante pares únicos
+                # garante pares unicos
                 if (nome, path) not in vistos:
                     vistos.add((nome, path))
                     self.lista_rasters_dir.append(path)
@@ -2960,7 +3244,7 @@ class HidroPixel:
         return lista_rasters
 
     def carrega_rasters(self):
-        """Esta função realiza o carregamento dos raster contidos no projeto do qgis e adiciona aos respectivos comboboxes
+        """Esta funcao realiza o carregamento dos raster contidos no projeto do qgis e adiciona aos respectivos comboboxes
         funcao: indica a rotina do hidropixel
         funcao = 1: Flow Travel Time
         funcao = 2: Excess Rainfall
@@ -2982,7 +3266,6 @@ class HidroPixel:
             self.dlg_exc_rain.cb_1_pg2,
             self.dlg_exc_rain.cb_2_pg2,
             self.dlg_flow_rout.cb_1_pg2,
-            self.dlg_flow_rout.cb_2_pg2,
             self.dlg_flow_rout.cb_3_pg2,
             self.dlg_flow_rout.cb_4_pg2,
             self.dlg_flow_rout.cb_5_pg2
@@ -2992,16 +3275,46 @@ class HidroPixel:
             atual = cb.currentText()
             cb.clear()
             cb.addItems(nomes)
-            # se o valor antigo ainda existir, refaz a seleção
+            # se o valor antigo ainda existir, refaz a selecao
             if atual in nomes:
                 cb.setCurrentText(atual)
 
+    def carrega_shp(self):
+        """Esta funcao seleciona o arquivo shp dos pontos de interesse da Flow Travel Time"""
+        # Armazena os arquivos shp em uma lista
+        self.shp_list_g = [None]
+        shp_list = [None]
+
+        # Percorre a arvore de camadas na ordem visual do QGIS
+        layer_tree_layers = QgsProject.instance().layerTreeRoot().findLayers()
+        vistos = set()
+
+        for node in layer_tree_layers:
+            layer = node.layer()
+            if layer.type() == QgsMapLayer.VectorLayer:
+                nome = layer.name()
+                path = layer.source()
+
+                # garante pares unicos
+                if (nome, path) not in vistos:
+                    vistos.add((nome, path))
+                    self.shp_list_g.append(path)
+                    shp_list.append(nome)
+
+        atual = self.dlg_flow_tt.cb_8_pg2.currentText()
+        self.dlg_flow_tt.cb_8_pg2.clear()
+        self.dlg_flow_tt.cb_8_pg2.addItems(shp_list)
+
+        # se o valor antigo ainda existir, refaz a selecao
+        if atual in shp_list:
+            self.dlg_flow_tt.cb_8_pg2.setCurrentText(atual)
+
     def SsButoes(self, active_button, instancia, page=0):
-        """Esta função configura o estilo dos botões das diferentes páginas do plugin. Aquele que estiver em destaque representará a página autal
+        """Esta funcao configura o estilo dos botões das diferentes paginas do plugin. Aquele que estiver em destaque representara a pagina autal
         page = 1 representa o form Excess Rainfall
         page = 0 representa os outros forms"""
 
-        # Defina os estilos para o botão ativo e o padrão
+        # Defina os estilos para o botao ativo e o padrao
         default_style = ""
         self.highlighted_style = "background-color: rgb(173, 216, 230)"
 
@@ -3022,7 +3335,7 @@ class HidroPixel:
                 instancia.btn_data_va_tool,
                 instancia.btn_run
             ]
-        # Aplica o estilo ativo ao botão clicado e o estilo padrão aos outros
+        # Aplica o estilo ativo ao botao clicado e o estilo padrao aos outros
         for btn in buttons:
             if btn == active_button:
                 btn.setStyleSheet(self.highlighted_style)
@@ -3042,7 +3355,7 @@ class HidroPixel:
             self.dlg_flow_rout.label_55.setEnabled(False)
 
     def CondicaoRunFlowTT(self):
-        """Esta função verifica se para cada etapa do hidropixel ao menos o output recomendado foi selecionado, caso sim, o botão RUN será liberado; do contrário, não."""
+        """Esta funcao verifica se para cada etapa do hidropixel ao menos o output recomendado foi selecionado, caso sim, o botao RUN sera liberado; do contrario, nao."""
         if self.dlg_flow_tt.le_11_pg4.text() != '':
             self.run_flow_tt()
 
@@ -3051,7 +3364,7 @@ class HidroPixel:
             QMessageBox.warning(None, "Invalid directory provided", result)
 
     def CondicaoRunRainfall_inter(self, map_out):
-        """Esta função verifica se para cada etapa do hidropixel ao menos o output recomendado foi selecionado, caso sim, o botão RUN será liberado; do contrário, não."""
+        """Esta funcao verifica se para cada etapa do hidropixel ao menos o output recomendado foi selecionado, caso sim, o botao RUN sera liberado; do contrario, nao."""
         if self.dlg_exc_rain.cb_1_pg_ri.currentText() != '' and self.dlg_exc_rain.le_2_pg_ri.text() != '' and self.dlg_exc_rain.le_3_pg_ri.text() != '':
             self.run_rainfall_interpolation(map_out)
 
@@ -3060,7 +3373,7 @@ class HidroPixel:
             QMessageBox.warning(None, "Invalid directory provided", result)
 
     def condicaoRunExcessRainfall(self):
-        """Esta função verifica se para cada etapa do hidropixel ao menos o output recomendado foi selecionado, caso sim, o botão RUN será liberado; do contrário, não."""
+        """Esta funcao verifica se para cada etapa do hidropixel ao menos o output recomendado foi selecionado, caso sim, o botao RUN sera liberado; do contrario, nao."""
         if self.dlg_exc_rain.le_5_pg4.text() != '' and self.dlg_exc_rain.le_6_pg4.text() != '':
             self.run_excess_rainfall()
 
@@ -3069,7 +3382,7 @@ class HidroPixel:
             QMessageBox.warning(None, "Invalid directory provided", result)
 
     def condicaoRunFlowRouting(self):
-        """Esta função verifica se para cada etapa do hidropixel ao menos o output recomendado foi selecionado, caso sim, o botão RUN será liberado; do contrário, não."""
+        """Esta funcao verifica se para cada etapa do hidropixel ao menos o output recomendado foi selecionado, caso sim, o botao RUN sera liberado; do contrario, nao."""
         if self.dlg_flow_rout.le_6_pg4.text() != '':
             self.run_flow_routing()
 
@@ -3139,7 +3452,7 @@ class HidroPixel:
 
             else:
                 file_name = txt2
-                # Se não tiver extensão, adiciona
+                # Se nao tiver extensao, adiciona
                 file_name = self.define_extensao_hpx(file_name)
 
             self.save_to_project(function, file_name)
@@ -3153,12 +3466,12 @@ class HidroPixel:
             return
 
     def run(self):
-        """Esta é a função principal do plugin, todas as funcionalidades propostas anteriormente serão efetivadas na função run"""
+        """Esta é a funcao principal do plugin, todas as funcionalidades propostas anteriormente serao efetivadas na funcao run"""
 
         self.dlg_hidro_pixel = HidroPixelDialog()
         # self.dlg_hidro_pixel.setWindowModality(Qt.ApplicationModal)
 
-        # Verifica se a interface já foi mostrada anteriormente
+        # Verifica se a interface ja foi mostrada anteriormente
         if not hasattr(self, 'dlg_hidro_pixel') or not self.dlg_hidro_pixel.isVisible():
             # Adiciona logo Hidropixel na pagina incial
             caminho_icon = os.path.abspath(
@@ -3169,18 +3482,18 @@ class HidroPixel:
             self.dlg_hidro_pixel.label_2.setPixmap(pixmap)
             self.dlg_hidro_pixel.label_2.setScaledContents(True)
 
-            # Inicializa self.dlg_hidro_pixel apenas se ainda não estiver inicializado ou se estiver fechado
-            # Mostra a interface gráfica
+            # Inicializa self.dlg_hidro_pixel apenas se ainda nao estiver inicializado ou se estiver fechado
+            # Mostra a interface grafica
             self.dlg_hidro_pixel.show()
             QApplication.processEvents()
 
-            # Desativa a página de log, só será ativada após clicar no botão run
+            # Desativa a pagina de log, so sera ativada apos clicar no botao run
             self.dlg_flow_tt.pg_log_ftt.setEnabled(False)
             # Cria as flags para configurar a leitura dos dados da tabela
             self.flag = 0
             self.flag_1 = 0
 
-            # Configura botão about
+            # Configura botao about
             self.dlg_hidro_pixel.btn_flow_about.clicked.connect(
                 lambda: self.dlg_about.show())
 
@@ -3201,12 +3514,12 @@ class HidroPixel:
             self.dlg_flow_rout.btn_config.setStyleSheet(self.highlighted_style)
 
             # self.dlg_hidro_pixel.btn_help.clicked.connect()
-            '''Configura os botões da página da rotina do flow travel time'''
+            '''Configura os botões da pagina da rotina do flow travel time'''
             # configura tabelas para inicar sem linhas: condicao para verificar altercao nas tabelas
             self.dlg_flow_tt.tbw_1_pg2.setRowCount(0)
             self.dlg_flow_tt.tbw_2_pg2.setRowCount(0)
 
-            # Chama páginas da GUI e função de mudanca de estilo dos botoes
+            # Chama paginas da GUI e funcao de mudanca de estilo dos botoes
             self.dlg_flow_tt.btn_config.clicked.connect(
                 lambda: self.SsButoes(self.dlg_flow_tt.btn_config, self.dlg_flow_tt))
             self.dlg_flow_tt.btn_config.clicked.connect(
@@ -3227,16 +3540,17 @@ class HidroPixel:
             self.dlg_flow_tt.btn_run.clicked.connect(
                 lambda: self.dlg_flow_tt.pages_flow_tt.setCurrentWidget(self.dlg_flow_tt.pg4_run))
 
-            # Configura os botões da página configuration: flow travel time
+            # Configura os botões da pagina configuration: flow travel time
             self.dlg_flow_tt.tbtn_pg1_1.clicked.connect(
                 lambda: self.carrega_work_folder(self.dlg_flow_tt.le_21_pg1))
 
             # Configura comboboxes para receber rasters do projeto QGIS
 
             self.carrega_rasters()
+            self.carrega_shp()
             # self.dlg_flow_tt.cb_1_pg1.toggled.connect(lambda: self.sheet_flow_status(self.dlg_flow_tt.cb_1_pg1.isChecked()))
 
-            # Configura os botões da página input data : flow travel time
+            # Configura os botões da pagina input data : flow travel time
             self.dlg_flow_tt.tbtn_pg2_1.clicked.connect(
                 lambda: self.carregaArquivos(0, self.dlg_flow_tt.cb_1_pg2))
             self.dlg_flow_tt.tbtn_pg2_2.clicked.connect(
@@ -3249,10 +3563,12 @@ class HidroPixel:
                 lambda: self.carregaArquivos(0, self.dlg_flow_tt.cb_5_pg2))
             self.dlg_flow_tt.tbtn_pg2_6.clicked.connect(
                 lambda: self.carregaArquivos(0, self.dlg_flow_tt.cb_7_pg2))
+            self.dlg_flow_tt.tbtn_pg2_7.clicked.connect(
+                lambda: self.carregaArquivos(0, self.dlg_flow_tt.cb_8_pg2, file_type='shp'))
             self.dlg_flow_tt.tbtn_pg2_9.clicked.connect(
                 lambda: self.carregaArquivos(0, self.dlg_flow_tt.cb_6_pg2))
 
-            # Configura os botões da página run page: flow travel time
+            # Configura os botões da pagina run page: flow travel time
             self.dlg_flow_tt.tbtn_pg4_6.clicked.connect(
                 lambda: self.save_buttons(self.dlg_flow_tt.le_6_pg4))
             self.dlg_flow_tt.tbtn_pg4_7.clicked.connect(
@@ -3265,6 +3581,8 @@ class HidroPixel:
                 lambda: self.save_buttons(self.dlg_flow_tt.le_10_pg4))
             self.dlg_flow_tt.tbtn_pg4_11.clicked.connect(
                 lambda: self.save_buttons(self.dlg_flow_tt.le_11_pg4))
+            self.dlg_flow_tt.tbtn_pg4_12.clicked.connect(
+                lambda: self.carrega_POI_path(0, self.dlg_flow_tt.le_13_pg4))
 
             # configura botões de salvar e salvar para um arquivo: flow travel time
             # Chama funcao para definir valor de path da GUI save to project
@@ -3308,7 +3626,7 @@ class HidroPixel:
             self.dlg_save_project_flow_tt.btn_save_project.clicked.connect(
                 lambda: self.run_save_project(self.dlg_save_project_flow_tt, 1))
 
-            # Configura botão para ler informações de um arquivo enviado : flow travel time
+            # Configura botao para ler informacões de um arquivo enviado : flow travel time
             self.dlg_flow_tt.btn_read_pg1.clicked.connect(
                 lambda: self.read_from_project(1, self.dlg_flow_tt.le_21_pg1.text()))
             self.dlg_flow_tt.btn_read_pg2.clicked.connect(
@@ -3334,28 +3652,28 @@ class HidroPixel:
             self.dlg_flow_tt.btn_del_row_2.clicked.connect(
                 lambda: self.delete_row(self.dlg_flow_tt.tbw_2_pg2))
 
-            # Configura os botões de limpeza das variáveis : flow travel time
+            # Configura os botões de limpeza das variaveis : flow travel time
             self.dlg_flow_tt.btn_clear_1.clicked.connect(lambda: self.clear_table(
                 self.dlg_flow_tt.tbw_1_pg2, self.dlg_flow_tt.le_8_pg2))
             self.dlg_flow_tt.btn_clear_2.clicked.connect(lambda: self.clear_table(
                 self.dlg_flow_tt.tbw_2_pg2, self.dlg_flow_tt.le_10_pg2))
 
-            # configura botões da página run : flow travel time
+            # configura botões da pagina run : flow travel time
             self.dlg_flow_tt.btn_close_pg4.clicked.connect(
                 lambda: self.close_gui(1))
 
             # Configura run button : flow travel time
-            # Configura condição para chamar rotinas em vb
+            # Configura condicao para chamar rotinas em vb
             self.dlg_flow_tt.btn_run_2.clicked.connect(
                 lambda: self.CondicaoRunFlowTT())
 
-            # Configura botão que salva projeto da rotina flow travel time
-            # Configura botões página de log: flow travel time
+            # Configura botao que salva projeto da rotina flow travel time
+            # Configura botões pagina de log: flow travel time
             self.dlg_flow_tt.btn_close_log.clicked.connect(
                 lambda: self.close_gui(1))
 
-            '''Configura os botões da página da rotina excess rainfall'''
-            # Configura botões gerais das páginas da rotina excess rainfall e a função de mudança de estilo
+            '''Configura os botões da pagina da rotina excess rainfall'''
+            # Configura botões gerais das paginas da rotina excess rainfall e a funcao de mudanca de estilo
             self.dlg_exc_rain.btn_config.clicked.connect(lambda: self.SsButoes(
                 self.dlg_exc_rain.btn_config, self.dlg_exc_rain, page=1))
             self.dlg_exc_rain.btn_config.clicked.connect(
@@ -3381,11 +3699,11 @@ class HidroPixel:
             self.dlg_exc_rain.btn_run.clicked.connect(
                 lambda: self.dlg_exc_rain.pages_exc_rain.setCurrentWidget(self.dlg_exc_rain.pg5_run))
 
-            # Configura botões da página de configuration: excess rainfall
+            # Configura botões da pagina de configuration: excess rainfall
             self.dlg_exc_rain.tbtn_pg1_1.clicked.connect(
                 lambda: self.carrega_work_folder(self.dlg_exc_rain.le_3_pg1))
 
-            # Condição: usuário escolhe precipitação média (na bacia) ou destribuida (na bacia)
+            # Condicao: usuario escolhe precipitacao média (na bacia) ou destribuida (na bacia)
             self.dlg_exc_rain.le_4_pg2.setEnabled(False)
             self.dlg_exc_rain.label_32.setEnabled(False)
             self.dlg_exc_rain.tbtn_pg2_4.setEnabled(False)
@@ -3395,13 +3713,13 @@ class HidroPixel:
             self.dlg_exc_rain.tbtn_pg2_3.setEnabled(False)
             self.dlg_exc_rain.label_35.setEnabled(False)
 
-            # Se o usuário escolher a opção para chuva média
+            # Se o usuario escolher a opcao para chuva média
             self.dlg_exc_rain.rb_1_pg1.toggled.connect(
                 lambda: self.rain_def_condition(1))
             self.dlg_exc_rain.rb_2_pg1.toggled.connect(
                 lambda: self.rain_def_condition(2))
 
-            # Configura os botões da página input data : excess rainfall
+            # Configura os botões da pagina input data : excess rainfall
             self.dlg_exc_rain.tbtn_pg2_1.clicked.connect(
                 lambda: self.carregaArquivos(0, self.dlg_exc_rain.cb_1_pg2))
             self.dlg_exc_rain.tbtn_pg2_2.clicked.connect(
@@ -3409,7 +3727,7 @@ class HidroPixel:
             self.dlg_exc_rain.tbtn_pg2_3.clicked.connect(
                 lambda: self.carregaArquivos(self.dlg_exc_rain.le_3_pg2, 0, file_type='text'))
             self.dlg_exc_rain.tbtn_pg2_4.clicked.connect(
-                lambda: self.carregaArquivos(self.dlg_exc_rain.le_4_pg2, 0, file_type='text'))
+                lambda: self.carregaArquivos(self.dlg_exc_rain.le_4_pg2, 0, file_type='bin'))
 
             # configura botões de salvar e salvar para um arquivo: excess rainfall
             # Chama funcao para definir valor de path da GUI save to project
@@ -3439,7 +3757,7 @@ class HidroPixel:
             self.dlg_save_project_exc_rain.btn_save_project.clicked.connect(
                 lambda: self.run_save_project(self.dlg_save_project_exc_rain, 2))
 
-            # Configura botão para ler informações de uma arquivo enviado : excess rainfall
+            # Configura botao para ler informacões de uma arquivo enviado : excess rainfall
             self.dlg_exc_rain.btn_read_pg1.clicked.connect(
                 lambda: self.read_from_project(2, self.dlg_exc_rain.le_3_pg1.text()))
 
@@ -3450,7 +3768,7 @@ class HidroPixel:
             self.dlg_exc_rain.btn_read_pg4.clicked.connect(
                 lambda: self.read_from_project(2, self.dlg_exc_rain.le_3_pg1.text()))
 
-            # Configura os botões da página run page: excess rainfall
+            # Configura os botões da pagina run page: excess rainfall
             self.dlg_exc_rain.tbtn_pg4_1.clicked.connect(
                 lambda: self.save_buttons(self.dlg_exc_rain.le_1_pg4))
             self.dlg_exc_rain.tbtn_pg4_2.clicked.connect(
@@ -3462,17 +3780,17 @@ class HidroPixel:
             self.dlg_exc_rain.tbtn_pg4_5.clicked.connect(
                 lambda: self.save_buttons(self.dlg_exc_rain.le_5_pg4))
             self.dlg_exc_rain.tbtn_pg4_6.clicked.connect(
-                lambda: self.save_buttons(self.dlg_exc_rain.le_6_pg4, file_type='text'))
+                lambda: self.save_buttons(self.dlg_exc_rain.le_6_pg4, file_type='bin'))
 
-            # configura botões da página run : excess rainfall
-            # Configura condição para chamar rotinas em vb
+            # configura botões da pagina run : excess rainfall
+            # Configura condicao para chamar rotinas em vb
             self.dlg_exc_rain.btn_run_2.clicked.connect(
                 lambda: self.condicaoRunExcessRainfall())
 
             self.dlg_exc_rain.btn_close_pg4.clicked.connect(
                 lambda: self.close_gui(2))
 
-            # Configura botões da página rainfall interpolation
+            # Configura botões da pagina rainfall interpolation
             self.dlg_exc_rain.tbtn_pg_r_1.clicked.connect(
                 lambda: self.carregaArquivos(0, self.dlg_exc_rain.cb_1_pg_ri))
             self.dlg_exc_rain.tbtn_pg_r_2.clicked.connect(
@@ -3480,7 +3798,7 @@ class HidroPixel:
             self.dlg_exc_rain.tbtn_pg_r_3.clicked.connect(
                 lambda: self.carregaArquivos(self.dlg_exc_rain.le_3_pg_ri, 0, file_type='text'))
             self.dlg_exc_rain.tbtn_pg_r_4.clicked.connect(
-                lambda: self.save_buttons(self.dlg_exc_rain.le_4_pg_ri, file_type='text'))
+                lambda: self.save_buttons(self.dlg_exc_rain.le_4_pg_ri, file_type='bin'))
             self.dlg_exc_rain.tbtn_pg_r_5.clicked.connect(
                 lambda: self.selciona_pasta(self.dlg_exc_rain.le_5_pg_ri))
             self.dlg_exc_rain.btn_save_1_pg_ri.clicked.connect(
@@ -3488,8 +3806,8 @@ class HidroPixel:
             self.dlg_exc_rain.btn_save_2_pg_ri.clicked.connect(
                 lambda: self.CondicaoRunRainfall_inter(1))
 
-            '''Configura os botões da página da rotina flow routing'''
-            # Configura botões das páginas da flow routing assim como a função de mudança de estilo
+            '''Configura os botões da pagina da rotina flow routing'''
+            # Configura botões das paginas da flow routing assim como a funcao de mudanca de estilo
             self.dlg_flow_rout.btn_config.clicked.connect(
                 lambda: self.SsButoes(self.dlg_flow_rout.btn_config, self.dlg_flow_rout))
             self.dlg_flow_rout.btn_config.clicked.connect(
@@ -3510,26 +3828,23 @@ class HidroPixel:
             self.dlg_flow_rout.btn_run.clicked.connect(
                 lambda: self.dlg_flow_rout.pages_flow_rout.setCurrentWidget(self.dlg_flow_rout.pg4_run))
 
-            # Configura botões da página de configuration: flow routing
+            # Configura botões da pagina de configuration: flow routing
             self.dlg_flow_rout.tbtn_pg1_1.clicked.connect(
                 lambda: self.carrega_work_folder(self.dlg_flow_rout.le_3_pg1))
 
-            # Configura os botões da página input data : flow routing
+            # Configura os botões da pagina input data : flow routing
             self.dlg_flow_rout.tbtn_pg2_1.clicked.connect(
                 lambda: self.carregaArquivos(0, self.dlg_flow_rout.cb_1_pg2))
-            # self.dlg_flow_rout.tbtn_pg2_2.clicked.connect(
-            #     lambda: self.carregaArquivos(0, self.dlg_flow_rout.cb_2_pg2))
             self.dlg_flow_rout.tbtn_pg2_3.clicked.connect(
                 lambda: self.carregaArquivos(0, self.dlg_flow_rout.cb_3_pg2))
+            self.dlg_flow_rout.tbtn_pg2_2.clicked.connect(
+                lambda: self.carrega_POI_path(1, self.dlg_flow_rout.le_3_pg2))
             self.dlg_flow_rout.tbtn_pg2_4.clicked.connect(
-                lambda: self.carregaArquivos(self.dlg_flow_rout.le_4_pg2, 0, file_type='text'))
+                lambda: self.carregaArquivos(self.dlg_flow_rout.le_4_pg2, 0, file_type='bin'))
             self.dlg_flow_rout.tbtn_pg2_5.clicked.connect(
                 lambda: self.carregaArquivos(0, self.dlg_flow_rout.cb_5_pg2))
             self.dlg_flow_rout.tbtn_pg2_6.clicked.connect(
                 lambda: self.carregaArquivos(0, self.dlg_flow_rout.cb_4_pg2))
-
-            self.dlg_flow_rout.tbtn_pg4_7.clicked.connect(
-                lambda: self.carregaArquivos(self.dlg_flow_rout.le_7_pg4, 0, file_type='text'))
 
             # configura botões de salvar e salvar para um arquivo: flow travel time
             self.dlg_flow_rout.btn_save_file_pg1.clicked.connect(
@@ -3547,13 +3862,13 @@ class HidroPixel:
             self.dlg_flow_rout.btn_save_file_pg4.clicked.connect(
                 lambda: self.dlg_save_project_flow_rout.show())
 
-            # configura gui save to project para criar projeto da excess rainfall
+            # configura gui save to project para criar projeto da flow routing
             self.dlg_save_project_flow_rout.tbtn_path.clicked.connect(
                 lambda: self.get_project_dir(self.dlg_save_project_flow_rout))
             self.dlg_save_project_flow_rout.btn_save_project.clicked.connect(
                 lambda: self.run_save_project(self.dlg_save_project_flow_rout, 3))
 
-            # Configura botão para ler informações de uma arquivo enviado : flow routing
+            # Configura botao para ler informacões de uma arquivo enviado : flow routing
             self.dlg_flow_rout.btn_read_pg1.clicked.connect(
                 lambda: self.read_from_project(3, self.dlg_flow_rout.le_3_pg1.text()))
             self.dlg_flow_rout.btn_read_pg2.clicked.connect(
@@ -3561,7 +3876,7 @@ class HidroPixel:
             self.dlg_flow_rout.btn_read_pg4.clicked.connect(
                 lambda: self.read_from_project(3, self.dlg_flow_rout.le_3_pg1.text()))
 
-            # Configura os botões da página run page: flow routing
+            # Configura os botões da pagina run page: flow routing
             self.dlg_flow_rout.tbtn_pg4_1.clicked.connect(
                 lambda: self.save_buttons(self.dlg_flow_rout.le_1_pg4))
             self.dlg_flow_rout.tbtn_pg4_2.clicked.connect(
@@ -3574,13 +3889,17 @@ class HidroPixel:
                 lambda: self.save_buttons(self.dlg_flow_rout.le_5_pg4))
             self.dlg_flow_rout.tbtn_pg4_6.clicked.connect(
                 lambda: self.save_buttons(self.dlg_flow_rout.le_6_pg4, file_type='text'))
+            self.dlg_flow_rout.tbtn_pg4_7.clicked.connect(
+                lambda: self.carregaArquivos(self.dlg_flow_rout.le_7_pg4, 0, file_type='text'))
+            self.dlg_flow_rout.tbtn_pg4_8.clicked.connect(
+                lambda: self.carrega_POI_path(2, self.dlg_flow_rout.le_9_pg4))
 
-            # Atualiza status dos campos da vazão observada
+            # Atualiza status dos campos da vazao observada
             self.dlg_flow_rout.ch_12_pg4.stateChanged.connect(
                 lambda: self.atualizaVazaoObs())
 
-            # configura botões da página run : flow routing
-            # Configura condição para chamar rotinas em vb
+            # configura botões da pagina run : flow routing
+            # Configura condicao para chamar rotinas em vb
             self.dlg_flow_rout.btn_run_2.clicked.connect(
                 lambda: self.condicaoRunFlowRouting())
 
@@ -3588,18 +3907,19 @@ class HidroPixel:
                 lambda: self.close_gui(3))
 
             '''Menu Hidropixel Plugin'''
-            # Elimina os arquivos criados durante a execução do hidropixel
+            # Elimina os arquivos criados durante a execucao do hidropixel
             self.apaga_arquivos_temp()
+            self.apaga_arquivos_maps()
+            self.apaga_arquivos_tv()
+            self.apaga_arquivos_hydrographs()
+            self.apaga_arquivos_tv_for_each_poi()
 
             # Run the dialog event loop
             self.dlg_hidro_pixel.exec_()
 
-            # Será aplicado a lógica do botão save
+            # Sera aplicado a logica do botao save
 
             # Recarrega o plugin
-            # qgis.utils.unloadPlugin('hidropixel')
-            # qgis.utils.loadPlugin('hidropixel')
-            qgis.utils.reloadPlugin('hidropixel')
             self.dlg_flow_tt.close()
             self.dlg_exc_rain.close()
             self.dlg_flow_rout.close()
@@ -3608,3 +3928,7 @@ class HidroPixel:
             self.dlg_save_project_flow_rout.close()
             self.dlg_rain_interpl_run.close()
             self.dlg_about.close()
+
+            qgis.utils.unloadPlugin('hidropixel')
+            qgis.utils.loadPlugin('hidropixel')
+            qgis.utils.reloadPlugin('hidropixel')
