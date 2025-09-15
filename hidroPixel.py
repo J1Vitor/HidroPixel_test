@@ -41,6 +41,9 @@ from datetime import datetime
 from hidropixel.modulos_files.RDC_variables import RDCVariables
 from hidropixel.modulos_files.global_variables import GlobalVariables
 
+# importa validacoes
+from .validations.validators import RasterValidator
+
 # Initialize Qt resources from file resources.py
 from .resources import *
 
@@ -186,6 +189,72 @@ class HidroPixel:
         self.highlighted_style = "background-color: rgb(173, 216, 230)"
         self.lista_rasters_dir = [None]
         self.shp_list_g = [None]
+        self.validations = {}
+        self.all_validated = None
+
+        self.validator = RasterValidator(
+                self,
+                self.dlg_flow_tt, 
+                self.dlg_exc_rain,
+                self.dlg_flow_rout
+        )
+
+        self._connect_buttons()
+    
+    
+    def _connect_buttons(self):
+        # Conexoes da aba Flow Travel Time
+        self.dlg_flow_tt.btn_6_pg3.clicked.connect(
+            lambda: self.validator.validar_raster_bacia(self.dlg_flow_tt.cb_1_pg2.currentText(), modulo=1)
+        )
+        self.dlg_flow_tt.btn_7_pg3.clicked.connect(self.validator.validar_raster_mde)
+        
+        
+        # self.dlg_flow_tt.btn_8_pg3.clicked.connect(self.validator.preencher_direcoes_padrao)
+        self.dlg_flow_tt.btn_8_pg3.clicked.connect(self.validator.validar_direcoes_fluxo)
+        
+        self.dlg_flow_tt.btn_10_pg3.clicked.connect(
+            lambda: self.validator.verificar_dimensoes_rasters([
+                self.dlg_flow_tt.cb_1_pg2.currentText(),
+                self.dlg_flow_tt.cb_2_pg2.currentText(),
+                self.dlg_flow_tt.cb_3_pg2.currentText(),
+                self.dlg_flow_tt.cb_7_pg2.currentText()
+            ], modulo=1)
+        )
+        self.dlg_flow_tt.btn9_pg3.clicked.connect(lambda: self.validator.executar_validacao_fluxo())
+        self.dlg_flow_tt.btn11_pg3.clicked.connect(self.validator.validar_uso_cobertura)
+        self.dlg_flow_tt.btn12_pg3.clicked.connect(self.validator.validar_tabela_manning_lulc)
+        self.dlg_flow_tt.btn13_pg3.clicked.connect(self.validator.validar_raster_rdn_classes)
+        self.dlg_flow_tt.btn14_pg3.clicked.connect(self.validator.verificar_conectividade_rede)
+        self.dlg_flow_tt.btn15_pg3.clicked.connect(self.validator.verificar_acumulado_drenagem)
+
+        # Conexoes da aba Excess Rain
+        self.dlg_exc_rain.btn1_pg_4.clicked.connect(
+            lambda: self.validator.verificar_dimensoes_rasters([
+                self.dlg_exc_rain.cb_1_pg2.currentText(),
+                self.dlg_exc_rain.cb_2_pg2.currentText()
+            ], modulo=2)
+        )
+        self.dlg_exc_rain.btn2_pg_4.clicked.connect(
+            lambda: self.validator.validar_raster_bacia(self.dlg_exc_rain.cb_1_pg2.currentText(), modulo=2)
+        )
+        self.dlg_exc_rain.btn3_pg_4.clicked.connect(self.validator.validar_raster_cn)
+
+        # Conexoes da aba Flow Routing
+        self.dlg_flow_rout.btn_1_pg3.clicked.connect(
+            lambda: self.validator.verificar_dimensoes_rasters([
+                self.dlg_flow_rout.cb_1_pg2.currentText(),
+                self.dlg_flow_rout.cb_3_pg2.currentText(),
+                self.dlg_flow_rout.cb_5_pg2.currentText()
+            ], modulo=3)
+        )
+        self.dlg_flow_rout.btn_2_pg3.clicked.connect(
+            lambda: self.validator.validar_raster_bacia(self.dlg_flow_rout.cb_1_pg2.currentText(), modulo=3)
+        )
+        self.dlg_flow_rout.btn_3_pg3.clicked.connect(self.validator.verificar_tempos_de_viagem)
+        self.dlg_flow_rout.btn_4_pg3.clicked.connect(self.validator.verificar_chuva_excedente_total)
+        self.dlg_flow_rout.btn_5_pg3.clicked.connect(self.validator.validar_hietograma_txt)
+        self.dlg_flow_rout.btn_6_pg3.clicked.connect(self.validator.validar_regioes_interesse_raster)
 
     # noinspection PyMethodMayBeStatic
     def tr(self, message):
@@ -300,7 +369,7 @@ class HidroPixel:
 
     def carrega_work_folder(self, line_edit):
         '''Esta funcao define a pasta padrao tanto para buscar, quanto para salvar os arquivos'''
-        # Define as variaveis e configuracões da janela de escolha do arquivo
+        # Define as variaveis e configuracoes da janela de escolha do arquivo
         pasta = None
         line_edit.setText('')
         options = QFileDialog.Options()
@@ -327,7 +396,7 @@ class HidroPixel:
 
     def carrega_POI_path(self, cond, line_edit):
         """Carrega a pasta com o os "tempos de viagem para cada POI"""
-        # Define as variaveis e configuracões da janela de escolha do arquivo
+        # Define as variaveis e configuracoes da janela de escolha do arquivo
         pasta = None
         line_edit.setText('')
         options = QFileDialog.Options()
@@ -361,7 +430,7 @@ class HidroPixel:
 
     def carregaArquivos(self, line_edit, combobox, file_type="raster"):
         """Esta funcao é utilizada para adicionar os arquivos enviados pelo usuario ao plugin"""
-        # Define as variaveis e configuracões da janela de escolha do arquivo
+        # Define as variaveis e configuracoes da janela de escolha do arquivo
         file_ = None
         options = QFileDialog.Options()
         directory = self.dlg_flow_tt.le_21_pg1.text()
@@ -455,7 +524,7 @@ class HidroPixel:
                 return file_
 
     def save_buttons(self, line_edit, file_type='raster'):
-        '''Esta funcao configura os botões da salvar (criar arquivo)'''
+        '''Esta funcao configura os botoes da salvar (criar arquivo)'''
         # Seleciona o arquivo enviado pelo usuario
         while True:
             # Obtendo o caminho do arquivo a ser salvo usando um dialogo de arquivo
@@ -519,7 +588,7 @@ class HidroPixel:
 
     def save_to_project(self, function, file_name):
         """
-        Gera um arquivo de texto unico contendo todas as informacões 
+        Gera um arquivo de texto unico contendo todas as informacoes 
         apresentadas nas diferentes paginas do plugin.
         Function: Indica qual funcao a pagina pertence
             function == 1: Flow travel time;
@@ -1030,7 +1099,7 @@ class HidroPixel:
             return indexes_
 
     def read_from_project(self, function, directory):
-        '''Obtem as informacões a partir projeto .hpx enviado pelo usuario
+        '''Obtem as informacoes a partir projeto .hpx enviado pelo usuario
         Function: Indica qual funcao a pagina pertence
                 function == 1: Flow travel time;
                 function == 2: Excess rainfall;
@@ -1044,9 +1113,9 @@ class HidroPixel:
 
             if file_:
                 if function == 1:
-                    # Ler as informacões da pagina 1: configuration
+                    # Ler as informacoes da pagina 1: configuration
                     with open(file_, 'r', encoding='utf-8') as arquivo_txt:
-                        # Armazena as informacões do arquivo enviado em uma lista
+                        # Armazena as informacoes do arquivo enviado em uma lista
                         cabecalho = arquivo_txt.readline().split(":")[1]
                         values = []
                         tif_val = [None]
@@ -1066,7 +1135,7 @@ class HidroPixel:
                     indexes_tif = self.list_index(tif_val, "tif")
                     indexes_shp = self.list_index(shp_val, "shp")
 
-                    # Adiciona as informacões lidas nas suas respectivas
+                    # Adiciona as informacoes lidas nas suas respectivas
                     self.dlg_flow_tt.le_12_pg2.setText(
                         cabecalho)
                     self.dlg_flow_tt.le_1_pg3.setText(
@@ -1103,7 +1172,7 @@ class HidroPixel:
 
                     # ---Input data---
 
-                    # Adiciona as informacões lidas a seus respectivos campos
+                    # Adiciona as informacoes lidas a seus respectivos campos
                     self.dlg_flow_tt.cb_1_pg2.setCurrentIndex(indexes_tif[1])
                     self.dlg_flow_tt.cb_8_pg2.setCurrentIndex(indexes_shp[1])
                     self.dlg_flow_tt.cb_2_pg2.setCurrentIndex(indexes_tif[2])
@@ -1142,7 +1211,7 @@ class HidroPixel:
                     self.dlg_flow_tt.le_11_pg2.setText(str(values[28]))
 
                     # Ler arquivos pagina 4 - run
-                    # Adiciona as informacões lidas a seus respectivos campos
+                    # Adiciona as informacoes lidas a seus respectivos campos
                     self.dlg_flow_tt.le_6_pg4.setText(str(values[29]))
                     self.dlg_flow_tt.ch_6_pg4.setChecked(
                         str(values[30]) == 'True')
@@ -1402,7 +1471,7 @@ class HidroPixel:
                     break
 
     def save_table_to_file_btn(self, table):
-        '''Esta funcao le as informacões adicionadas as tabelas e as armazena em um arquivo apos o usuario clicar no botao de salvar
+        '''Esta funcao le as informacoes adicionadas as tabelas e as armazena em um arquivo apos o usuario clicar no botao de salvar
             table == 1: a tabela de referencia é a tabelea das caracteristicas da rede de drenagem
             table == 2 referencia a tabela das classes e coeficientes de manning.'''
         while True:
@@ -1412,14 +1481,14 @@ class HidroPixel:
                     None, "Save the file", "RDN_classes", "Text (*.txt)")
                 if file_name:
                     self.dlg_flow_tt.le_8_pg2.setText(file_name)
-                    # seleciona as dimensões da tabela
+                    # seleciona as dimensoes da tabela
                     nlin_tb1 = self.dlg_flow_tt.tbw_1_pg2.rowCount()
                     ncol_tb1 = self.dlg_flow_tt.tbw_1_pg2.columnCount()
 
                     # Escreve o arquivo de saida
                     with open(file_name, 'w', encoding='utf-8') as arquivo_txt_csv:
                         arquivo_txt_csv.write(f'Trecho,Rh (m),n,S (m/m)\n')
-                        # Adicionando as informacões das linhas e colunas ao arquivo de saida
+                        # Adicionando as informacoes das linhas e colunas ao arquivo de saida
                         for lin in range(nlin_tb1):
                             for col in range(ncol_tb1):
                                 item = self.dlg_flow_tt.tbw_1_pg2.item(
@@ -1445,7 +1514,7 @@ class HidroPixel:
                     None, "Save the file", "Manning_roughness_coef_for_each_LULC", "Text (*.txt)")
                 if file_name:
                     self.dlg_flow_tt.le_10_pg2.setText(file_name)
-                    # seleciona as dimensões da tabela
+                    # seleciona as dimensoes da tabela
                     nlin_tb1 = self.dlg_flow_tt.tbw_2_pg2.rowCount()
                     ncol_tb1 = self.dlg_flow_tt.tbw_2_pg2.columnCount()
 
@@ -1453,7 +1522,7 @@ class HidroPixel:
                     with open(file_name, 'w', encoding='utf-8') as arquivo_txt_csv:
                         arquivo_txt_csv.write(
                             'Land Cover Type Code,Land Cover Type Name,Manning (Sheet Flow),Coefficient k (Shallow concentrated flow)\n')
-                        # Adicionando as informacões das linhas e colunas ao arquivo de saida
+                        # Adicionando as informacoes das linhas e colunas ao arquivo de saida
                         for lin in range(nlin_tb1):
                             for col in range(ncol_tb1):
                                 item = self.dlg_flow_tt.tbw_2_pg2.item(
@@ -1475,7 +1544,7 @@ class HidroPixel:
                         break
 
     def save_table_to_file(self, table):
-        '''Esta funcao le as informacões adicionadas as tabelas e as armazena em um arquivo, sendo essas para leitura do visual basic
+        '''Esta funcao le as informacoes adicionadas as tabelas e as armazena em um arquivo, sendo essas para leitura do visual basic
             table == 1: a tabela de referencia é a tabelea das caracteristicas da rede de drenagem
             table == 2 referencia a tabela das classes e coeficientes de manning.'''
 
@@ -1484,14 +1553,14 @@ class HidroPixel:
             self.file_name_tb1 = self.diretorio_atual + \
                 r'\temp' + r'\segment_characteristics.txt'
             if self.file_name_tb1:
-                # seleciona as dimensões da tabela
+                # seleciona as dimensoes da tabela
                 nlin_tb1 = self.dlg_flow_tt.tbw_1_pg2.rowCount()
                 ncol_tb1 = self.dlg_flow_tt.tbw_1_pg2.columnCount()
 
                 # Escreve o arquivo de saida
                 with open(self.file_name_tb1, 'w', encoding='utf-8') as arquivo_txt_csv:
                     arquivo_txt_csv.write(f'Trecho,Rh (m),n,S (m/m)\n')
-                    # Adicionando as informacões das linhas e colunas ao arquivo de saida
+                    # Adicionando as informacoes das linhas e colunas ao arquivo de saida
                     for lin in range(nlin_tb1):
                         for col in range(ncol_tb1):
                             item = self.dlg_flow_tt.tbw_1_pg2.item(lin, col)
@@ -1506,7 +1575,7 @@ class HidroPixel:
         elif table == 2:
             self.file_name_tb2 = self.diretorio_atual + r'\temp' + r'\surface_roughness.txt'
             if self.file_name_tb2:
-                # seleciona as dimensões da tabela
+                # seleciona as dimensoes da tabela
                 nlin_tb1 = self.dlg_flow_tt.tbw_2_pg2.rowCount()
                 ncol_tb1 = self.dlg_flow_tt.tbw_2_pg2.columnCount()
 
@@ -1514,7 +1583,7 @@ class HidroPixel:
                 with open(self.file_name_tb2, 'w', encoding='utf-8') as arquivo_txt_csv:
                     arquivo_txt_csv.write(
                         'Land Cover Type Code,Land Cover Type Name,Manning (Sheet Flow),Coefficient k (Shallow concentrated flow)\n')
-                    # Adicionando as informacões das linhas e colunas ao arquivo de saida
+                    # Adicionando as informacoes das linhas e colunas ao arquivo de saida
                     for lin in range(nlin_tb1):
                         for col in range(ncol_tb1):
                             item = self.dlg_flow_tt.tbw_2_pg2.item(lin, col)
@@ -1552,7 +1621,7 @@ class HidroPixel:
                         # Le a linha e o cabecalho
                         arquivo_txt_csv.readline()
 
-                        # Inicializa as listas para armazenamento das informacões
+                        # Inicializa as listas para armazenamento das informacoes
                         id_class_list = []
                         Sclasse_list = []
                         Mannclasse_list = []
@@ -1576,7 +1645,7 @@ class HidroPixel:
                     # Atualiza no numero de linhas da tabela (recebe o numero de classes dos rios da bacia hidrografica)
                     table.setRowCount(len(Mannclasse_list))
 
-                    # Coleta as dimensões da tabela
+                    # Coleta as dimensoes da tabela
                     n_row = table.rowCount()
                     n_column = table.columnCount()
 
@@ -1625,9 +1694,9 @@ class HidroPixel:
                         # Amazena a linha do cabecalho
                         firt_line = arquivo_txt_csv.readline().strip()
 
-                        # Le as informacões de uso do solo e coeficiente de Manning
+                        # Le as informacoes de uso do solo e coeficiente de Manning
                         for line in arquivo_txt_csv:
-                            # Coletando as informacões de cada linha
+                            # Coletando as informacoes de cada linha
                             info = line.strip().split(',')
                             # Armazenando os valores das linhas nas suas respectivas variaveis
                             if info[0] != '' and info[1] != '' and info[2] != '' and info[3]:
@@ -1649,11 +1718,11 @@ class HidroPixel:
                     # Atualiza no numero de linhas da tabela (recebe o numero de classes dos rios da bacia hidrografica)
                     table.setRowCount(len(uso_manning_val))
 
-                    # Coleta as dimensões da tabela
+                    # Coleta as dimensoes da tabela
                     n_row = table.rowCount()
                     n_column = table.columnCount()
 
-                    # Adiciona as informacões a tabela
+                    # Adiciona as informacoes a tabela
                     for col in range(n_column):
                         for lin in range(n_row):
                             if col == 0:
@@ -1698,7 +1767,7 @@ class HidroPixel:
                 # Le a linha e o cabecalho
                 arquivo_txt_csv.readline()
 
-                # Inicializa as listas para armazenamento das informacões
+                # Inicializa as listas para armazenamento das informacoes
                 id_class_list = []
                 Sclasse_list = []
                 Mannclasse_list = []
@@ -1730,7 +1799,7 @@ class HidroPixel:
             # Atualiza no numero de linhas da tabela (recebe o numero de classes dos rios da bacia hidrografica)
             table.setRowCount(len(Mannclasse_list))
 
-            # Coleta as dimensões da tabela
+            # Coleta as dimensoes da tabela
             n_row = table.rowCount()
             n_column = table.columnCount()
 
@@ -1785,7 +1854,7 @@ class HidroPixel:
             self.x_min = self.rdc_vars.geotransform[0]
             self.y_max = self.rdc_vars.geotransform[3]
 
-            # Captura resolucões espaciais da imagem (sentido vertical e horizontal)
+            # Captura resolucoes espaciais da imagem (sentido vertical e horizontal)
             self.dx = self.rdc_vars.geotransform[1]
             self.dy = self.rdc_vars.geotransform[5]
 
@@ -1906,7 +1975,7 @@ class HidroPixel:
             QMessageBox.warning(None, "Warning", "You did not select any row.")
 
     def close_gui(self, function):
-        '''Esta funcao é usada para torna nulo (limpar) as informacões adicionadas nos diferentes objetos das funcões do Hidropixel Plugin
+        '''Esta funcao é usada para torna nulo (limpar) as informacoes adicionadas nos diferentes objetos das funcoes do Hidropixel Plugin
            - Function = 1 : Flow travel time
            - Function = 2 : Excess rainfall
            - Function = 3 : Flow routing'''
@@ -1925,7 +1994,7 @@ class HidroPixel:
 
     def clear_table(self, table, lineEdit):
         '''Esta funcao limpa os valores armazenados na respectiva tabela'''
-        # Limpando as informacões armazenadas: tables widgets
+        # Limpando as informacoes armazenadas: tables widgets
         nlin_tb1 = table.rowCount()
         ncol_tb1 = table.columnCount()
 
@@ -2151,7 +2220,7 @@ class HidroPixel:
         # Captura diretorio dos arquivo txt (pasta temp)
         direct_temp = self.diretorio_atual + r'\temp'
 
-        # Chama funcões para tranformacao do raster em geotiff para rst tipo ascii
+        # Chama funcoes para tranformacao do raster em geotiff para rst tipo ascii
         bacia_file = direct_temp + r'\Watershed.rst'
         self.leh_geotiff_escreve_ascii(
             self.lista_rasters_dir[self.dlg_exc_rain.cb_1_pg_ri.currentIndex()], bacia_file, 'int')
@@ -2275,7 +2344,7 @@ class HidroPixel:
             geom = feature.GetGeometryRef()
             x, y = geom.GetX(), geom.GetY()
 
-            # Conversão considerando centro do pixel
+            # Conversao considerando centro do pixel
             col = int((x - gt[0]) / gt[1])
             lin = int((y - gt[3]) / gt[5])
 
@@ -2309,7 +2378,7 @@ class HidroPixel:
         # Captura diretorio dos arquivo txt (pasta temp)
         direct_temp = self.diretorio_atual + r'\temp'
 
-        # Chama funcões para tranformacao do raster em geotiff para rst tipo ascii
+        # Chama funcoes para tranformacao do raster em geotiff para rst tipo ascii
 
         # leh bacia tif gera bacia rst ascii
         bacia_file = direct_temp + r'\Watershed.rst'
@@ -2378,8 +2447,8 @@ class HidroPixel:
                 f"{1 if self.dlg_exc_rain.ch_6_pg4.isChecked() == True else 0},Excess hyetographs per pixel (mm),{self.output6_exec_rain}")
 
     def run_excess_rainfall(self):
-        '''Esta funcao ativa a pagina de log e configura a ordem de execucao das funcões para o calculo da chuva excedente'''
-        # Ativiva a pagina de log e limpa as informacões passadas no text_edit
+        '''Esta funcao ativa a pagina de log e configura a ordem de execucao das funcoes para o calculo da chuva excedente'''
+        # Ativiva a pagina de log e limpa as informacoes passadas no text_edit
         mensagem_log1 = None
         self.dlg_exc_rain.tabWidget.setCurrentIndex(1)
         self.dlg_exc_rain.pg_log_exc_rain.setEnabled(True)
@@ -2390,7 +2459,7 @@ class HidroPixel:
         self.dlg_exc_rain.progressBar.setValue(0)
         self.dlg_exc_rain.progressBar.setValue(5)
 
-        # Configura as informacões do textEdit da referida pagina
+        # Configura as informacoes do textEdit da referida pagina
         font = QFont()
         font.setPointSize(11)
         version_info = {
@@ -2416,7 +2485,7 @@ class HidroPixel:
             self.dlg_exc_rain.btn_cancel_log.clicked.connect(lambda: self.cancel_log_page(
                 self.dlg_exc_rain.te_logg, self.dlg_exc_rain.pg_par_exc_rain, self.dlg_exc_rain.pg_log_exc_rain))
 
-            # Se nao existir erros nas informacões enviadas, sera mostrada a pagina de log e o programa sera executado
+            # Se nao existir erros nas informacoes enviadas, sera mostrada a pagina de log e o programa sera executado
             self.dlg_exc_rain.pg_par_exc_rain.setEnabled(False)
 
             # Adiciona as mensagem de log ao text edit e configura a funcao run
@@ -2540,7 +2609,7 @@ class HidroPixel:
         # Captura diretorio dos arquivo txt (pasta temp)
         direct_temp = self.diretorio_atual + r'\temp'
 
-        # Escreve txt contendo codigo de direcões de fluxo
+        # Escreve txt contendo codigo de direcoes de fluxo
         flow_directions_code = direct_temp + r'\flow_directions_code.txt'
         with open(flow_directions_code, 'w', encoding='utf-8') as arquivo_txt:
             # Escreve cabecalho
@@ -2579,13 +2648,13 @@ class HidroPixel:
             arquivo_txt.write(
                 f'Minimum slope,{self.dlg_flow_tt.le_1_pg1.text()}')
 
-        # Escreve arquivos contendo as informacões das tabelas referentes aos segmentos homogeneos da rede de drenagem e das caracteristicas do uso e cobertura do solo
+        # Escreve arquivos contendo as informacoes das tabelas referentes aos segmentos homogeneos da rede de drenagem e das caracteristicas do uso e cobertura do solo
         if self.dlg_flow_tt.le_8_pg2.text() != '' or self.dlg_flow_tt.tbw_1_pg2.rowCount() != 0:
             self.save_table_to_file(1)
 
         self.save_table_to_file(2)
 
-        # Chama funcões para tranformacao do raster em geotiff para rst tipo ascii
+        # Chama funcoes para tranformacao do raster em geotiff para rst tipo ascii
         bacia_file = direct_temp + r'\Watershed.rst'
         self.leh_geotiff_escreve_ascii(
             self.lista_rasters_dir[self.dlg_flow_tt.cb_1_pg2.currentIndex()], bacia_file, 'int')
@@ -2680,8 +2749,8 @@ class HidroPixel:
                 f'{1 if self.dlg_flow_tt.ch_11_pg4.isChecked() == True else 0},Flow_travel_time,{self.output6_flow_tt}')  # rst
 
     def run_flow_tt(self):
-        '''Esta funcao ativa a pagina de log e configura a ordem de execucao das funcões para o calculo do tempo de viagem'''
-        # Ativiva a pagina de log e limpa as informacões passadas no text_edit
+        '''Esta funcao ativa a pagina de log e configura a ordem de execucao das funcoes para o calculo do tempo de viagem'''
+        # Ativiva a pagina de log e limpa as informacoes passadas no text_edit
         mensagem_log1 = None
         self.dlg_flow_tt.tabWidget.setCurrentIndex(1)
         self.dlg_flow_tt.pg_log_ftt.setEnabled(True)
@@ -2692,7 +2761,7 @@ class HidroPixel:
         self.dlg_flow_tt.progressBar.setValue(0)
         self.dlg_flow_tt.progressBar.setValue(5)
 
-        # Configura as informacões do textEdit da referida pagina
+        # Configura as informacoes do textEdit da referida pagina
         font = QFont()
         font.setPointSize(11)
         version_info = {
@@ -2719,7 +2788,7 @@ class HidroPixel:
             self.dlg_flow_tt.btn_cancel_log.clicked.connect(lambda: self.cancel_log_page(
                 self.dlg_flow_tt.te_logg, self.dlg_flow_tt.pg_par_ftt, self.dlg_flow_tt.pg_log_ftt))
 
-            # Verifica a existencia de incoerencias nas informacões (direcões de fluxo) fornecidas pelo usuario
+            # Verifica a existencia de incoerencias nas informacoes (direcoes de fluxo) fornecidas pelo usuario
             list_line_edit_value_pg1 = [self.dlg_flow_tt.le_5_pg1.text(),
                                         self.dlg_flow_tt.le_6_pg1.text(),
                                         self.dlg_flow_tt.le_7_pg1.text(),
@@ -2739,7 +2808,7 @@ class HidroPixel:
 
             if any(item == '' for item in duplicate):
                 self.dlg_flow_tt.pages_flow_tt.setCurrentIndex(0)
-                # Vefica se os codigos das difercões de drenagem foram corretamente enviados
+                # Vefica se os codigos das difercoes de drenagem foram corretamente enviados
                 QMessageBox.warning(self.dlg_flow_tt, 'Warning',
                                     "Direction codes might not None.")
                 return
@@ -2752,7 +2821,7 @@ class HidroPixel:
                 return
 
             else:
-                # Se nao existir erros nas informacões enviadas, sera mostrada a pagina de log e o programa sera executado
+                # Se nao existir erros nas informacoes enviadas, sera mostrada a pagina de log e o programa sera executado
                 self.dlg_flow_tt.pg_par_ftt.setEnabled(False)
 
                 # Adiciona as mensagem de log ao text edit e configura a funcao run
@@ -2906,7 +2975,7 @@ class HidroPixel:
             arquivo_txt.write(
                 f"m3/s,{1 if self.dlg_flow_rout.rb_4_pg4.isChecked() == True else 0}")
 
-        # Chama funcões para tranformacao do raster em geotiff para rst tipo ascii
+        # Chama funcoes para tranformacao do raster em geotiff para rst tipo ascii
         bacia_file = direct_temp + r'\Watershed.rst'
         self.leh_geotiff_escreve_ascii(
             self.lista_rasters_dir[self.dlg_flow_rout.cb_1_pg2.currentIndex()], bacia_file, 'int')
@@ -2934,7 +3003,7 @@ class HidroPixel:
         else:
             watershed_into_classes = ""
 
-        # Escreve txt contendo codigo de direcões de fluxo
+        # Escreve txt contendo codigo de direcoes de fluxo
         flow_directions_code = direct_temp + r'\input_files_config_flow_rout.txt'
         with open(flow_directions_code, 'w', encoding='utf-8') as arquivo_txt:
             arquivo_txt.write("Selected input files directory\n")
@@ -3014,11 +3083,11 @@ class HidroPixel:
             plt.gcf().canvas.manager.window.setWindowTitle('Resulting Watershed Hydrograph')
             plt.title('HYDROGRAPH')
 
-            # Observado (primeira coluna de vazões observadas) em preto
+            # Observado (primeira coluna de vazoes observadas) em preto
             plt.plot(tempos_obs, vazoes_obs[:, 0], color='black',
                      linestyle='-', label='Observed Runoff')
 
-            # Calculado total (primeira coluna de vazões calculadas) em vermelho
+            # Calculado total (primeira coluna de vazoes calculadas) em vermelho
             plt.plot(tempos_calc, vazoes_calc[:, 0], color='red',
                      linestyle='-', label='Calculated Runoff')
 
@@ -3044,7 +3113,7 @@ class HidroPixel:
             vol_calc = np.sum(q_calc) * delta_t
             er_vol = (vol_calc - vol_obs) / vol_obs * 100
 
-            # mantém as posicões originais das métricas
+            # mantém as posicoes originais das métricas
             plt.figtext(0.1, 0.25, f'RMSE: {rmse:.2f}m³/s', fontsize=10)
             plt.figtext(0.1, 0.20, f'NS coefficient: {nse:.2f}', fontsize=10)
             plt.figtext(
@@ -3092,8 +3161,8 @@ class HidroPixel:
             plt.show()
 
     def run_flow_routing(self):
-        '''Esta funcao ativa a pagina de log e configura a ordem de execucao das funcões para o calculo do tempo de viagem'''
-        # Ativiva a pagina de log e limpa as informacões passadas no text_edit
+        '''Esta funcao ativa a pagina de log e configura a ordem de execucao das funcoes para o calculo do tempo de viagem'''
+        # Ativiva a pagina de log e limpa as informacoes passadas no text_edit
         mensagem_log1 = None
         self.dlg_flow_rout.tabWidget.setCurrentIndex(1)
         self.dlg_flow_rout.pg_log_f_rout.setEnabled(True)
@@ -3104,7 +3173,7 @@ class HidroPixel:
         self.dlg_flow_rout.progressBar.setValue(0)
         self.dlg_flow_rout.progressBar.setValue(5)
 
-        # Configura as informacões do textEdit da referida pagina
+        # Configura as informacoes do textEdit da referida pagina
         font = QFont()
         font.setPointSize(11)
         version_info = {
@@ -3310,7 +3379,7 @@ class HidroPixel:
             self.dlg_flow_tt.cb_8_pg2.setCurrentText(atual)
 
     def SsButoes(self, active_button, instancia, page=0):
-        """Esta funcao configura o estilo dos botões das diferentes paginas do plugin. Aquele que estiver em destaque representara a pagina autal
+        """Esta funcao configura o estilo dos botoes das diferentes paginas do plugin. Aquele que estiver em destaque representara a pagina autal
         page = 1 representa o form Excess Rainfall
         page = 0 representa os outros forms"""
 
@@ -3320,7 +3389,7 @@ class HidroPixel:
 
         # Significa que o form atual é o excess rainfall
         if page == 1:
-            # Lista dos botões
+            # Lista dos botoes
             buttons = [
                 instancia.btn_config,
                 instancia.btn_rain_int,
@@ -3500,7 +3569,7 @@ class HidroPixel:
             # Chama funcao que aplica mascara para todos os parametros das diferentes rotinas
             self.parameters_mask()
 
-            # Configura botões do menu do hidropixel e estilo dos botoes da configuration page
+            # Configura botoes do menu do hidropixel e estilo dos botoes da configuration page
             self.dlg_hidro_pixel.btn_flow_trav.clicked.connect(
                 lambda: self.dlg_flow_tt.show())
             self.dlg_flow_tt.btn_config.setStyleSheet(self.highlighted_style)
@@ -3514,7 +3583,7 @@ class HidroPixel:
             self.dlg_flow_rout.btn_config.setStyleSheet(self.highlighted_style)
 
             # self.dlg_hidro_pixel.btn_help.clicked.connect()
-            '''Configura os botões da pagina da rotina do flow travel time'''
+            '''Configura os botoes da pagina da rotina do flow travel time'''
             # configura tabelas para inicar sem linhas: condicao para verificar altercao nas tabelas
             self.dlg_flow_tt.tbw_1_pg2.setRowCount(0)
             self.dlg_flow_tt.tbw_2_pg2.setRowCount(0)
@@ -3540,7 +3609,7 @@ class HidroPixel:
             self.dlg_flow_tt.btn_run.clicked.connect(
                 lambda: self.dlg_flow_tt.pages_flow_tt.setCurrentWidget(self.dlg_flow_tt.pg4_run))
 
-            # Configura os botões da pagina configuration: flow travel time
+            # Configura os botoes da pagina configuration: flow travel time
             self.dlg_flow_tt.tbtn_pg1_1.clicked.connect(
                 lambda: self.carrega_work_folder(self.dlg_flow_tt.le_21_pg1))
 
@@ -3550,7 +3619,7 @@ class HidroPixel:
             self.carrega_shp()
             # self.dlg_flow_tt.cb_1_pg1.toggled.connect(lambda: self.sheet_flow_status(self.dlg_flow_tt.cb_1_pg1.isChecked()))
 
-            # Configura os botões da pagina input data : flow travel time
+            # Configura os botoes da pagina input data : flow travel time
             self.dlg_flow_tt.tbtn_pg2_1.clicked.connect(
                 lambda: self.carregaArquivos(0, self.dlg_flow_tt.cb_1_pg2))
             self.dlg_flow_tt.tbtn_pg2_2.clicked.connect(
@@ -3568,7 +3637,28 @@ class HidroPixel:
             self.dlg_flow_tt.tbtn_pg2_9.clicked.connect(
                 lambda: self.carregaArquivos(0, self.dlg_flow_tt.cb_6_pg2))
 
-            # Configura os botões da pagina run page: flow travel time
+            # Configura os botoes da pagina data validation tool: flow travel time
+            ### pedro tt
+            # self.dlg_flow_tt.btn_6_pg3.clicked.connect(
+            #     lambda: self.validar_raster_bacia(self.dlg_flow_tt.cb_1_pg2.currentText(),modulo=1)
+            # )
+            # self.dlg_flow_tt.btn_7_pg3.clicked.connect(self.validar_raster_mde)
+            # self.dlg_flow_tt.btn_8_pg3.clicked.connect(self.preencher_direcoes_padrao)
+            # self.dlg_flow_tt.btn_8_pg3.clicked.connect(self.validar_direcoes_fluxo)
+            # self.dlg_flow_tt.btn_10_pg3.clicked.connect(lambda: self.verificar_dimensoes_rasters([
+            #             self.dlg_flow_tt.cb_1_pg2.currentText(),
+            #             self.dlg_flow_tt.cb_2_pg2.currentText(),
+            #             self.dlg_flow_tt.cb_3_pg2.currentText(),
+            #             self.dlg_flow_tt.cb_7_pg2.currentText()
+            #         ], modulo = 1)
+            #     )
+            # self.dlg_flow_tt.btn9_pg3.clicked.connect(lambda: self.executar_validacao_fluxo())
+            # self.dlg_flow_tt.btn11_pg3.clicked.connect(self.validar_uso_cobertura)
+            # self.dlg_flow_tt.btn12_pg3.clicked.connect(self.validar_tabela_manning)
+            # self.dlg_flow_tt.btn14_pg3.clicked.connect(self.verificar_conectividade_rede)
+            # self.dlg_flow_tt.btn15_pg3.clicked.connect(self.verificar_acumulado_drenagem)
+
+            # Configura os botoes da pagina run page: flow travel time
             self.dlg_flow_tt.tbtn_pg4_6.clicked.connect(
                 lambda: self.save_buttons(self.dlg_flow_tt.le_6_pg4))
             self.dlg_flow_tt.tbtn_pg4_7.clicked.connect(
@@ -3584,7 +3674,7 @@ class HidroPixel:
             self.dlg_flow_tt.tbtn_pg4_12.clicked.connect(
                 lambda: self.carrega_POI_path(0, self.dlg_flow_tt.le_13_pg4))
 
-            # configura botões de salvar e salvar para um arquivo: flow travel time
+            # configura botoes de salvar e salvar para um arquivo: flow travel time
             # Chama funcao para definir valor de path da GUI save to project
             self.dlg_flow_tt.btn_save_file_pg1.clicked.connect(
                 lambda: self.project_path())
@@ -3626,7 +3716,7 @@ class HidroPixel:
             self.dlg_save_project_flow_tt.btn_save_project.clicked.connect(
                 lambda: self.run_save_project(self.dlg_save_project_flow_tt, 1))
 
-            # Configura botao para ler informacões de um arquivo enviado : flow travel time
+            # Configura botao para ler informacoes de um arquivo enviado : flow travel time
             self.dlg_flow_tt.btn_read_pg1.clicked.connect(
                 lambda: self.read_from_project(1, self.dlg_flow_tt.le_21_pg1.text()))
             self.dlg_flow_tt.btn_read_pg2.clicked.connect(
@@ -3634,7 +3724,7 @@ class HidroPixel:
             self.dlg_flow_tt.btn_read_pg4.clicked.connect(
                 lambda: self.read_from_project(1, self.dlg_flow_tt.le_21_pg1.text()))
 
-            # Configura botões das tabelas : flow travel time
+            # Configura botoes das tabelas : flow travel time
             self.dlg_flow_tt.btn_read_t1.clicked.connect(lambda: self.read_tb_from_file(
                 self.dlg_flow_tt.tbw_1_pg2, self.dlg_flow_tt.le_8_pg2, 1))
             self.dlg_flow_tt.btn_read_t2.clicked.connect(lambda: self.read_tb_from_file(
@@ -3652,13 +3742,13 @@ class HidroPixel:
             self.dlg_flow_tt.btn_del_row_2.clicked.connect(
                 lambda: self.delete_row(self.dlg_flow_tt.tbw_2_pg2))
 
-            # Configura os botões de limpeza das variaveis : flow travel time
+            # Configura os botoes de limpeza das variaveis : flow travel time
             self.dlg_flow_tt.btn_clear_1.clicked.connect(lambda: self.clear_table(
                 self.dlg_flow_tt.tbw_1_pg2, self.dlg_flow_tt.le_8_pg2))
             self.dlg_flow_tt.btn_clear_2.clicked.connect(lambda: self.clear_table(
                 self.dlg_flow_tt.tbw_2_pg2, self.dlg_flow_tt.le_10_pg2))
 
-            # configura botões da pagina run : flow travel time
+            # configura botoes da pagina run : flow travel time
             self.dlg_flow_tt.btn_close_pg4.clicked.connect(
                 lambda: self.close_gui(1))
 
@@ -3668,12 +3758,12 @@ class HidroPixel:
                 lambda: self.CondicaoRunFlowTT())
 
             # Configura botao que salva projeto da rotina flow travel time
-            # Configura botões pagina de log: flow travel time
+            # Configura botoes pagina de log: flow travel time
             self.dlg_flow_tt.btn_close_log.clicked.connect(
                 lambda: self.close_gui(1))
 
-            '''Configura os botões da pagina da rotina excess rainfall'''
-            # Configura botões gerais das paginas da rotina excess rainfall e a funcao de mudanca de estilo
+            '''Configura os botoes da pagina da rotina excess rainfall'''
+            # Configura botoes gerais das paginas da rotina excess rainfall e a funcao de mudanca de estilo
             self.dlg_exc_rain.btn_config.clicked.connect(lambda: self.SsButoes(
                 self.dlg_exc_rain.btn_config, self.dlg_exc_rain, page=1))
             self.dlg_exc_rain.btn_config.clicked.connect(
@@ -3699,7 +3789,7 @@ class HidroPixel:
             self.dlg_exc_rain.btn_run.clicked.connect(
                 lambda: self.dlg_exc_rain.pages_exc_rain.setCurrentWidget(self.dlg_exc_rain.pg5_run))
 
-            # Configura botões da pagina de configuration: excess rainfall
+            # Configura botoes da pagina de configuration: excess rainfall
             self.dlg_exc_rain.tbtn_pg1_1.clicked.connect(
                 lambda: self.carrega_work_folder(self.dlg_exc_rain.le_3_pg1))
 
@@ -3719,7 +3809,7 @@ class HidroPixel:
             self.dlg_exc_rain.rb_2_pg1.toggled.connect(
                 lambda: self.rain_def_condition(2))
 
-            # Configura os botões da pagina input data : excess rainfall
+            # Configura os botoes da pagina input data : excess rainfall
             self.dlg_exc_rain.tbtn_pg2_1.clicked.connect(
                 lambda: self.carregaArquivos(0, self.dlg_exc_rain.cb_1_pg2))
             self.dlg_exc_rain.tbtn_pg2_2.clicked.connect(
@@ -3729,7 +3819,20 @@ class HidroPixel:
             self.dlg_exc_rain.tbtn_pg2_4.clicked.connect(
                 lambda: self.carregaArquivos(self.dlg_exc_rain.le_4_pg2, 0, file_type='bin'))
 
-            # configura botões de salvar e salvar para um arquivo: excess rainfall
+            # Configura os botoes da pagina data validation tool : excess rainfall
+            # pedro ex
+            # self.dlg_exc_rain.btn1_pg_4.clicked.connect(lambda: self.verificar_dimensoes_rasters([
+            #             self.dlg_exc_rain.cb_1_pg2.currentText(),
+            #             self.dlg_exc_rain.cb_2_pg2.currentText(),
+            #         ], modulo = 2)
+            #     )
+            # self.dlg_exc_rain.btn2_pg_4.clicked.connect(
+            #     lambda: self.validar_raster_bacia(self.dlg_exc_rain.cb_1_pg2.currentText(),modulo=2)
+            # )
+            # self.dlg_exc_rain.btn3_pg_4.clicked.connect(self.validar_raster_cn)
+
+            # configura botoes de salvar e salvar para um arquivo: excess rainfall
+
             # Chama funcao para definir valor de path da GUI save to project
             self.dlg_exc_rain.btn_save_file_pg1.clicked.connect(
                 lambda: self.project_path())
@@ -3757,7 +3860,7 @@ class HidroPixel:
             self.dlg_save_project_exc_rain.btn_save_project.clicked.connect(
                 lambda: self.run_save_project(self.dlg_save_project_exc_rain, 2))
 
-            # Configura botao para ler informacões de uma arquivo enviado : excess rainfall
+            # Configura botao para ler informacoes de uma arquivo enviado : excess rainfall
             self.dlg_exc_rain.btn_read_pg1.clicked.connect(
                 lambda: self.read_from_project(2, self.dlg_exc_rain.le_3_pg1.text()))
 
@@ -3768,7 +3871,7 @@ class HidroPixel:
             self.dlg_exc_rain.btn_read_pg4.clicked.connect(
                 lambda: self.read_from_project(2, self.dlg_exc_rain.le_3_pg1.text()))
 
-            # Configura os botões da pagina run page: excess rainfall
+            # Configura os botoes da pagina run page: excess rainfall
             self.dlg_exc_rain.tbtn_pg4_1.clicked.connect(
                 lambda: self.save_buttons(self.dlg_exc_rain.le_1_pg4))
             self.dlg_exc_rain.tbtn_pg4_2.clicked.connect(
@@ -3782,7 +3885,7 @@ class HidroPixel:
             self.dlg_exc_rain.tbtn_pg4_6.clicked.connect(
                 lambda: self.save_buttons(self.dlg_exc_rain.le_6_pg4, file_type='bin'))
 
-            # configura botões da pagina run : excess rainfall
+            # configura botoes da pagina run : excess rainfall
             # Configura condicao para chamar rotinas em vb
             self.dlg_exc_rain.btn_run_2.clicked.connect(
                 lambda: self.condicaoRunExcessRainfall())
@@ -3790,7 +3893,7 @@ class HidroPixel:
             self.dlg_exc_rain.btn_close_pg4.clicked.connect(
                 lambda: self.close_gui(2))
 
-            # Configura botões da pagina rainfall interpolation
+            # Configura botoes da pagina rainfall interpolation
             self.dlg_exc_rain.tbtn_pg_r_1.clicked.connect(
                 lambda: self.carregaArquivos(0, self.dlg_exc_rain.cb_1_pg_ri))
             self.dlg_exc_rain.tbtn_pg_r_2.clicked.connect(
@@ -3806,8 +3909,8 @@ class HidroPixel:
             self.dlg_exc_rain.btn_save_2_pg_ri.clicked.connect(
                 lambda: self.CondicaoRunRainfall_inter(1))
 
-            '''Configura os botões da pagina da rotina flow routing'''
-            # Configura botões das paginas da flow routing assim como a funcao de mudanca de estilo
+            '''Configura os botoes da pagina da rotina flow routing'''
+            # Configura botoes das paginas da flow routing assim como a funcao de mudanca de estilo
             self.dlg_flow_rout.btn_config.clicked.connect(
                 lambda: self.SsButoes(self.dlg_flow_rout.btn_config, self.dlg_flow_rout))
             self.dlg_flow_rout.btn_config.clicked.connect(
@@ -3828,11 +3931,11 @@ class HidroPixel:
             self.dlg_flow_rout.btn_run.clicked.connect(
                 lambda: self.dlg_flow_rout.pages_flow_rout.setCurrentWidget(self.dlg_flow_rout.pg4_run))
 
-            # Configura botões da pagina de configuration: flow routing
+            # Configura botoes da pagina de configuration: flow routing
             self.dlg_flow_rout.tbtn_pg1_1.clicked.connect(
                 lambda: self.carrega_work_folder(self.dlg_flow_rout.le_3_pg1))
 
-            # Configura os botões da pagina input data : flow routing
+            # Configura os botoes da pagina input data : flow routing
             self.dlg_flow_rout.tbtn_pg2_1.clicked.connect(
                 lambda: self.carregaArquivos(0, self.dlg_flow_rout.cb_1_pg2))
             self.dlg_flow_rout.tbtn_pg2_3.clicked.connect(
@@ -3846,7 +3949,7 @@ class HidroPixel:
             self.dlg_flow_rout.tbtn_pg2_6.clicked.connect(
                 lambda: self.carregaArquivos(0, self.dlg_flow_rout.cb_4_pg2))
 
-            # configura botões de salvar e salvar para um arquivo: flow travel time
+            # configura botoes de salvar e salvar para um arquivo: flow travel time
             self.dlg_flow_rout.btn_save_file_pg1.clicked.connect(
                 lambda: self.project_path())
             self.dlg_flow_rout.btn_save_file_pg1.clicked.connect(
@@ -3868,7 +3971,7 @@ class HidroPixel:
             self.dlg_save_project_flow_rout.btn_save_project.clicked.connect(
                 lambda: self.run_save_project(self.dlg_save_project_flow_rout, 3))
 
-            # Configura botao para ler informacões de uma arquivo enviado : flow routing
+            # Configura botao para ler informacoes de uma arquivo enviado : flow routing
             self.dlg_flow_rout.btn_read_pg1.clicked.connect(
                 lambda: self.read_from_project(3, self.dlg_flow_rout.le_3_pg1.text()))
             self.dlg_flow_rout.btn_read_pg2.clicked.connect(
@@ -3876,7 +3979,7 @@ class HidroPixel:
             self.dlg_flow_rout.btn_read_pg4.clicked.connect(
                 lambda: self.read_from_project(3, self.dlg_flow_rout.le_3_pg1.text()))
 
-            # Configura os botões da pagina run page: flow routing
+            # Configura os botoes da pagina run page: flow routing
             self.dlg_flow_rout.tbtn_pg4_1.clicked.connect(
                 lambda: self.save_buttons(self.dlg_flow_rout.le_1_pg4))
             self.dlg_flow_rout.tbtn_pg4_2.clicked.connect(
@@ -3894,11 +3997,31 @@ class HidroPixel:
             self.dlg_flow_rout.tbtn_pg4_8.clicked.connect(
                 lambda: self.carrega_POI_path(2, self.dlg_flow_rout.le_9_pg4))
 
+            # Configura os botoes da pagina run page: flow routing
+            # pedro fr
+            # self.dlg_flow_rout.btn_1_pg3.clicked.connect(
+            #      lambda: self.verificar_dimensoes_rasters(
+            #          paths=[
+            #             self.dlg_flow_rout.cb_1_pg2.currentText(),
+            #             self.dlg_flow_rout.cb_3_pg2.currentText(),
+            #             self.dlg_flow_rout.cb_5_pg2.currentText(),
+                         
+            #          ], modulo=3
+            #      )
+            #  )
+            # self.dlg_flow_rout.btn_2_pg3.clicked.connect(
+            #     lambda: self.validar_raster_bacia(self.dlg_flow_rout.cb_1_pg2.currentText(),modulo=3)
+            # )
+            # self.dlg_flow_rout.btn_3_pg3.clicked.connect(self.verificar_tempos_de_viagem)
+            # self.dlg_flow_rout.btn_4_pg3.clicked.connect(self.verificar_chuva_excedente_total)
+            # self.dlg_flow_rout.btn_5_pg3.clicked.connect(self.validar_hietograma_txt)
+            # self.dlg_flow_rout.btn_6_pg3.clicked.connect(self.validar_regioes_interesse_raster)
+                        
             # Atualiza status dos campos da vazao observada
             self.dlg_flow_rout.ch_12_pg4.stateChanged.connect(
                 lambda: self.atualizaVazaoObs())
 
-            # configura botões da pagina run : flow routing
+            # configura botoes da pagina run : flow routing
             # Configura condicao para chamar rotinas em vb
             self.dlg_flow_rout.btn_run_2.clicked.connect(
                 lambda: self.condicaoRunFlowRouting())

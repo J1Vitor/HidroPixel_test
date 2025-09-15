@@ -2699,51 +2699,6 @@
           </widget>
           <widget class="QWidget" name="pg3_data_val_tool">
            <layout class="QGridLayout" name="gridLayout_29">
-            <item row="2" column="0">
-             <widget class="QScrollArea" name="scrollArea_3">
-              <property name="widgetResizable">
-               <bool>true</bool>
-              </property>
-              <widget class="QWidget" name="scrollAreaWidgetContents_3">
-               <property name="geometry">
-                <rect>
-                 <x>0</x>
-                 <y>0</y>
-                 <width>258</width>
-                 <height>61</height>
-                </rect>
-               </property>
-               <layout class="QGridLayout" name="gridLayout_30">
-                <item row="0" column="0">
-                 <widget class="QFrame" name="frame_6">
-                  <property name="frameShape">
-                   <enum>QFrame::StyledPanel</enum>
-                  </property>
-                  <property name="frameShadow">
-                   <enum>QFrame::Raised</enum>
-                  </property>
-                  <layout class="QGridLayout" name="gridLayout_31">
-                   <item row="0" column="0">
-                    <widget class="QLabel" name="label_46">
-                     <property name="text">
-                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:14pt; font-weight:700;&quot;&gt;UNDER DEVELOPMENT&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </widget>
-                </item>
-               </layout>
-              </widget>
-             </widget>
-            </item>
-            <item row="0" column="0">
-             <widget class="QLabel" name="label_47">
-              <property name="text">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-weight:700;&quot;&gt;Flow travel time: DATA VALIDATION TOOL&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-              </property>
-             </widget>
-            </item>
             <item row="1" column="0">
              <layout class="QGridLayout" name="gridLayout_79">
               <item row="0" column="0">
@@ -2792,6 +2747,849 @@
                </widget>
               </item>
              </layout>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_47">
+              <property name="text">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-weight:700;&quot;&gt;Flow travel time: DATA VALIDATION TOOL&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QScrollArea" name="scrollArea_3">
+              <property name="widgetResizable">
+               <bool>true</bool>
+              </property>
+              <widget class="QWidget" name="scrollAreaWidgetContents_3">
+               <property name="geometry">
+                <rect>
+                 <x>0</x>
+                 <y>0</y>
+                 <width>330</width>
+                 <height>445</height>
+                </rect>
+               </property>
+               <layout class="QGridLayout" name="gridLayout_30">
+                <item row="1" column="0">
+                 <widget class="QFrame" name="frame_6">
+                  <property name="frameShape">
+                   <enum>QFrame::StyledPanel</enum>
+                  </property>
+                  <property name="frameShadow">
+                   <enum>QFrame::Raised</enum>
+                  </property>
+                  <layout class="QGridLayout" name="gridLayout_11">
+                   <item row="0" column="0">
+                    <layout class="QGridLayout" name="gridLayout_31">
+                     <item row="0" column="3">
+                      <widget class="QLabel" name="label_106">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>16</width>
+                         <height>16</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>16</width>
+                         <height>16</height>
+                        </size>
+                       </property>
+                       <property name="toolTip">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Checks whether all input rasters have the same extent and spatial resolution.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                       <property name="text">
+                        <string/>
+                       </property>
+                       <property name="pixmap">
+                        <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
+                       </property>
+                       <property name="scaledContents">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="1" column="1">
+                      <spacer name="verticalSpacer_14">
+                       <property name="orientation">
+                        <enum>Qt::Vertical</enum>
+                       </property>
+                       <property name="sizeType">
+                        <enum>QSizePolicy::Fixed</enum>
+                       </property>
+                       <property name="sizeHint" stdset="0">
+                        <size>
+                         <width>20</width>
+                         <height>5</height>
+                        </size>
+                       </property>
+                      </spacer>
+                     </item>
+                     <item row="18" column="1">
+                      <widget class="QPushButton" name="btn15_pg3">
+                       <property name="text">
+                        <string>Execute</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="10" column="1">
+                      <widget class="QPushButton" name="btn11_pg3">
+                       <property name="text">
+                        <string>Execute</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="6" column="0">
+                      <widget class="QLabel" name="label_97">
+                       <property name="text">
+                        <string>Validate Input Directions</string>
+                       </property>
+                       <property name="textFormat">
+                        <enum>Qt::PlainText</enum>
+                       </property>
+                       <property name="alignment">
+                        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="8" column="2">
+                      <widget class="QLabel" name="label_100">
+                       <property name="text">
+                        <string>Not validated</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="6" column="2">
+                      <widget class="QLabel" name="label_98">
+                       <property name="text">
+                        <string>Not validated</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="0">
+                      <widget class="QLabel" name="label_82">
+                       <property name="text">
+                        <string>Validate Dimensions</string>
+                       </property>
+                       <property name="textFormat">
+                        <enum>Qt::PlainText</enum>
+                       </property>
+                       <property name="alignment">
+                        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="6" column="1">
+                      <widget class="QPushButton" name="btn_8_pg3">
+                       <property name="text">
+                        <string>Execute</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="12" column="0">
+                      <widget class="QLabel" name="label_103">
+                       <property name="text">
+                        <string>LULC Classes Validation</string>
+                       </property>
+                       <property name="textFormat">
+                        <enum>Qt::PlainText</enum>
+                       </property>
+                       <property name="alignment">
+                        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                       </property>
+                       <property name="wordWrap">
+                        <bool>false</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="4" column="1">
+                      <widget class="QPushButton" name="btn_7_pg3">
+                       <property name="text">
+                        <string>Execute</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="14" column="2">
+                      <widget class="QLabel" name="label_110">
+                       <property name="text">
+                        <string>Not validated</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="4" column="2">
+                      <widget class="QLabel" name="label_96">
+                       <property name="text">
+                        <string>Not validated</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="5" column="1">
+                      <spacer name="verticalSpacer_16">
+                       <property name="orientation">
+                        <enum>Qt::Vertical</enum>
+                       </property>
+                       <property name="sizeType">
+                        <enum>QSizePolicy::Fixed</enum>
+                       </property>
+                       <property name="sizeHint" stdset="0">
+                        <size>
+                         <width>20</width>
+                         <height>5</height>
+                        </size>
+                       </property>
+                      </spacer>
+                     </item>
+                     <item row="9" column="1">
+                      <spacer name="verticalSpacer_18">
+                       <property name="orientation">
+                        <enum>Qt::Vertical</enum>
+                       </property>
+                       <property name="sizeType">
+                        <enum>QSizePolicy::Fixed</enum>
+                       </property>
+                       <property name="sizeHint" stdset="0">
+                        <size>
+                         <width>20</width>
+                         <height>5</height>
+                        </size>
+                       </property>
+                      </spacer>
+                     </item>
+                     <item row="14" column="1">
+                      <widget class="QPushButton" name="btn14_pg3">
+                       <property name="text">
+                        <string>Execute</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="1">
+                      <widget class="QPushButton" name="btn_10_pg3">
+                       <property name="text">
+                        <string>Execute</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="16" column="0">
+                      <widget class="QLabel" name="label_111">
+                       <property name="text">
+                        <string>RDN Classes Validation</string>
+                       </property>
+                       <property name="textFormat">
+                        <enum>Qt::PlainText</enum>
+                       </property>
+                       <property name="alignment">
+                        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                       </property>
+                       <property name="wordWrap">
+                        <bool>false</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="4" column="3">
+                      <widget class="QLabel" name="label_109">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>16</width>
+                         <height>16</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>16</width>
+                         <height>16</height>
+                        </size>
+                       </property>
+                       <property name="toolTip">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Checks if input DEM is valid.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                       <property name="text">
+                        <string/>
+                       </property>
+                       <property name="pixmap">
+                        <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
+                       </property>
+                       <property name="scaledContents">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="18" column="0">
+                      <widget class="QLabel" name="label_113">
+                       <property name="text">
+                        <string>Validate Drainage Areas</string>
+                       </property>
+                       <property name="textFormat">
+                        <enum>Qt::PlainText</enum>
+                       </property>
+                       <property name="alignment">
+                        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                       </property>
+                       <property name="wordWrap">
+                        <bool>false</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="12" column="3">
+                      <widget class="QLabel" name="label_117">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>16</width>
+                         <height>16</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>16</width>
+                         <height>16</height>
+                        </size>
+                       </property>
+                       <property name="toolTip">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Checks if all Mannint values from the LULC classes file are valid.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                       <property name="text">
+                        <string/>
+                       </property>
+                       <property name="pixmap">
+                        <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
+                       </property>
+                       <property name="scaledContents">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="12" column="2">
+                      <widget class="QLabel" name="label_104">
+                       <property name="text">
+                        <string>Not validated</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="14" column="3">
+                      <widget class="QLabel" name="label_118">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>16</width>
+                         <height>16</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>16</width>
+                         <height>16</height>
+                        </size>
+                       </property>
+                       <property name="toolTip">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Checks if the RDN is continuous and reaches the outlet.&lt;/p&gt;&lt;p&gt;Needs RDN, watershed, flow direction and accumulation drainage area rasters.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                       <property name="text">
+                        <string/>
+                       </property>
+                       <property name="pixmap">
+                        <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
+                       </property>
+                       <property name="scaledContents">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="2" column="0">
+                      <widget class="QLabel" name="label_46">
+                       <property name="layoutDirection">
+                        <enum>Qt::LeftToRight</enum>
+                       </property>
+                       <property name="text">
+                        <string>Validate Basin</string>
+                       </property>
+                       <property name="textFormat">
+                        <enum>Qt::PlainText</enum>
+                       </property>
+                       <property name="alignment">
+                        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="18" column="3">
+                      <widget class="QLabel" name="label_120">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>16</width>
+                         <height>16</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>16</width>
+                         <height>16</height>
+                        </size>
+                       </property>
+                       <property name="toolTip">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Checks if the drainage area raster contains only positive real and increasing values within the basin.&lt;/p&gt;&lt;p&gt;Needs watershed, RDN and accumulated area rasters.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                       <property name="text">
+                        <string/>
+                       </property>
+                       <property name="pixmap">
+                        <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
+                       </property>
+                       <property name="scaledContents">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="8" column="1">
+                      <widget class="QPushButton" name="btn9_pg3">
+                       <property name="text">
+                        <string>Execute</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="16" column="1">
+                      <widget class="QPushButton" name="btn13_pg3">
+                       <property name="text">
+                        <string>Execute</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="3" column="1">
+                      <spacer name="verticalSpacer_15">
+                       <property name="orientation">
+                        <enum>Qt::Vertical</enum>
+                       </property>
+                       <property name="sizeType">
+                        <enum>QSizePolicy::Fixed</enum>
+                       </property>
+                       <property name="sizeHint" stdset="0">
+                        <size>
+                         <width>20</width>
+                         <height>5</height>
+                        </size>
+                       </property>
+                      </spacer>
+                     </item>
+                     <item row="6" column="3">
+                      <widget class="QLabel" name="label_115">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>16</width>
+                         <height>16</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>16</width>
+                         <height>16</height>
+                        </size>
+                       </property>
+                       <property name="toolTip">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Checks if input flow directions are valid (positive unique integers).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                       <property name="text">
+                        <string/>
+                       </property>
+                       <property name="pixmap">
+                        <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
+                       </property>
+                       <property name="scaledContents">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="15" column="1">
+                      <spacer name="verticalSpacer_22">
+                       <property name="orientation">
+                        <enum>Qt::Vertical</enum>
+                       </property>
+                       <property name="sizeType">
+                        <enum>QSizePolicy::Fixed</enum>
+                       </property>
+                       <property name="sizeHint" stdset="0">
+                        <size>
+                         <width>20</width>
+                         <height>5</height>
+                        </size>
+                       </property>
+                      </spacer>
+                     </item>
+                     <item row="2" column="3">
+                      <widget class="QLabel" name="label_108">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>16</width>
+                         <height>16</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>16</width>
+                         <height>16</height>
+                        </size>
+                       </property>
+                       <property name="toolTip">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Checks if the watershed raster is valid.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                       <property name="text">
+                        <string/>
+                       </property>
+                       <property name="pixmap">
+                        <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
+                       </property>
+                       <property name="scaledContents">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="18" column="2">
+                      <widget class="QLabel" name="label_114">
+                       <property name="text">
+                        <string>Not validated</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="10" column="3">
+                      <widget class="QLabel" name="label_116">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>16</width>
+                         <height>16</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>16</width>
+                         <height>16</height>
+                        </size>
+                       </property>
+                       <property name="toolTip">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Checks if all pixels within the basin from the LULC raster are positive integers.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                       <property name="text">
+                        <string/>
+                       </property>
+                       <property name="pixmap">
+                        <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
+                       </property>
+                       <property name="scaledContents">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="16" column="2">
+                      <widget class="QLabel" name="label_112">
+                       <property name="text">
+                        <string>Not validated</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="11" column="1">
+                      <spacer name="verticalSpacer_20">
+                       <property name="orientation">
+                        <enum>Qt::Vertical</enum>
+                       </property>
+                       <property name="sizeType">
+                        <enum>QSizePolicy::Fixed</enum>
+                       </property>
+                       <property name="sizeHint" stdset="0">
+                        <size>
+                         <width>20</width>
+                         <height>5</height>
+                        </size>
+                       </property>
+                      </spacer>
+                     </item>
+                     <item row="14" column="0">
+                      <widget class="QLabel" name="label_105">
+                       <property name="text">
+                        <string>RDN Validation</string>
+                       </property>
+                       <property name="textFormat">
+                        <enum>Qt::PlainText</enum>
+                       </property>
+                       <property name="alignment">
+                        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                       </property>
+                       <property name="wordWrap">
+                        <bool>false</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="4" column="0">
+                      <widget class="QLabel" name="label_94">
+                       <property name="text">
+                        <string>Validate DEM</string>
+                       </property>
+                       <property name="textFormat">
+                        <enum>Qt::PlainText</enum>
+                       </property>
+                       <property name="alignment">
+                        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="8" column="3">
+                      <widget class="QLabel" name="label_107">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>16</width>
+                         <height>16</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>16</width>
+                         <height>16</height>
+                        </size>
+                       </property>
+                       <property name="toolTip">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Checks if all directions from the flow directions raster converge to the outlet.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                       <property name="text">
+                        <string/>
+                       </property>
+                       <property name="pixmap">
+                        <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
+                       </property>
+                       <property name="scaledContents">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="2">
+                      <widget class="QLabel" name="label_95">
+                       <property name="text">
+                        <string>Not validated</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="2" column="2">
+                      <widget class="QLabel" name="label_90">
+                       <property name="text">
+                        <string>Not validated</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="16" column="3">
+                      <widget class="QLabel" name="label_119">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>16</width>
+                         <height>16</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>16</width>
+                         <height>16</height>
+                        </size>
+                       </property>
+                       <property name="toolTip">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Checks if the RDN classes in the input file are present in the RDN classes raster.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                       <property name="text">
+                        <string/>
+                       </property>
+                       <property name="pixmap">
+                        <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
+                       </property>
+                       <property name="scaledContents">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="2" column="1">
+                      <widget class="QPushButton" name="btn_6_pg3">
+                       <property name="text">
+                        <string>Execute</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="12" column="1">
+                      <widget class="QPushButton" name="btn12_pg3">
+                       <property name="text">
+                        <string>Execute</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="7" column="1">
+                      <spacer name="verticalSpacer_17">
+                       <property name="orientation">
+                        <enum>Qt::Vertical</enum>
+                       </property>
+                       <property name="sizeType">
+                        <enum>QSizePolicy::Fixed</enum>
+                       </property>
+                       <property name="sizeHint" stdset="0">
+                        <size>
+                         <width>20</width>
+                         <height>5</height>
+                        </size>
+                       </property>
+                      </spacer>
+                     </item>
+                     <item row="8" column="0">
+                      <widget class="QLabel" name="label_99">
+                       <property name="text">
+                        <string>Validate Flow Directions</string>
+                       </property>
+                       <property name="textFormat">
+                        <enum>Qt::PlainText</enum>
+                       </property>
+                       <property name="alignment">
+                        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="13" column="1">
+                      <spacer name="verticalSpacer_21">
+                       <property name="orientation">
+                        <enum>Qt::Vertical</enum>
+                       </property>
+                       <property name="sizeType">
+                        <enum>QSizePolicy::Fixed</enum>
+                       </property>
+                       <property name="sizeHint" stdset="0">
+                        <size>
+                         <width>20</width>
+                         <height>5</height>
+                        </size>
+                       </property>
+                      </spacer>
+                     </item>
+                     <item row="10" column="2">
+                      <widget class="QLabel" name="label_102">
+                       <property name="text">
+                        <string>Not validated</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="10" column="0">
+                      <widget class="QLabel" name="label_101">
+                       <property name="text">
+                        <string>LULC Validation</string>
+                       </property>
+                       <property name="textFormat">
+                        <enum>Qt::PlainText</enum>
+                       </property>
+                       <property name="alignment">
+                        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                       </property>
+                       <property name="wordWrap">
+                        <bool>false</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="17" column="1">
+                      <spacer name="verticalSpacer_23">
+                       <property name="orientation">
+                        <enum>Qt::Vertical</enum>
+                       </property>
+                       <property name="sizeType">
+                        <enum>QSizePolicy::Fixed</enum>
+                       </property>
+                       <property name="sizeHint" stdset="0">
+                        <size>
+                         <width>20</width>
+                         <height>5</height>
+                        </size>
+                       </property>
+                      </spacer>
+                     </item>
+                    </layout>
+                   </item>
+                   <item row="1" column="0">
+                    <spacer name="verticalSpacer_12">
+                     <property name="orientation">
+                      <enum>Qt::Vertical</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>20</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+                <item row="0" column="0">
+                 <spacer name="verticalSpacer_13">
+                  <property name="orientation">
+                   <enum>Qt::Vertical</enum>
+                  </property>
+                  <property name="sizeType">
+                   <enum>QSizePolicy::Fixed</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>20</width>
+                    <height>10</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+               </layout>
+              </widget>
+             </widget>
             </item>
            </layout>
           </widget>
@@ -4287,6 +5085,7 @@ p, li { white-space: pre-wrap; }
  </tabstops>
  <resources>
   <include location="resources.qrc"/>
+  <include location="D:/lixo_de_ouro/simulacoes/new_hidropixel/hidropixel/resources.qrc"/>
  </resources>
  <connections/>
 </ui>
