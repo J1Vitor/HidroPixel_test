@@ -950,7 +950,7 @@
                        <item>
                         <widget class="QLabel" name="label_8">
                          <property name="enabled">
-                          <bool>true</bool>
+                          <bool>false</bool>
                          </property>
                          <property name="font">
                           <font>
@@ -1001,7 +1001,7 @@
                          <item>
                           <widget class="QLineEdit" name="le_5_pg_ri">
                            <property name="enabled">
-                            <bool>true</bool>
+                            <bool>false</bool>
                            </property>
                            <property name="sizePolicy">
                             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
@@ -1102,7 +1102,7 @@
                            <item>
                             <widget class="QToolButton" name="tbtn_pg_r_5">
                              <property name="enabled">
-                              <bool>true</bool>
+                              <bool>false</bool>
                              </property>
                              <property name="font">
                               <font>
@@ -1117,7 +1117,7 @@
                            <item>
                             <widget class="QPushButton" name="btn_save_2_pg_ri">
                              <property name="enabled">
-                              <bool>true</bool>
+                              <bool>false</bool>
                              </property>
                              <property name="font">
                               <font>
@@ -1195,8 +1195,8 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>580</width>
-                 <height>390</height>
+                 <width>402</width>
+                 <height>229</height>
                 </rect>
                </property>
                <layout class="QGridLayout" name="gridLayout_14">
@@ -1620,8 +1620,8 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>580</width>
-                 <height>390</height>
+                 <width>98</width>
+                 <height>89</height>
                 </rect>
                </property>
                <layout class="QGridLayout" name="gridLayout_30">
@@ -1635,8 +1635,8 @@
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>560</width>
-                     <height>370</height>
+                     <width>310</width>
+                     <height>145</height>
                     </rect>
                    </property>
                    <layout class="QGridLayout" name="gridLayout_28">
@@ -1978,8 +1978,8 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>580</width>
-                 <height>390</height>
+                 <width>454</width>
+                 <height>389</height>
                 </rect>
                </property>
                <layout class="QGridLayout" name="gridLayout_17">

@@ -14,8 +14,8 @@ QMessageBox detalhando o que falta ou o que falhou.
 """
 from qgis.PyQt.QtWidgets import QMessageBox
 
-# Lista de checagens obrigatorias por modulo.
-# Assumimos algumas chaves que o codigo do plugin usa via atualizar_validacao(...).
+# List of required checks by module.
+# We assume some keys that the plugin code uses via atualizar_validacao(...).
 REQUIRED_CHECKS = {
     1: [  # Flow Travel Time
         'validar_raster_bacia',
@@ -152,13 +152,13 @@ def ensure_validations_pass(hidropixel, module, parent=None):
 
 
 def all_modules_ready(hidropixel, parent=None):
-    """Checa todos os modulos (1,2,3). Retorna um dicionário com o status de
-    cada modulo e um booleano agregado.
+    """verify all modules (1,2,3). return a dictionary with the status of
+    each module and an aggregated boolean.
 
-    Retorno:
+    Return:
         (ready_all, detail)
-        ready_all: bool - True se todos os modulos estiverem prontos.
-        detail: dict - mapeia modulo -> (ok: bool, missing:list, failed:list)
+        ready_all: bool - True if all modules are ready.
+        detail: dict - maps module -> (ok: bool, missing:list, failed:list)
     """
     results = {}
     overall = True
@@ -173,7 +173,7 @@ def all_modules_ready(hidropixel, parent=None):
             overall = False
 
     if not overall:
-        # constroi mensagem resumida
+        # mensage detailed
         lines = ['Validation summary:']
         for module, info in results.items():
             if info['ok']:

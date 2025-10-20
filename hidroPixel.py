@@ -45,7 +45,7 @@ from .validations.validators import RasterValidator
 from .validations.validation_gate import ensure_validations_pass
 
 # importing animation module
-from .animation.create_rainfall_animation import create_precip_video
+# from .animation.create_rainfall_animation import create_precip_video
 
 # Initialize Qt resources from file resources.py
 from .resources import *
@@ -55,25 +55,11 @@ import numpy as np
 import subprocess
 import sys
 
-if getattr(sys, 'stderr', None) is None:
-    try:
-        # Prefer the original interpreter stderr if available
-        if getattr(sys, '__stderr__', None) is not None:
-            sys.stderr = sys.__stderr__
-        else:
-            # Fallback to a harmless null stream
-            import os
-            sys.stderr = open(os.devnull, 'w')
-    except Exception:
-        # As a last resort provide an in-memory stream
-        import io
-        sys.stderr = io.StringIO()
 from osgeo import ogr, gdal, gdalconst
 from functools import wraps
 
 import matplotlib.pyplot as plt
-import cv2
-
+# import cv2
 
 
 class Hidropixel:
@@ -2382,8 +2368,8 @@ class Hidropixel:
             # Se o usuario escolheu para gerar os mapas da precipitacao interpolada, eles serao enviados para a pasta informada
             elif self.map_cond == 1:
                 # Chama funcao para gerar o video a partir dos mapas gerados
-                create_precip_video(input_dir=self.diretorio_atual + r'\temp\maps',
-                                    output_path=self.dlg_exc_rain.le_5_pg_ri.text())
+                # create_precip_video(input_dir=self.diretorio_atual + r'\temp\maps',
+                #                     output_path=self.dlg_exc_rain.le_5_pg_ri.text())
 
                 QMessageBox.information(
                     None, "Information", "Operation completed successfully!", )
@@ -4320,8 +4306,8 @@ class Hidropixel:
                 lambda: self.save_buttons(self.dlg_exc_rain.le_5_pg_ri, file_type='vid'))
             self.dlg_exc_rain.btn_save_1_pg_ri.clicked.connect(
                 lambda: self.CondicaoRunRainfall_inter(0))
-            self.dlg_exc_rain.btn_save_2_pg_ri.clicked.connect(
-                lambda: self.CondicaoRunRainfall_inter(1))
+            # self.dlg_exc_rain.btn_save_2_pg_ri.clicked.connect(
+            #     lambda: self.CondicaoRunRainfall_inter(1))
 
             '''Configura os botoes da pagina da rotina flow routing'''
             # Configura botoes das paginas da flow routing assim como a funcao de mudanca de estilo
