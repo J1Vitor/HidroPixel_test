@@ -1,7 +1,7 @@
 """
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ MODULE FOR CREATION OF GENERAL VARIABLES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-Objective: This file is responsible for creating the general variables necessary for the HidroPixel Plugin operation.
+Objective: This file is responsible for creating the general variables necessary for the Hidropixel Plugin operation.
 Author: João Vitor Dias
 Supervisor: Adriano Rolim
 Date of last update: 30/11/2023
@@ -11,11 +11,11 @@ import numpy as np
 
 class GlobalVariables:
     """
-    This class is responsible for creating the general variables necessary for the HidroPixel Plugin operation.
+    This class is responsible for creating the general variables necessary for the Hidropixel Plugin operation.
     """
     def __init__(self,nlin,ncol):
         """
-        This method is responsible for creating the general variables necessary for the HidroPixel Plugin operation.
+        This method is responsible for creating the general variables necessary for the Hidropixel Plugin operation.
         """
         # Matrix's declaration
         self.direcoes = np.empty((nlin,ncol), dtype = np.int16)

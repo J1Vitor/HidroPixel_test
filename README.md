@@ -1,7 +1,7 @@
 ﻿### **Plugin Builder Results**
 Congratulations! You just built a plugin for QGIS!
 
-Your plugin **HidroPixel** was created in:
+Your plugin **Hidropixel** was created in:
 `  `**C:/PyQGIS\hidropixel** 
 
 Your QGIS plugin directory is located at:
@@ -11,9 +11,9 @@ Your QGIS plugin directory is located at:
 1. Optionally, test the generated sources using **make test** (or run tests from your IDE) 
 1. Copy the entire directory containing your new plugin to the QGIS plugin directory (see Notes below) 
 1. Test the plugin by enabling it in the QGIS plugin manager 
-1. Customize it by editing the implementation file **hidroPixel.py**
+1. Customize it by editing the implementation file **hidropixel.py**
 1. Create your own custom icon, replacing the default **icon.png**
-1. Modify your user interface by opening **hidroPixel\_dialog\_base.ui** in Qt Designer 
+1. Modify your user interface by opening **hidropixel\_dialog\_base.ui** in Qt Designer 
 
 Notes: 
 

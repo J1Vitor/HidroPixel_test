@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>HidroPixelDialogBase</class>
- <widget class="QDialog" name="HidroPixelDialogBase">
+ <class>HidropixelDialogBase</class>
+ <widget class="QDialog" name="HidropixelDialogBase">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -23,7 +23,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>Hidropixel Plugin</string>
+   <string>Q-Hidropixel</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>636</width>
+    <width>620</width>
     <height>554</height>
    </rect>
   </property>
@@ -104,7 +104,7 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>574</width>
+                 <width>568</width>
                  <height>396</height>
                 </rect>
                </property>
@@ -164,7 +164,7 @@
                      <string/>
                     </property>
                     <property name="pixmap">
-                     <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
+                     <pixmap resource="resources.qrc">:/plugins/hidropixel/icons/icons/info(2).png</pixmap>
                     </property>
                     <property name="scaledContents">
                      <bool>true</bool>
@@ -304,7 +304,7 @@
                           <string/>
                          </property>
                          <property name="pixmap">
-                          <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
+                          <pixmap resource="resources.qrc">:/plugins/hidropixel/icons/icons/info(2).png</pixmap>
                          </property>
                          <property name="scaledContents">
                           <bool>true</bool>
@@ -341,7 +341,7 @@
                           <string/>
                          </property>
                          <property name="pixmap">
-                          <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
+                          <pixmap resource="resources.qrc">:/plugins/hidropixel/icons/icons/info(2).png</pixmap>
                          </property>
                          <property name="scaledContents">
                           <bool>true</bool>
@@ -492,7 +492,7 @@
                             <string/>
                            </property>
                            <property name="pixmap">
-                            <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
+                            <pixmap resource="resources.qrc">:/plugins/hidropixel/icons/icons/info(2).png</pixmap>
                            </property>
                            <property name="scaledContents">
                             <bool>true</bool>
@@ -585,7 +585,7 @@
                 </property>
                 <property name="icon">
                  <iconset resource="resources.qrc">
-                  <normaloff>:/plugins/hidroPixel/icons/icons/folder_icon</normaloff>:/plugins/hidroPixel/icons/icons/folder_icon</iconset>
+                  <normaloff>:/plugins/hidropixel/icons/icons/folder_icon</normaloff>:/plugins/hidropixel/icons/icons/folder_icon</iconset>
                 </property>
                </widget>
               </item>
@@ -676,7 +676,7 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>574</width>
+                 <width>568</width>
                  <height>398</height>
                 </rect>
                </property>
@@ -685,26 +685,13 @@
                  <layout class="QVBoxLayout" name="verticalLayout_2">
                   <item>
                    <layout class="QGridLayout" name="gridLayout_22">
-                    <item row="1" column="1">
-                     <widget class="QComboBox" name="cb_1_pg2">
-                      <property name="minimumSize">
-                       <size>
-                        <width>265</width>
-                        <height>20</height>
-                       </size>
+                    <item row="1" column="2">
+                     <widget class="QToolButton" name="tbtn_pg2_1">
+                      <property name="toolTip">
+                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add the watershed delineation. The file must be a raster type (geotiff).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                       </property>
-                      <property name="maximumSize">
-                       <size>
-                        <width>265</width>
-                        <height>24</height>
-                       </size>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="1" column="0">
-                     <widget class="QLabel" name="label_29">
                       <property name="text">
-                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Watershed delineation*:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       <string>...</string>
                       </property>
                      </widget>
                     </item>
@@ -735,22 +722,22 @@
                        <string/>
                       </property>
                       <property name="pixmap">
-                       <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
+                       <pixmap resource="resources.qrc">:/plugins/hidropixel/icons/icons/info(2).png</pixmap>
                       </property>
                       <property name="scaledContents">
                        <bool>true</bool>
                       </property>
                      </widget>
                     </item>
-                    <item row="1" column="2">
-                     <widget class="QToolButton" name="tbtn_pg2_1">
-                      <property name="toolTip">
-                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add the watershed delineation. The file must be a raster type (geotiff).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                      </property>
+                    <item row="1" column="0">
+                     <widget class="QLabel" name="label_29">
                       <property name="text">
-                       <string>...</string>
+                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Watershed delineation*:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                       </property>
                      </widget>
+                    </item>
+                    <item row="1" column="1">
+                     <widget class="QgsMapLayerComboBox" name="cb_1_pg2"/>
                     </item>
                    </layout>
                   </item>
@@ -769,36 +756,6 @@
                   </item>
                   <item>
                    <layout class="QGridLayout" name="gridLayout_24">
-                    <item row="0" column="0">
-                     <widget class="QLabel" name="label_31">
-                      <property name="text">
-                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Flow travel time*:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="0" column="1">
-                     <widget class="QComboBox" name="cb_3_pg2">
-                      <property name="minimumSize">
-                       <size>
-                        <width>265</width>
-                        <height>20</height>
-                       </size>
-                      </property>
-                      <property name="maximumSize">
-                       <size>
-                        <width>265</width>
-                        <height>20</height>
-                       </size>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="0" column="2">
-                     <widget class="QToolButton" name="tbtn_pg2_3">
-                      <property name="text">
-                       <string>...</string>
-                      </property>
-                     </widget>
-                    </item>
                     <item row="0" column="3">
                      <widget class="QLabel" name="label_35">
                       <property name="sizePolicy">
@@ -826,10 +783,27 @@
                        <string/>
                       </property>
                       <property name="pixmap">
-                       <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
+                       <pixmap resource="resources.qrc">:/plugins/hidropixel/icons/icons/info(2).png</pixmap>
                       </property>
                       <property name="scaledContents">
                        <bool>true</bool>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="0">
+                     <widget class="QLabel" name="label_31">
+                      <property name="text">
+                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Flow travel time*:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="1">
+                     <widget class="QgsMapLayerComboBox" name="cb_3_pg2"/>
+                    </item>
+                    <item row="0" column="2">
+                     <widget class="QToolButton" name="tbtn_pg2_3">
+                      <property name="text">
+                       <string>...</string>
                       </property>
                      </widget>
                     </item>
@@ -893,7 +867,7 @@
                        <string/>
                       </property>
                       <property name="pixmap">
-                       <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
+                       <pixmap resource="resources.qrc">:/plugins/hidropixel/icons/icons/info(2).png</pixmap>
                       </property>
                       <property name="scaledContents">
                        <bool>true</bool>
@@ -917,18 +891,6 @@
                         <horstretch>0</horstretch>
                         <verstretch>0</verstretch>
                        </sizepolicy>
-                      </property>
-                      <property name="minimumSize">
-                       <size>
-                        <width>265</width>
-                        <height>20</height>
-                       </size>
-                      </property>
-                      <property name="maximumSize">
-                       <size>
-                        <width>265</width>
-                        <height>20</height>
-                       </size>
                       </property>
                       <property name="clearButtonEnabled">
                        <bool>true</bool>
@@ -959,18 +921,6 @@
                         <horstretch>0</horstretch>
                         <verstretch>0</verstretch>
                        </sizepolicy>
-                      </property>
-                      <property name="minimumSize">
-                       <size>
-                        <width>265</width>
-                        <height>20</height>
-                       </size>
-                      </property>
-                      <property name="maximumSize">
-                       <size>
-                        <width>265</width>
-                        <height>20</height>
-                       </size>
                       </property>
                       <property name="clearButtonEnabled">
                        <bool>true</bool>
@@ -1004,7 +954,7 @@
                        <string/>
                       </property>
                       <property name="pixmap">
-                       <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
+                       <pixmap resource="resources.qrc">:/plugins/hidropixel/icons/icons/info(2).png</pixmap>
                       </property>
                       <property name="scaledContents">
                        <bool>true</bool>
@@ -1042,13 +992,6 @@
                   </item>
                   <item>
                    <layout class="QGridLayout" name="gridLayout_37">
-                    <item row="0" column="2">
-                     <widget class="QToolButton" name="tbtn_pg2_5">
-                      <property name="text">
-                       <string>...</string>
-                      </property>
-                     </widget>
-                    </item>
                     <item row="0" column="0">
                      <widget class="QLabel" name="label_39">
                       <property name="text">
@@ -1083,7 +1026,7 @@
                        <string/>
                       </property>
                       <property name="pixmap">
-                       <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
+                       <pixmap resource="resources.qrc">:/plugins/hidropixel/icons/icons/info(2).png</pixmap>
                       </property>
                       <property name="scaledContents">
                        <bool>true</bool>
@@ -1091,18 +1034,16 @@
                      </widget>
                     </item>
                     <item row="0" column="1">
-                     <widget class="QComboBox" name="cb_5_pg2">
-                      <property name="minimumSize">
-                       <size>
-                        <width>265</width>
-                        <height>20</height>
-                       </size>
+                     <widget class="QgsMapLayerComboBox" name="cb_5_pg2">
+                      <property name="allowEmptyLayer">
+                       <bool>false</bool>
                       </property>
-                      <property name="maximumSize">
-                       <size>
-                        <width>265</width>
-                        <height>20</height>
-                       </size>
+                     </widget>
+                    </item>
+                    <item row="0" column="2">
+                     <widget class="QToolButton" name="tbtn_pg2_5">
+                      <property name="text">
+                       <string>...</string>
                       </property>
                      </widget>
                     </item>
@@ -1125,7 +1066,7 @@
                    <widget class="QGroupBox" name="groupBox_2">
                     <property name="font">
                      <font>
-                      <pointsize>10</pointsize>
+                      <pointsize>9</pointsize>
                      </font>
                     </property>
                     <property name="title">
@@ -1140,39 +1081,6 @@
                     <layout class="QGridLayout" name="gridLayout_12">
                      <item row="0" column="0">
                       <layout class="QGridLayout" name="gridLayout_28">
-                       <item row="1" column="0">
-                        <widget class="QLabel" name="label_30">
-                         <property name="text">
-                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Watershed into classes:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                         </property>
-                        </widget>
-                       </item>
-                       <item row="1" column="2">
-                        <widget class="QToolButton" name="tbtn_pg2_6">
-                         <property name="toolTip">
-                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add the watershed delineation. The file must be a raster type (geotiff).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                         </property>
-                         <property name="text">
-                          <string>...</string>
-                         </property>
-                        </widget>
-                       </item>
-                       <item row="1" column="1">
-                        <widget class="QComboBox" name="cb_4_pg2">
-                         <property name="minimumSize">
-                          <size>
-                           <width>265</width>
-                           <height>20</height>
-                          </size>
-                         </property>
-                         <property name="maximumSize">
-                          <size>
-                           <width>265</width>
-                           <height>20</height>
-                          </size>
-                         </property>
-                        </widget>
-                       </item>
                        <item row="1" column="3">
                         <widget class="QLabel" name="label_40">
                          <property name="sizePolicy">
@@ -1200,10 +1108,47 @@
                           <string/>
                          </property>
                          <property name="pixmap">
-                          <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
+                          <pixmap resource="resources.qrc">:/plugins/hidropixel/icons/icons/info(2).png</pixmap>
                          </property>
                          <property name="scaledContents">
                           <bool>true</bool>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="1" column="0">
+                        <widget class="QLabel" name="label_30">
+                         <property name="font">
+                          <font>
+                           <pointsize>8</pointsize>
+                          </font>
+                         </property>
+                         <property name="text">
+                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Watershed into classes:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="1" column="1">
+                        <widget class="QgsMapLayerComboBox" name="cb_4_pg2">
+                         <property name="font">
+                          <font>
+                           <pointsize>8</pointsize>
+                          </font>
+                         </property>
+                         <property name="currentIndex">
+                          <number>-1</number>
+                         </property>
+                         <property name="allowEmptyLayer">
+                          <bool>true</bool>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="1" column="2">
+                        <widget class="QToolButton" name="tbtn_pg2_6">
+                         <property name="toolTip">
+                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add the watershed delineation. The file must be a raster type (geotiff).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                         </property>
+                         <property name="text">
+                          <string>...</string>
                          </property>
                         </widget>
                        </item>
@@ -1277,8 +1222,8 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>574</width>
-                 <height>398</height>
+                 <width>346</width>
+                 <height>285</height>
                 </rect>
                </property>
                <layout class="QGridLayout" name="gridLayout_30">
@@ -1295,6 +1240,11 @@
                     <layout class="QGridLayout" name="gridLayout_40">
                      <item row="4" column="0">
                       <widget class="QLabel" name="label_17">
+                       <property name="font">
+                        <font>
+                         <pointsize>9</pointsize>
+                        </font>
+                       </property>
                        <property name="text">
                         <string>Validate Travel Time</string>
                        </property>
@@ -1330,7 +1280,7 @@
                         <string/>
                        </property>
                        <property name="pixmap">
-                        <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
+                        <pixmap resource="resources.qrc">:/plugins/hidropixel/icons/icons/info(2).png</pixmap>
                        </property>
                        <property name="scaledContents">
                         <bool>true</bool>
@@ -1381,7 +1331,7 @@
                         <string/>
                        </property>
                        <property name="pixmap">
-                        <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
+                        <pixmap resource="resources.qrc">:/plugins/hidropixel/icons/icons/info(2).png</pixmap>
                        </property>
                        <property name="scaledContents">
                         <bool>true</bool>
@@ -1397,6 +1347,11 @@
                      </item>
                      <item row="0" column="2">
                       <widget class="QLabel" name="label_10">
+                       <property name="font">
+                        <font>
+                         <pointsize>9</pointsize>
+                        </font>
+                       </property>
                        <property name="text">
                         <string>Not Validated</string>
                        </property>
@@ -1404,6 +1359,11 @@
                      </item>
                      <item row="2" column="2">
                       <widget class="QLabel" name="label_14">
+                       <property name="font">
+                        <font>
+                         <pointsize>9</pointsize>
+                        </font>
+                       </property>
                        <property name="text">
                         <string>Not Validated</string>
                        </property>
@@ -1411,6 +1371,11 @@
                      </item>
                      <item row="2" column="0">
                       <widget class="QLabel" name="label_11">
+                       <property name="font">
+                        <font>
+                         <pointsize>9</pointsize>
+                        </font>
+                       </property>
                        <property name="text">
                         <string>Validate Basin</string>
                        </property>
@@ -1418,6 +1383,11 @@
                      </item>
                      <item row="8" column="0">
                       <widget class="QLabel" name="label_23">
+                       <property name="font">
+                        <font>
+                         <pointsize>9</pointsize>
+                        </font>
+                       </property>
                        <property name="text">
                         <string>Validate Hyetograph</string>
                        </property>
@@ -1453,7 +1423,7 @@
                         <string/>
                        </property>
                        <property name="pixmap">
-                        <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
+                        <pixmap resource="resources.qrc">:/plugins/hidropixel/icons/icons/info(2).png</pixmap>
                        </property>
                        <property name="scaledContents">
                         <bool>true</bool>
@@ -1497,7 +1467,7 @@
                         <string/>
                        </property>
                        <property name="pixmap">
-                        <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
+                        <pixmap resource="resources.qrc">:/plugins/hidropixel/icons/icons/info(2).png</pixmap>
                        </property>
                        <property name="scaledContents">
                         <bool>true</bool>
@@ -1506,6 +1476,11 @@
                      </item>
                      <item row="0" column="0">
                       <widget class="QLabel" name="label_9">
+                       <property name="font">
+                        <font>
+                         <pointsize>9</pointsize>
+                        </font>
+                       </property>
                        <property name="text">
                         <string>Validate Dimensions</string>
                        </property>
@@ -1513,6 +1488,11 @@
                      </item>
                      <item row="8" column="2">
                       <widget class="QLabel" name="label_24">
+                       <property name="font">
+                        <font>
+                         <pointsize>9</pointsize>
+                        </font>
+                       </property>
                        <property name="text">
                         <string>Not Validated</string>
                        </property>
@@ -1536,6 +1516,11 @@
                      </item>
                      <item row="10" column="2">
                       <widget class="QLabel" name="label_37">
+                       <property name="font">
+                        <font>
+                         <pointsize>9</pointsize>
+                        </font>
+                       </property>
                        <property name="text">
                         <string>Not Validated</string>
                        </property>
@@ -1566,6 +1551,11 @@
                      </item>
                      <item row="6" column="0">
                       <widget class="QLabel" name="label_21">
+                       <property name="font">
+                        <font>
+                         <pointsize>9</pointsize>
+                        </font>
+                       </property>
                        <property name="text">
                         <string>Validate Excess Rainfall</string>
                        </property>
@@ -1573,6 +1563,11 @@
                      </item>
                      <item row="6" column="2">
                       <widget class="QLabel" name="label_22">
+                       <property name="font">
+                        <font>
+                         <pointsize>9</pointsize>
+                        </font>
+                       </property>
                        <property name="text">
                         <string>Not Validated</string>
                        </property>
@@ -1608,7 +1603,7 @@
                         <string/>
                        </property>
                        <property name="pixmap">
-                        <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
+                        <pixmap resource="resources.qrc">:/plugins/hidropixel/icons/icons/info(2).png</pixmap>
                        </property>
                        <property name="scaledContents">
                         <bool>true</bool>
@@ -1633,6 +1628,11 @@
                      </item>
                      <item row="4" column="2">
                       <widget class="QLabel" name="label_20">
+                       <property name="font">
+                        <font>
+                         <pointsize>9</pointsize>
+                        </font>
+                       </property>
                        <property name="text">
                         <string>Not Validated</string>
                        </property>
@@ -1668,7 +1668,7 @@
                         <string/>
                        </property>
                        <property name="pixmap">
-                        <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
+                        <pixmap resource="resources.qrc">:/plugins/hidropixel/icons/icons/info(2).png</pixmap>
                        </property>
                        <property name="scaledContents">
                         <bool>true</bool>
@@ -1700,6 +1700,11 @@
                      </item>
                      <item row="10" column="0">
                       <widget class="QLabel" name="label_34">
+                       <property name="font">
+                        <font>
+                         <pointsize>9</pointsize>
+                        </font>
+                       </property>
                        <property name="text">
                         <string>Validate ROI</string>
                        </property>
@@ -1818,989 +1823,65 @@
                  <x>0</x>
                  <y>0</y>
                  <width>465</width>
-                 <height>490</height>
+                 <height>340</height>
                 </rect>
                </property>
                <layout class="QGridLayout" name="gridLayout_10">
-                <item row="0" column="0">
-                 <layout class="QGridLayout" name="gridLayout_55">
-                  <item row="0" column="0">
-                   <layout class="QGridLayout" name="gridLayout_13">
-                    <item row="0" column="0">
-                     <widget class="QLabel" name="label_49">
-                      <property name="text">
-                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Output definition:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="1" column="0">
-                     <widget class="Line" name="line">
-                      <property name="orientation">
-                       <enum>Qt::Horizontal</enum>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
+                <item row="2" column="0">
+                 <layout class="QHBoxLayout" name="horizontalLayout_15">
+                  <item>
+                   <widget class="QPushButton" name="btn_read_pg4">
+                    <property name="text">
+                     <string notr="true">Read from project</string>
+                    </property>
+                   </widget>
                   </item>
-                  <item row="1" column="0">
-                   <layout class="QGridLayout" name="gridLayout_17">
-                    <item row="0" column="1">
-                     <widget class="QLabel" name="label_66">
-                      <property name="toolTip">
-                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select each file to be added to current QGIS project.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                      </property>
-                      <property name="text">
-                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Add to project:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="0" column="0">
-                     <spacer name="horizontalSpacer_8">
-                      <property name="orientation">
-                       <enum>Qt::Horizontal</enum>
-                      </property>
-                      <property name="sizeHint" stdset="0">
-                       <size>
-                        <width>40</width>
-                        <height>20</height>
-                       </size>
-                      </property>
-                     </spacer>
-                    </item>
-                   </layout>
+                  <item>
+                   <widget class="QPushButton" name="btn_save_file_pg4">
+                    <property name="text">
+                     <string notr="true">Save to project</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QPushButton" name="btn_run_2">
+                    <property name="enabled">
+                     <bool>true</bool>
+                    </property>
+                    <property name="styleSheet">
+                     <string notr="true"/>
+                    </property>
+                    <property name="text">
+                     <string notr="true">Run</string>
+                    </property>
+                    <property name="checkable">
+                     <bool>false</bool>
+                    </property>
+                    <property name="checked">
+                     <bool>false</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QPushButton" name="btn_close_pg4">
+                    <property name="accessibleDescription">
+                     <string notr="true"/>
+                    </property>
+                    <property name="text">
+                     <string notr="true">Close</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QPushButton" name="btn_help_pg4">
+                    <property name="text">
+                     <string notr="true">Help</string>
+                    </property>
+                   </widget>
                   </item>
                  </layout>
                 </item>
                 <item row="1" column="0">
-                 <widget class="QFrame" name="frame_3">
-                  <property name="frameShape">
-                   <enum>QFrame::StyledPanel</enum>
-                  </property>
-                  <property name="frameShadow">
-                   <enum>QFrame::Raised</enum>
-                  </property>
-                  <layout class="QGridLayout" name="gridLayout_8">
-                   <item row="0" column="0">
-                    <layout class="QGridLayout" name="gridLayout_26">
-                     <item row="0" column="0">
-                      <widget class="QCheckBox" name="ch_1_pg4">
-                       <property name="enabled">
-                        <bool>false</bool>
-                       </property>
-                       <property name="sizePolicy">
-                        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                         <horstretch>13</horstretch>
-                         <verstretch>0</verstretch>
-                        </sizepolicy>
-                       </property>
-                       <property name="minimumSize">
-                        <size>
-                         <width>13</width>
-                         <height>13</height>
-                        </size>
-                       </property>
-                       <property name="text">
-                        <string/>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="0" column="2">
-                      <layout class="QGridLayout" name="gridLayout_51">
-                       <item row="0" column="0" alignment="Qt::AlignLeft">
-                        <widget class="QLabel" name="label_57">
-                         <property name="enabled">
-                          <bool>false</bool>
-                         </property>
-                         <property name="text">
-                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Map of TUH + peak discharge:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                         </property>
-                        </widget>
-                       </item>
-                       <item row="0" column="4">
-                        <widget class="QLabel" name="label_62">
-                         <property name="enabled">
-                          <bool>false</bool>
-                         </property>
-                         <property name="sizePolicy">
-                          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                           <horstretch>0</horstretch>
-                           <verstretch>0</verstretch>
-                          </sizepolicy>
-                         </property>
-                         <property name="minimumSize">
-                          <size>
-                           <width>16</width>
-                           <height>16</height>
-                          </size>
-                         </property>
-                         <property name="maximumSize">
-                          <size>
-                           <width>16</width>
-                           <height>16</height>
-                          </size>
-                         </property>
-                         <property name="toolTip">
-                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add this file to current QGIS project.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                         </property>
-                         <property name="text">
-                          <string/>
-                         </property>
-                         <property name="pixmap">
-                          <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
-                         </property>
-                         <property name="scaledContents">
-                          <bool>true</bool>
-                         </property>
-                        </widget>
-                       </item>
-                       <item row="0" column="5">
-                        <widget class="QCheckBox" name="ch_7_pg4">
-                         <property name="enabled">
-                          <bool>false</bool>
-                         </property>
-                         <property name="sizePolicy">
-                          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                           <horstretch>0</horstretch>
-                           <verstretch>0</verstretch>
-                          </sizepolicy>
-                         </property>
-                         <property name="minimumSize">
-                          <size>
-                           <width>16</width>
-                           <height>16</height>
-                          </size>
-                         </property>
-                         <property name="maximumSize">
-                          <size>
-                           <width>16</width>
-                           <height>16</height>
-                          </size>
-                         </property>
-                         <property name="text">
-                          <string/>
-                         </property>
-                         <property name="checkable">
-                          <bool>true</bool>
-                         </property>
-                         <property name="checked">
-                          <bool>false</bool>
-                         </property>
-                        </widget>
-                       </item>
-                       <item row="0" column="1">
-                        <widget class="QLineEdit" name="le_1_pg4">
-                         <property name="enabled">
-                          <bool>false</bool>
-                         </property>
-                         <property name="sizePolicy">
-                          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                           <horstretch>0</horstretch>
-                           <verstretch>0</verstretch>
-                          </sizepolicy>
-                         </property>
-                         <property name="minimumSize">
-                          <size>
-                           <width>60</width>
-                           <height>0</height>
-                          </size>
-                         </property>
-                         <property name="maximumSize">
-                          <size>
-                           <width>158</width>
-                           <height>24</height>
-                          </size>
-                         </property>
-                         <property name="clearButtonEnabled">
-                          <bool>true</bool>
-                         </property>
-                        </widget>
-                       </item>
-                       <item row="0" column="2">
-                        <widget class="QToolButton" name="tbtn_pg4_1">
-                         <property name="enabled">
-                          <bool>false</bool>
-                         </property>
-                         <property name="text">
-                          <string>...</string>
-                         </property>
-                        </widget>
-                       </item>
-                      </layout>
-                     </item>
-                     <item row="0" column="1">
-                      <widget class="QLabel" name="label_50">
-                       <property name="enabled">
-                        <bool>false</bool>
-                       </property>
-                       <property name="sizePolicy">
-                        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                         <horstretch>0</horstretch>
-                         <verstretch>0</verstretch>
-                        </sizepolicy>
-                       </property>
-                       <property name="minimumSize">
-                        <size>
-                         <width>16</width>
-                         <height>16</height>
-                        </size>
-                       </property>
-                       <property name="maximumSize">
-                        <size>
-                         <width>16</width>
-                         <height>16</height>
-                        </size>
-                       </property>
-                       <property name="toolTip">
-                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;In development...&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                       </property>
-                       <property name="text">
-                        <string/>
-                       </property>
-                       <property name="pixmap">
-                        <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
-                       </property>
-                       <property name="scaledContents">
-                        <bool>true</bool>
-                       </property>
-                      </widget>
-                     </item>
-                    </layout>
-                   </item>
-                   <item row="1" column="0">
-                    <layout class="QHBoxLayout" name="horizontalLayout_18">
-                     <item>
-                      <spacer name="horizontalSpacer_5">
-                       <property name="orientation">
-                        <enum>Qt::Horizontal</enum>
-                       </property>
-                       <property name="sizeHint" stdset="0">
-                        <size>
-                         <width>40</width>
-                         <height>20</height>
-                        </size>
-                       </property>
-                      </spacer>
-                     </item>
-                     <item>
-                      <widget class="QLabel" name="label_5">
-                       <property name="enabled">
-                        <bool>false</bool>
-                       </property>
-                       <property name="text">
-                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;Select unit:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item>
-                      <layout class="QHBoxLayout" name="horizontalLayout_13">
-                       <item>
-                        <layout class="QHBoxLayout" name="horizontalLayout_8">
-                         <item>
-                          <widget class="QRadioButton" name="rb_1_pg4">
-                           <property name="enabled">
-                            <bool>false</bool>
-                           </property>
-                           <property name="text">
-                            <string>L/s</string>
-                           </property>
-                          </widget>
-                         </item>
-                        </layout>
-                       </item>
-                       <item>
-                        <layout class="QHBoxLayout" name="horizontalLayout_10">
-                         <item>
-                          <widget class="QRadioButton" name="rb_2_pg4">
-                           <property name="enabled">
-                            <bool>false</bool>
-                           </property>
-                           <property name="text">
-                            <string>m³/s</string>
-                           </property>
-                          </widget>
-                         </item>
-                         <item>
-                          <widget class="QLabel" name="label_60">
-                           <property name="enabled">
-                            <bool>false</bool>
-                           </property>
-                           <property name="sizePolicy">
-                            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                             <horstretch>0</horstretch>
-                             <verstretch>0</verstretch>
-                            </sizepolicy>
-                           </property>
-                           <property name="minimumSize">
-                            <size>
-                             <width>16</width>
-                             <height>16</height>
-                            </size>
-                           </property>
-                           <property name="maximumSize">
-                            <size>
-                             <width>16</width>
-                             <height>16</height>
-                            </size>
-                           </property>
-                           <property name="toolTip">
-                            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select the output file unit. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                           </property>
-                           <property name="text">
-                            <string/>
-                           </property>
-                           <property name="pixmap">
-                            <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
-                           </property>
-                           <property name="scaledContents">
-                            <bool>true</bool>
-                           </property>
-                          </widget>
-                         </item>
-                        </layout>
-                       </item>
-                      </layout>
-                     </item>
-                     <item>
-                      <spacer name="horizontalSpacer_7">
-                       <property name="orientation">
-                        <enum>Qt::Horizontal</enum>
-                       </property>
-                       <property name="sizeHint" stdset="0">
-                        <size>
-                         <width>40</width>
-                         <height>20</height>
-                        </size>
-                       </property>
-                      </spacer>
-                     </item>
-                    </layout>
-                   </item>
-                  </layout>
-                 </widget>
-                </item>
-                <item row="2" column="0">
-                 <widget class="QFrame" name="frame_2">
-                  <property name="frameShape">
-                   <enum>QFrame::StyledPanel</enum>
-                  </property>
-                  <property name="frameShadow">
-                   <enum>QFrame::Raised</enum>
-                  </property>
-                  <layout class="QGridLayout" name="gridLayout_18">
-                   <item row="0" column="0">
-                    <layout class="QGridLayout" name="gridLayout_23">
-                     <item row="0" column="2">
-                      <layout class="QGridLayout" name="gridLayout_58">
-                       <item row="0" column="1">
-                        <widget class="QLineEdit" name="le_2_pg4">
-                         <property name="enabled">
-                          <bool>false</bool>
-                         </property>
-                         <property name="sizePolicy">
-                          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                           <horstretch>0</horstretch>
-                           <verstretch>0</verstretch>
-                          </sizepolicy>
-                         </property>
-                         <property name="minimumSize">
-                          <size>
-                           <width>60</width>
-                           <height>0</height>
-                          </size>
-                         </property>
-                         <property name="maximumSize">
-                          <size>
-                           <width>158</width>
-                           <height>24</height>
-                          </size>
-                         </property>
-                         <property name="clearButtonEnabled">
-                          <bool>true</bool>
-                         </property>
-                        </widget>
-                       </item>
-                       <item row="0" column="5">
-                        <widget class="QCheckBox" name="ch_8_pg4">
-                         <property name="enabled">
-                          <bool>false</bool>
-                         </property>
-                         <property name="sizePolicy">
-                          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                           <horstretch>0</horstretch>
-                           <verstretch>0</verstretch>
-                          </sizepolicy>
-                         </property>
-                         <property name="minimumSize">
-                          <size>
-                           <width>16</width>
-                           <height>16</height>
-                          </size>
-                         </property>
-                         <property name="maximumSize">
-                          <size>
-                           <width>16</width>
-                           <height>16</height>
-                          </size>
-                         </property>
-                         <property name="text">
-                          <string/>
-                         </property>
-                         <property name="checkable">
-                          <bool>true</bool>
-                         </property>
-                         <property name="checked">
-                          <bool>false</bool>
-                         </property>
-                        </widget>
-                       </item>
-                       <item row="0" column="0">
-                        <widget class="QLabel" name="label_58">
-                         <property name="enabled">
-                          <bool>false</bool>
-                         </property>
-                         <property name="text">
-                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Map of TUH + peak time (min):&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                         </property>
-                        </widget>
-                       </item>
-                       <item row="0" column="2">
-                        <widget class="QToolButton" name="tbtn_pg4_2">
-                         <property name="enabled">
-                          <bool>false</bool>
-                         </property>
-                         <property name="text">
-                          <string>...</string>
-                         </property>
-                        </widget>
-                       </item>
-                       <item row="0" column="4">
-                        <widget class="QLabel" name="label_67">
-                         <property name="enabled">
-                          <bool>false</bool>
-                         </property>
-                         <property name="sizePolicy">
-                          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                           <horstretch>0</horstretch>
-                           <verstretch>0</verstretch>
-                          </sizepolicy>
-                         </property>
-                         <property name="minimumSize">
-                          <size>
-                           <width>16</width>
-                           <height>16</height>
-                          </size>
-                         </property>
-                         <property name="maximumSize">
-                          <size>
-                           <width>16</width>
-                           <height>16</height>
-                          </size>
-                         </property>
-                         <property name="toolTip">
-                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add this file to current QGIS project.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                         </property>
-                         <property name="text">
-                          <string/>
-                         </property>
-                         <property name="pixmap">
-                          <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
-                         </property>
-                         <property name="scaledContents">
-                          <bool>true</bool>
-                         </property>
-                        </widget>
-                       </item>
-                      </layout>
-                     </item>
-                     <item row="0" column="0">
-                      <widget class="QCheckBox" name="ch_2_pg4">
-                       <property name="enabled">
-                        <bool>false</bool>
-                       </property>
-                       <property name="sizePolicy">
-                        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                         <horstretch>0</horstretch>
-                         <verstretch>0</verstretch>
-                        </sizepolicy>
-                       </property>
-                       <property name="text">
-                        <string/>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="0" column="1">
-                      <widget class="QLabel" name="label_51">
-                       <property name="enabled">
-                        <bool>false</bool>
-                       </property>
-                       <property name="sizePolicy">
-                        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                         <horstretch>0</horstretch>
-                         <verstretch>0</verstretch>
-                        </sizepolicy>
-                       </property>
-                       <property name="minimumSize">
-                        <size>
-                         <width>16</width>
-                         <height>16</height>
-                        </size>
-                       </property>
-                       <property name="maximumSize">
-                        <size>
-                         <width>16</width>
-                         <height>16</height>
-                        </size>
-                       </property>
-                       <property name="toolTip">
-                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;In development...&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                       </property>
-                       <property name="text">
-                        <string/>
-                       </property>
-                       <property name="pixmap">
-                        <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
-                       </property>
-                       <property name="scaledContents">
-                        <bool>true</bool>
-                       </property>
-                      </widget>
-                     </item>
-                    </layout>
-                   </item>
-                   <item row="1" column="0">
-                    <layout class="QGridLayout" name="gridLayout_27">
-                     <item row="0" column="0">
-                      <widget class="QCheckBox" name="ch_3_pg4">
-                       <property name="enabled">
-                        <bool>false</bool>
-                       </property>
-                       <property name="sizePolicy">
-                        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                         <horstretch>0</horstretch>
-                         <verstretch>0</verstretch>
-                        </sizepolicy>
-                       </property>
-                       <property name="text">
-                        <string/>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="0" column="2">
-                      <layout class="QGridLayout" name="gridLayout_50">
-                       <item row="0" column="1">
-                        <widget class="QLabel" name="label_59">
-                         <property name="enabled">
-                          <bool>false</bool>
-                         </property>
-                         <property name="text">
-                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Map of TUH + base time (min):&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                         </property>
-                        </widget>
-                       </item>
-                       <item row="0" column="6">
-                        <widget class="QCheckBox" name="ch_9_pg4">
-                         <property name="enabled">
-                          <bool>false</bool>
-                         </property>
-                         <property name="sizePolicy">
-                          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                           <horstretch>0</horstretch>
-                           <verstretch>0</verstretch>
-                          </sizepolicy>
-                         </property>
-                         <property name="minimumSize">
-                          <size>
-                           <width>16</width>
-                           <height>16</height>
-                          </size>
-                         </property>
-                         <property name="maximumSize">
-                          <size>
-                           <width>16</width>
-                           <height>16</height>
-                          </size>
-                         </property>
-                         <property name="text">
-                          <string/>
-                         </property>
-                         <property name="checkable">
-                          <bool>true</bool>
-                         </property>
-                         <property name="checked">
-                          <bool>false</bool>
-                         </property>
-                        </widget>
-                       </item>
-                       <item row="0" column="3">
-                        <widget class="QToolButton" name="tbtn_pg4_3">
-                         <property name="enabled">
-                          <bool>false</bool>
-                         </property>
-                         <property name="text">
-                          <string>...</string>
-                         </property>
-                        </widget>
-                       </item>
-                       <item row="0" column="5">
-                        <widget class="QLabel" name="label_68">
-                         <property name="enabled">
-                          <bool>false</bool>
-                         </property>
-                         <property name="sizePolicy">
-                          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                           <horstretch>0</horstretch>
-                           <verstretch>0</verstretch>
-                          </sizepolicy>
-                         </property>
-                         <property name="minimumSize">
-                          <size>
-                           <width>16</width>
-                           <height>16</height>
-                          </size>
-                         </property>
-                         <property name="maximumSize">
-                          <size>
-                           <width>16</width>
-                           <height>16</height>
-                          </size>
-                         </property>
-                         <property name="toolTip">
-                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add this file to current QGIS project.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                         </property>
-                         <property name="text">
-                          <string/>
-                         </property>
-                         <property name="pixmap">
-                          <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
-                         </property>
-                         <property name="scaledContents">
-                          <bool>true</bool>
-                         </property>
-                        </widget>
-                       </item>
-                       <item row="0" column="2">
-                        <widget class="QLineEdit" name="le_3_pg4">
-                         <property name="enabled">
-                          <bool>false</bool>
-                         </property>
-                         <property name="sizePolicy">
-                          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                           <horstretch>0</horstretch>
-                           <verstretch>0</verstretch>
-                          </sizepolicy>
-                         </property>
-                         <property name="minimumSize">
-                          <size>
-                           <width>60</width>
-                           <height>0</height>
-                          </size>
-                         </property>
-                         <property name="maximumSize">
-                          <size>
-                           <width>158</width>
-                           <height>24</height>
-                          </size>
-                         </property>
-                         <property name="clearButtonEnabled">
-                          <bool>true</bool>
-                         </property>
-                        </widget>
-                       </item>
-                      </layout>
-                     </item>
-                     <item row="0" column="1">
-                      <widget class="QLabel" name="label_52">
-                       <property name="enabled">
-                        <bool>false</bool>
-                       </property>
-                       <property name="sizePolicy">
-                        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                         <horstretch>0</horstretch>
-                         <verstretch>0</verstretch>
-                        </sizepolicy>
-                       </property>
-                       <property name="minimumSize">
-                        <size>
-                         <width>16</width>
-                         <height>16</height>
-                        </size>
-                       </property>
-                       <property name="maximumSize">
-                        <size>
-                         <width>16</width>
-                         <height>16</height>
-                        </size>
-                       </property>
-                       <property name="toolTip">
-                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;In development...&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                       </property>
-                       <property name="text">
-                        <string/>
-                       </property>
-                       <property name="pixmap">
-                        <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
-                       </property>
-                       <property name="scaledContents">
-                        <bool>true</bool>
-                       </property>
-                      </widget>
-                     </item>
-                    </layout>
-                   </item>
-                  </layout>
-                 </widget>
-                </item>
-                <item row="3" column="0">
-                 <widget class="QFrame" name="frame_4">
-                  <property name="frameShape">
-                   <enum>QFrame::StyledPanel</enum>
-                  </property>
-                  <property name="frameShadow">
-                   <enum>QFrame::Raised</enum>
-                  </property>
-                  <layout class="QGridLayout" name="gridLayout_9">
-                   <item row="0" column="0" colspan="3">
-                    <layout class="QGridLayout" name="gridLayout_16">
-                     <item row="0" column="0">
-                      <widget class="QCheckBox" name="ch_4_pg4">
-                       <property name="sizePolicy">
-                        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                         <horstretch>13</horstretch>
-                         <verstretch>0</verstretch>
-                        </sizepolicy>
-                       </property>
-                       <property name="minimumSize">
-                        <size>
-                         <width>13</width>
-                         <height>13</height>
-                        </size>
-                       </property>
-                       <property name="text">
-                        <string/>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="0" column="2">
-                      <layout class="QGridLayout" name="gridLayout_52">
-                       <item row="0" column="2">
-                        <widget class="QToolButton" name="tbtn_pg4_4">
-                         <property name="text">
-                          <string>...</string>
-                         </property>
-                        </widget>
-                       </item>
-                       <item row="0" column="5">
-                        <widget class="QCheckBox" name="ch_10_pg4">
-                         <property name="enabled">
-                          <bool>true</bool>
-                         </property>
-                         <property name="sizePolicy">
-                          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                           <horstretch>0</horstretch>
-                           <verstretch>0</verstretch>
-                          </sizepolicy>
-                         </property>
-                         <property name="minimumSize">
-                          <size>
-                           <width>16</width>
-                           <height>16</height>
-                          </size>
-                         </property>
-                         <property name="maximumSize">
-                          <size>
-                           <width>16</width>
-                           <height>16</height>
-                          </size>
-                         </property>
-                         <property name="text">
-                          <string/>
-                         </property>
-                         <property name="checkable">
-                          <bool>true</bool>
-                         </property>
-                         <property name="checked">
-                          <bool>false</bool>
-                         </property>
-                        </widget>
-                       </item>
-                       <item row="0" column="0" alignment="Qt::AlignLeft">
-                        <widget class="QLabel" name="label_61">
-                         <property name="text">
-                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Map of resulting peak discharge:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                         </property>
-                        </widget>
-                       </item>
-                       <item row="0" column="1">
-                        <widget class="QLineEdit" name="le_4_pg4">
-                         <property name="sizePolicy">
-                          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                           <horstretch>0</horstretch>
-                           <verstretch>0</verstretch>
-                          </sizepolicy>
-                         </property>
-                         <property name="minimumSize">
-                          <size>
-                           <width>60</width>
-                           <height>0</height>
-                          </size>
-                         </property>
-                         <property name="maximumSize">
-                          <size>
-                           <width>158</width>
-                           <height>24</height>
-                          </size>
-                         </property>
-                         <property name="clearButtonEnabled">
-                          <bool>true</bool>
-                         </property>
-                        </widget>
-                       </item>
-                       <item row="0" column="4">
-                        <widget class="QLabel" name="label_69">
-                         <property name="sizePolicy">
-                          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                           <horstretch>0</horstretch>
-                           <verstretch>0</verstretch>
-                          </sizepolicy>
-                         </property>
-                         <property name="minimumSize">
-                          <size>
-                           <width>16</width>
-                           <height>16</height>
-                          </size>
-                         </property>
-                         <property name="maximumSize">
-                          <size>
-                           <width>16</width>
-                           <height>16</height>
-                          </size>
-                         </property>
-                         <property name="toolTip">
-                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add this file to current QGIS project.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                         </property>
-                         <property name="text">
-                          <string/>
-                         </property>
-                         <property name="pixmap">
-                          <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
-                         </property>
-                         <property name="scaledContents">
-                          <bool>true</bool>
-                         </property>
-                        </widget>
-                       </item>
-                      </layout>
-                     </item>
-                     <item row="0" column="1">
-                      <widget class="QLabel" name="label_53">
-                       <property name="sizePolicy">
-                        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                         <horstretch>0</horstretch>
-                         <verstretch>0</verstretch>
-                        </sizepolicy>
-                       </property>
-                       <property name="minimumSize">
-                        <size>
-                         <width>16</width>
-                         <height>16</height>
-                        </size>
-                       </property>
-                       <property name="maximumSize">
-                        <size>
-                         <width>16</width>
-                         <height>16</height>
-                        </size>
-                       </property>
-                       <property name="toolTip">
-                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:700;&quot;&gt;Optional output.&lt;br/&gt;&lt;/span&gt;&lt;br/&gt;If selected, the user can specify a directory to save a raster file containing the resulting peak discharge.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                       </property>
-                       <property name="text">
-                        <string/>
-                       </property>
-                       <property name="pixmap">
-                        <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
-                       </property>
-                       <property name="scaledContents">
-                        <bool>true</bool>
-                       </property>
-                      </widget>
-                     </item>
-                    </layout>
-                   </item>
-                   <item row="1" column="1">
-                    <layout class="QHBoxLayout" name="horizontalLayout_14">
-                     <item>
-                      <widget class="QLabel" name="label_6">
-                       <property name="text">
-                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;Select unit:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item>
-                      <layout class="QHBoxLayout" name="horizontalLayout_16">
-                       <item>
-                        <widget class="QRadioButton" name="rb_3_pg4">
-                         <property name="text">
-                          <string>L/s</string>
-                         </property>
-                        </widget>
-                       </item>
-                      </layout>
-                     </item>
-                     <item>
-                      <layout class="QHBoxLayout" name="horizontalLayout_17">
-                       <item>
-                        <widget class="QRadioButton" name="rb_4_pg4">
-                         <property name="text">
-                          <string>m³/s</string>
-                         </property>
-                        </widget>
-                       </item>
-                       <item>
-                        <widget class="QLabel" name="label_65">
-                         <property name="enabled">
-                          <bool>true</bool>
-                         </property>
-                         <property name="sizePolicy">
-                          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                           <horstretch>0</horstretch>
-                           <verstretch>0</verstretch>
-                          </sizepolicy>
-                         </property>
-                         <property name="minimumSize">
-                          <size>
-                           <width>16</width>
-                           <height>16</height>
-                          </size>
-                         </property>
-                         <property name="maximumSize">
-                          <size>
-                           <width>16</width>
-                           <height>16</height>
-                          </size>
-                         </property>
-                         <property name="toolTip">
-                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select the output file unit. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                         </property>
-                         <property name="text">
-                          <string/>
-                         </property>
-                         <property name="pixmap">
-                          <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
-                         </property>
-                         <property name="scaledContents">
-                          <bool>true</bool>
-                         </property>
-                        </widget>
-                       </item>
-                      </layout>
-                     </item>
-                    </layout>
-                   </item>
-                  </layout>
-                 </widget>
-                </item>
-                <item row="4" column="0">
                  <widget class="QFrame" name="frame_5">
                   <property name="frameShape">
                    <enum>QFrame::StyledPanel</enum>
@@ -2809,29 +1890,10 @@
                    <enum>QFrame::Raised</enum>
                   </property>
                   <layout class="QGridLayout" name="gridLayout_33">
-                   <item row="1" column="0">
+                   <item row="5" column="0">
                     <layout class="QGridLayout" name="gridLayout_11">
                      <item row="0" column="0">
                       <layout class="QGridLayout" name="gridLayout_38">
-                       <item row="0" column="0">
-                        <widget class="QCheckBox" name="ch_6_pg4">
-                         <property name="enabled">
-                          <bool>false</bool>
-                         </property>
-                         <property name="sizePolicy">
-                          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                           <horstretch>0</horstretch>
-                           <verstretch>0</verstretch>
-                          </sizepolicy>
-                         </property>
-                         <property name="text">
-                          <string/>
-                         </property>
-                         <property name="checked">
-                          <bool>true</bool>
-                         </property>
-                        </widget>
-                       </item>
                        <item row="0" column="1">
                         <widget class="QLabel" name="label_72">
                          <property name="sizePolicy">
@@ -2859,17 +1921,17 @@
                           <string/>
                          </property>
                          <property name="pixmap">
-                          <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
+                          <pixmap resource="resources.qrc">:/plugins/hidropixel/icons/icons/info(2).png</pixmap>
                          </property>
                          <property name="scaledContents">
                           <bool>true</bool>
                          </property>
                         </widget>
                        </item>
-                       <item row="0" column="2">
-                        <widget class="QLabel" name="label_63">
+                       <item row="0" column="4">
+                        <widget class="QToolButton" name="tbtn_pg4_6">
                          <property name="text">
-                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Resulting watershed hydrograph (m³/s)*:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                          <string>...</string>
                          </property>
                         </widget>
                        </item>
@@ -2898,44 +1960,29 @@
                          </property>
                         </widget>
                        </item>
-                       <item row="0" column="4">
-                        <widget class="QToolButton" name="tbtn_pg4_6">
-                         <property name="text">
-                          <string>...</string>
+                       <item row="0" column="0">
+                        <widget class="QCheckBox" name="ch_6_pg4">
+                         <property name="enabled">
+                          <bool>false</bool>
                          </property>
-                        </widget>
-                       </item>
-                       <item row="0" column="5">
-                        <widget class="QLabel" name="label_54">
                          <property name="sizePolicy">
-                          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                            <horstretch>0</horstretch>
                            <verstretch>0</verstretch>
                           </sizepolicy>
                          </property>
-                         <property name="minimumSize">
-                          <size>
-                           <width>16</width>
-                           <height>16</height>
-                          </size>
-                         </property>
-                         <property name="maximumSize">
-                          <size>
-                           <width>16</width>
-                           <height>16</height>
-                          </size>
-                         </property>
-                         <property name="toolTip">
-                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If selected, a graph of the resulting hydrograph will be generated.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                         </property>
                          <property name="text">
                           <string/>
                          </property>
-                         <property name="pixmap">
-                          <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
-                         </property>
-                         <property name="scaledContents">
+                         <property name="checked">
                           <bool>true</bool>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="0" column="2">
+                        <widget class="QLabel" name="label_63">
+                         <property name="text">
+                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Resulting watershed hydrograph (m³/s)*:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                          </property>
                         </widget>
                        </item>
@@ -2970,6 +2017,40 @@
                          </property>
                          <property name="checked">
                           <bool>false</bool>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="0" column="7">
+                        <widget class="QLabel" name="label_54">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                           <horstretch>0</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="minimumSize">
+                          <size>
+                           <width>16</width>
+                           <height>16</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>16</width>
+                           <height>16</height>
+                          </size>
+                         </property>
+                         <property name="toolTip">
+                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If selected, a graph of the resulting hydrograph will be generated.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                         </property>
+                         <property name="text">
+                          <string/>
+                         </property>
+                         <property name="pixmap">
+                          <pixmap resource="resources.qrc">:/plugins/hidropixel/icons/icons/info(2).png</pixmap>
+                         </property>
+                         <property name="scaledContents">
+                          <bool>true</bool>
                          </property>
                         </widget>
                        </item>
@@ -3039,9 +2120,25 @@
                         </widget>
                        </item>
                        <item>
+                        <spacer name="horizontalSpacer_9">
+                         <property name="orientation">
+                          <enum>Qt::Horizontal</enum>
+                         </property>
+                         <property name="sizeType">
+                          <enum>QSizePolicy::Fixed</enum>
+                         </property>
+                         <property name="sizeHint" stdset="0">
+                          <size>
+                           <width>22</width>
+                           <height>20</height>
+                          </size>
+                         </property>
+                        </spacer>
+                       </item>
+                       <item>
                         <widget class="QLabel" name="label_55">
                          <property name="enabled">
-                          <bool>false</bool>
+                          <bool>true</bool>
                          </property>
                          <property name="sizePolicy">
                           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -3068,24 +2165,70 @@
                           <string/>
                          </property>
                          <property name="pixmap">
-                          <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
+                          <pixmap resource="resources.qrc">:/plugins/hidropixel/icons/icons/info(2).png</pixmap>
                          </property>
                          <property name="scaledContents">
                           <bool>true</bool>
                          </property>
                         </widget>
                        </item>
-                       <item>
-                        <spacer name="horizontalSpacer_9">
+                      </layout>
+                     </item>
+                    </layout>
+                   </item>
+                   <item row="8" column="0">
+                    <spacer name="verticalSpacer">
+                     <property name="orientation">
+                      <enum>Qt::Vertical</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>20</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
+                   <item row="0" column="0">
+                    <layout class="QGridLayout" name="gridLayout_55">
+                     <item row="0" column="0">
+                      <layout class="QGridLayout" name="gridLayout_13">
+                       <item row="0" column="0">
+                        <widget class="QLabel" name="label_49">
+                         <property name="text">
+                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Output definition:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="1" column="0">
+                        <widget class="Line" name="line">
                          <property name="orientation">
                           <enum>Qt::Horizontal</enum>
                          </property>
-                         <property name="sizeType">
-                          <enum>QSizePolicy::Fixed</enum>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                     <item row="1" column="0">
+                      <layout class="QGridLayout" name="gridLayout_17">
+                       <item row="0" column="1">
+                        <widget class="QLabel" name="label_66">
+                         <property name="toolTip">
+                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select each file to be added to current QGIS project.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                         </property>
+                         <property name="text">
+                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Add to project:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="0" column="0">
+                        <spacer name="horizontalSpacer_8">
+                         <property name="orientation">
+                          <enum>Qt::Horizontal</enum>
                          </property>
                          <property name="sizeHint" stdset="0">
                           <size>
-                           <width>16</width>
+                           <width>40</width>
                            <height>20</height>
                           </size>
                          </property>
@@ -3095,93 +2238,53 @@
                      </item>
                     </layout>
                    </item>
-                   <item row="0" column="0">
-                    <layout class="QGridLayout" name="gridLayout_20">
+                   <item row="1" column="0">
+                    <layout class="QGridLayout" name="gridLayout_16">
                      <item row="0" column="0">
-                      <widget class="QCheckBox" name="ch_5_pg4">
+                      <widget class="QCheckBox" name="ch_4_pg4">
                        <property name="sizePolicy">
                         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                         <horstretch>0</horstretch>
+                         <horstretch>13</horstretch>
                          <verstretch>0</verstretch>
                         </sizepolicy>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>13</width>
+                         <height>13</height>
+                        </size>
                        </property>
                        <property name="text">
                         <string/>
                        </property>
                       </widget>
                      </item>
-                     <item row="0" column="1">
-                      <layout class="QGridLayout" name="gridLayout_57">
-                       <item row="0" column="1">
-                        <widget class="QLabel" name="label_71">
+                     <item row="0" column="2">
+                      <layout class="QGridLayout" name="gridLayout_52">
+                       <item row="0" column="2">
+                        <widget class="QToolButton" name="tbtn_pg4_4">
+                         <property name="enabled">
+                          <bool>false</bool>
+                         </property>
                          <property name="text">
-                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Map of resulting runoff volume (m³):&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                          <string>...</string>
                          </property>
                         </widget>
                        </item>
-                       <item row="0" column="2">
-                        <widget class="QLineEdit" name="le_5_pg4">
-                         <property name="sizePolicy">
-                          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                           <horstretch>0</horstretch>
-                           <verstretch>0</verstretch>
-                          </sizepolicy>
+                       <item row="0" column="0" alignment="Qt::AlignLeft">
+                        <widget class="QLabel" name="label_61">
+                         <property name="enabled">
+                          <bool>false</bool>
                          </property>
-                         <property name="minimumSize">
-                          <size>
-                           <width>60</width>
-                           <height>0</height>
-                          </size>
-                         </property>
-                         <property name="maximumSize">
-                          <size>
-                           <width>158</width>
-                           <height>24</height>
-                          </size>
-                         </property>
-                         <property name="clearButtonEnabled">
-                          <bool>true</bool>
+                         <property name="text">
+                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Map of resulting peak discharge:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                          </property>
                         </widget>
                        </item>
                        <item row="0" column="5">
-                        <widget class="QLabel" name="label_70">
-                         <property name="sizePolicy">
-                          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                           <horstretch>0</horstretch>
-                           <verstretch>0</verstretch>
-                          </sizepolicy>
-                         </property>
-                         <property name="minimumSize">
-                          <size>
-                           <width>16</width>
-                           <height>16</height>
-                          </size>
-                         </property>
-                         <property name="maximumSize">
-                          <size>
-                           <width>16</width>
-                           <height>16</height>
-                          </size>
-                         </property>
-                         <property name="toolTip">
-                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add this file to current QGIS project.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                         </property>
-                         <property name="text">
-                          <string/>
-                         </property>
-                         <property name="pixmap">
-                          <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
-                         </property>
-                         <property name="scaledContents">
-                          <bool>true</bool>
-                         </property>
-                        </widget>
-                       </item>
-                       <item row="0" column="6">
-                        <widget class="QCheckBox" name="ch_11_pg4">
+                        <widget class="QCheckBox" name="ch_10_pg4">
                          <property name="enabled">
-                          <bool>true</bool>
+                          <bool>false</bool>
                          </property>
                          <property name="sizePolicy">
                           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -3212,10 +2315,373 @@
                          </property>
                         </widget>
                        </item>
+                       <item row="0" column="1">
+                        <widget class="QLineEdit" name="le_4_pg4">
+                         <property name="enabled">
+                          <bool>false</bool>
+                         </property>
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                           <horstretch>0</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="minimumSize">
+                          <size>
+                           <width>60</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>158</width>
+                           <height>24</height>
+                          </size>
+                         </property>
+                         <property name="clearButtonEnabled">
+                          <bool>true</bool>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="0" column="6">
+                        <widget class="QLabel" name="label_69">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                           <horstretch>0</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="minimumSize">
+                          <size>
+                           <width>16</width>
+                           <height>16</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>16</width>
+                           <height>16</height>
+                          </size>
+                         </property>
+                         <property name="toolTip">
+                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add this file to current QGIS project.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                         </property>
+                         <property name="text">
+                          <string/>
+                         </property>
+                         <property name="pixmap">
+                          <pixmap resource="resources.qrc">:/plugins/hidropixel/icons/icons/info(2).png</pixmap>
+                         </property>
+                         <property name="scaledContents">
+                          <bool>true</bool>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                     <item row="0" column="1">
+                      <widget class="QLabel" name="label_53">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>16</width>
+                         <height>16</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>16</width>
+                         <height>16</height>
+                        </size>
+                       </property>
+                       <property name="toolTip">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:700;&quot;&gt;Optional output.&lt;br/&gt;&lt;/span&gt;&lt;br/&gt;If selected, the user can specify a directory to save a raster file containing the resulting peak discharge.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                       <property name="text">
+                        <string/>
+                       </property>
+                       <property name="pixmap">
+                        <pixmap resource="resources.qrc">:/plugins/hidropixel/icons/icons/info(2).png</pixmap>
+                       </property>
+                       <property name="scaledContents">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
+                   <item row="6" column="0">
+                    <spacer name="verticalSpacer_14">
+                     <property name="orientation">
+                      <enum>Qt::Vertical</enum>
+                     </property>
+                     <property name="sizeType">
+                      <enum>QSizePolicy::Fixed</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>20</width>
+                       <height>10</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
+                   <item row="7" column="0">
+                    <layout class="QGridLayout" name="gridLayout_39">
+                     <item row="0" column="3">
+                      <widget class="QLineEdit" name="le_9_pg4">
+                       <property name="enabled">
+                        <bool>false</bool>
+                       </property>
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>60</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>158</width>
+                         <height>24</height>
+                        </size>
+                       </property>
+                       <property name="clearButtonEnabled">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="4">
+                      <widget class="QToolButton" name="tbtn_pg4_8">
+                       <property name="enabled">
+                        <bool>false</bool>
+                       </property>
+                       <property name="text">
+                        <string>...</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="6">
+                      <spacer name="horizontalSpacer_16">
+                       <property name="orientation">
+                        <enum>Qt::Horizontal</enum>
+                       </property>
+                       <property name="sizeType">
+                        <enum>QSizePolicy::Fixed</enum>
+                       </property>
+                       <property name="sizeHint" stdset="0">
+                        <size>
+                         <width>16</width>
+                         <height>20</height>
+                        </size>
+                       </property>
+                      </spacer>
+                     </item>
+                     <item row="0" column="2">
+                      <widget class="QLabel" name="label_74">
+                       <property name="enabled">
+                        <bool>false</bool>
+                       </property>
+                       <property name="text">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Resulting hydrograph (m³/s) for each POI:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="0">
+                      <widget class="QCheckBox" name="ch_13_pg4">
+                       <property name="enabled">
+                        <bool>true</bool>
+                       </property>
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="text">
+                        <string/>
+                       </property>
+                       <property name="checked">
+                        <bool>false</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="1">
+                      <widget class="QLabel" name="label_73">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>16</width>
+                         <height>16</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>16</width>
+                         <height>16</height>
+                        </size>
+                       </property>
+                       <property name="toolTip">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:704;&quot;&gt;Optional output.&lt;br/&gt;&lt;/span&gt;&lt;br/&gt;If selected, the user can specify a path to save a text file containing the resulting hydrograph (m³/s) for each POI.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                       <property name="text">
+                        <string/>
+                       </property>
+                       <property name="pixmap">
+                        <pixmap resource="resources.qrc">:/plugins/hidropixel/icons/icons/info(2).png</pixmap>
+                       </property>
+                       <property name="scaledContents">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="7">
+                      <widget class="QLabel" name="label_75">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>16</width>
+                         <height>16</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>16</width>
+                         <height>16</height>
+                        </size>
+                       </property>
+                       <property name="toolTip">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;You can open this output file using any text editor.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                       <property name="text">
+                        <string/>
+                       </property>
+                       <property name="pixmap">
+                        <pixmap resource="resources.qrc">:/plugins/hidropixel/icons/icons/info(2).png</pixmap>
+                       </property>
+                       <property name="scaledContents">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
+                   <item row="3" column="0">
+                    <layout class="QGridLayout" name="gridLayout_20">
+                     <item row="0" column="0">
+                      <widget class="QCheckBox" name="ch_5_pg4">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="text">
+                        <string/>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="1">
+                      <layout class="QGridLayout" name="gridLayout_57">
                        <item row="0" column="3">
                         <widget class="QToolButton" name="tbtn_pg4_5">
+                         <property name="enabled">
+                          <bool>false</bool>
+                         </property>
                          <property name="text">
                           <string>...</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="0" column="6">
+                        <widget class="QCheckBox" name="ch_11_pg4">
+                         <property name="enabled">
+                          <bool>false</bool>
+                         </property>
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                           <horstretch>0</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="minimumSize">
+                          <size>
+                           <width>16</width>
+                           <height>16</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>16</width>
+                           <height>16</height>
+                          </size>
+                         </property>
+                         <property name="text">
+                          <string/>
+                         </property>
+                         <property name="checkable">
+                          <bool>true</bool>
+                         </property>
+                         <property name="checked">
+                          <bool>false</bool>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="0" column="1">
+                        <widget class="QLabel" name="label_71">
+                         <property name="enabled">
+                          <bool>false</bool>
+                         </property>
+                         <property name="text">
+                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Map of resulting runoff volume (m³):&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="0" column="2">
+                        <widget class="QLineEdit" name="le_5_pg4">
+                         <property name="enabled">
+                          <bool>false</bool>
+                         </property>
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                           <horstretch>0</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="minimumSize">
+                          <size>
+                           <width>60</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>158</width>
+                           <height>24</height>
+                          </size>
+                         </property>
+                         <property name="clearButtonEnabled">
+                          <bool>true</bool>
                          </property>
                         </widget>
                        </item>
@@ -3246,7 +2712,41 @@
                           <string/>
                          </property>
                          <property name="pixmap">
-                          <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
+                          <pixmap resource="resources.qrc">:/plugins/hidropixel/icons/icons/info(2).png</pixmap>
+                         </property>
+                         <property name="scaledContents">
+                          <bool>true</bool>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="0" column="7">
+                        <widget class="QLabel" name="label_70">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                           <horstretch>0</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="minimumSize">
+                          <size>
+                           <width>16</width>
+                           <height>16</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>16</width>
+                           <height>16</height>
+                          </size>
+                         </property>
+                         <property name="toolTip">
+                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add this file to current QGIS project.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                         </property>
+                         <property name="text">
+                          <string/>
+                         </property>
+                         <property name="pixmap">
+                          <pixmap resource="resources.qrc">:/plugins/hidropixel/icons/icons/info(2).png</pixmap>
                          </property>
                          <property name="scaledContents">
                           <bool>true</bool>
@@ -3257,234 +2757,129 @@
                      </item>
                     </layout>
                    </item>
-                   <item row="3" column="0">
-                    <layout class="QGridLayout" name="gridLayout_39">
-                     <item row="0" column="1">
-                      <widget class="QLabel" name="label_73">
-                       <property name="sizePolicy">
-                        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                         <horstretch>0</horstretch>
-                         <verstretch>0</verstretch>
-                        </sizepolicy>
-                       </property>
-                       <property name="minimumSize">
-                        <size>
-                         <width>16</width>
-                         <height>16</height>
-                        </size>
-                       </property>
-                       <property name="maximumSize">
-                        <size>
-                         <width>16</width>
-                         <height>16</height>
-                        </size>
-                       </property>
-                       <property name="toolTip">
-                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:704;&quot;&gt;Optional output.&lt;br/&gt;&lt;/span&gt;&lt;br/&gt;If selected, the user can specify a path to save a text file containing the resulting hydrograph (m³/s) for each POI.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                       </property>
-                       <property name="text">
-                        <string/>
-                       </property>
-                       <property name="pixmap">
-                        <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
-                       </property>
-                       <property name="scaledContents">
-                        <bool>true</bool>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="0" column="5">
-                      <widget class="QLabel" name="label_75">
-                       <property name="sizePolicy">
-                        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                         <horstretch>0</horstretch>
-                         <verstretch>0</verstretch>
-                        </sizepolicy>
-                       </property>
-                       <property name="minimumSize">
-                        <size>
-                         <width>16</width>
-                         <height>16</height>
-                        </size>
-                       </property>
-                       <property name="maximumSize">
-                        <size>
-                         <width>16</width>
-                         <height>16</height>
-                        </size>
-                       </property>
-                       <property name="toolTip">
-                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;You can open this output file using any text editor.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                       </property>
-                       <property name="text">
-                        <string/>
-                       </property>
-                       <property name="pixmap">
-                        <pixmap resource="resources.qrc">:/plugins/hidroPixel/icons/icons/info(2).png</pixmap>
-                       </property>
-                       <property name="scaledContents">
-                        <bool>true</bool>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="0" column="3">
-                      <widget class="QLineEdit" name="le_9_pg4">
-                       <property name="sizePolicy">
-                        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                         <horstretch>0</horstretch>
-                         <verstretch>0</verstretch>
-                        </sizepolicy>
-                       </property>
-                       <property name="minimumSize">
-                        <size>
-                         <width>60</width>
-                         <height>0</height>
-                        </size>
-                       </property>
-                       <property name="maximumSize">
-                        <size>
-                         <width>158</width>
-                         <height>24</height>
-                        </size>
-                       </property>
-                       <property name="clearButtonEnabled">
-                        <bool>true</bool>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="0" column="0">
-                      <widget class="QCheckBox" name="ch_13_pg4">
-                       <property name="enabled">
-                        <bool>true</bool>
-                       </property>
-                       <property name="sizePolicy">
-                        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                         <horstretch>0</horstretch>
-                         <verstretch>0</verstretch>
-                        </sizepolicy>
-                       </property>
-                       <property name="text">
-                        <string/>
-                       </property>
-                       <property name="checked">
-                        <bool>false</bool>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="0" column="2">
-                      <widget class="QLabel" name="label_74">
-                       <property name="text">
-                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Resulting hydrograph (m³/s) for each POI:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="0" column="4">
-                      <widget class="QToolButton" name="tbtn_pg4_8">
-                       <property name="text">
-                        <string>...</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="0" column="6">
-                      <spacer name="horizontalSpacer_16">
+                   <item row="2" column="0">
+                    <layout class="QHBoxLayout" name="horizontalLayout_14">
+                     <item>
+                      <spacer name="horizontalSpacer_5">
                        <property name="orientation">
                         <enum>Qt::Horizontal</enum>
                        </property>
-                       <property name="sizeType">
-                        <enum>QSizePolicy::Fixed</enum>
-                       </property>
                        <property name="sizeHint" stdset="0">
                         <size>
-                         <width>16</width>
+                         <width>40</width>
                          <height>20</height>
                         </size>
                        </property>
                       </spacer>
                      </item>
+                     <item>
+                      <widget class="QLabel" name="label_6">
+                       <property name="enabled">
+                        <bool>false</bool>
+                       </property>
+                       <property name="text">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;Select unit:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_16">
+                       <item>
+                        <widget class="QRadioButton" name="rb_3_pg4">
+                         <property name="enabled">
+                          <bool>false</bool>
+                         </property>
+                         <property name="text">
+                          <string>L/s</string>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                     <item>
+                      <layout class="QHBoxLayout" name="horizontalLayout_17">
+                       <item>
+                        <widget class="QRadioButton" name="rb_4_pg4">
+                         <property name="enabled">
+                          <bool>false</bool>
+                         </property>
+                         <property name="text">
+                          <string>m³/s</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <widget class="QLabel" name="label_65">
+                         <property name="enabled">
+                          <bool>true</bool>
+                         </property>
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                           <horstretch>0</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="minimumSize">
+                          <size>
+                           <width>16</width>
+                           <height>16</height>
+                          </size>
+                         </property>
+                         <property name="maximumSize">
+                          <size>
+                           <width>16</width>
+                           <height>16</height>
+                          </size>
+                         </property>
+                         <property name="toolTip">
+                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select the output file unit. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                         </property>
+                         <property name="text">
+                          <string/>
+                         </property>
+                         <property name="pixmap">
+                          <pixmap resource="resources.qrc">:/plugins/hidropixel/icons/icons/info(2).png</pixmap>
+                         </property>
+                         <property name="scaledContents">
+                          <bool>true</bool>
+                         </property>
+                        </widget>
+                       </item>
+                       <item>
+                        <spacer name="horizontalSpacer_7">
+                         <property name="orientation">
+                          <enum>Qt::Horizontal</enum>
+                         </property>
+                         <property name="sizeHint" stdset="0">
+                          <size>
+                           <width>40</width>
+                           <height>20</height>
+                          </size>
+                         </property>
+                        </spacer>
+                       </item>
+                      </layout>
+                     </item>
                     </layout>
                    </item>
                    <item row="4" column="0">
-                    <spacer name="verticalSpacer">
+                    <spacer name="verticalSpacer_13">
                      <property name="orientation">
                       <enum>Qt::Vertical</enum>
+                     </property>
+                     <property name="sizeType">
+                      <enum>QSizePolicy::Fixed</enum>
                      </property>
                      <property name="sizeHint" stdset="0">
                       <size>
                        <width>20</width>
-                       <height>40</height>
-                      </size>
-                     </property>
-                    </spacer>
-                   </item>
-                   <item row="2" column="0">
-                    <spacer name="verticalSpacer_10">
-                     <property name="orientation">
-                      <enum>Qt::Vertical</enum>
-                     </property>
-                     <property name="sizeHint" stdset="0">
-                      <size>
-                       <width>20</width>
-                       <height>40</height>
+                       <height>10</height>
                       </size>
                      </property>
                     </spacer>
                    </item>
                   </layout>
                  </widget>
-                </item>
-                <item row="5" column="0">
-                 <layout class="QHBoxLayout" name="horizontalLayout_15">
-                  <item>
-                   <widget class="QPushButton" name="btn_read_pg4">
-                    <property name="text">
-                     <string notr="true">Read from project</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QPushButton" name="btn_save_file_pg4">
-                    <property name="text">
-                     <string notr="true">Save to project</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QPushButton" name="btn_run_2">
-                    <property name="enabled">
-                     <bool>true</bool>
-                    </property>
-                    <property name="styleSheet">
-                     <string notr="true"/>
-                    </property>
-                    <property name="text">
-                     <string notr="true">Run</string>
-                    </property>
-                    <property name="checkable">
-                     <bool>false</bool>
-                    </property>
-                    <property name="checked">
-                     <bool>false</bool>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QPushButton" name="btn_close_pg4">
-                    <property name="accessibleDescription">
-                     <string notr="true"/>
-                    </property>
-                    <property name="text">
-                     <string notr="true">Close</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QPushButton" name="btn_help_pg4">
-                    <property name="text">
-                     <string notr="true">Help</string>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
                 </item>
                </layout>
               </widget>
@@ -3638,6 +3033,13 @@ p, li { white-space: pre-wrap; }
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QgsMapLayerComboBox</class>
+   <extends>QComboBox</extends>
+   <header>qgsmaplayercombobox.h</header>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>le_3_pg1</tabstop>
   <tabstop>tbtn_pg1_1</tabstop>
@@ -3682,27 +3084,13 @@ p, li { white-space: pre-wrap; }
   <tabstop>btn_close_pg4</tabstop>
   <tabstop>btn_help_pg4</tabstop>
   <tabstop>btn_config</tabstop>
-  <tabstop>le_3_pg4</tabstop>
   <tabstop>rb_2_pg1</tabstop>
   <tabstop>tabWidget</tabstop>
   <tabstop>scrollArea</tabstop>
   <tabstop>rb_3_pg1</tabstop>
   <tabstop>scrollArea_2</tabstop>
-  <tabstop>le_1_pg4</tabstop>
-  <tabstop>tbtn_pg4_1</tabstop>
-  <tabstop>rb_1_pg4</tabstop>
-  <tabstop>rb_2_pg4</tabstop>
-  <tabstop>le_2_pg4</tabstop>
-  <tabstop>ch_8_pg4</tabstop>
   <tabstop>scrollArea_3</tabstop>
   <tabstop>scrollArea_4</tabstop>
-  <tabstop>ch_7_pg4</tabstop>
-  <tabstop>ch_1_pg4</tabstop>
-  <tabstop>tbtn_pg4_2</tabstop>
-  <tabstop>ch_2_pg4</tabstop>
-  <tabstop>ch_3_pg4</tabstop>
-  <tabstop>ch_9_pg4</tabstop>
-  <tabstop>tbtn_pg4_3</tabstop>
   <tabstop>te_logg</tabstop>
   <tabstop>btn_cancel_log</tabstop>
   <tabstop>btn_close_log</tabstop>

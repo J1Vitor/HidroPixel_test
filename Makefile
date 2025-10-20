@@ -1,5 +1,5 @@
 #/***************************************************************************
-# HidroPixel
+# Hidropixel
 #
 #							 -------------------
 #		begin				: 2023-11-29
@@ -37,15 +37,15 @@ LOCALES =
 # translation
 SOURCES = \
 	__init__.py \
-	hidroPixel.py hidroPixel_dialog.py
+	hidropixel.py hidropixel_dialog.py
 
-PLUGINNAME = hidroPixel
+PLUGINNAME = hidropixel
 
 PY_FILES = \
 	__init__.py \
-	hidroPixel.py hidroPixel_dialog.py
+	hidropixel.py hidropixel_dialog.py
 
-UI_FILES = hidroPixel_dialog_base.ui
+UI_FILES = hidropixel_dialog_base.ui
 
 EXTRAS = metadata.txt icon.png
 

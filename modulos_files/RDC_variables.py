@@ -1,7 +1,7 @@
 """
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ MODULE FOR CREATION OF RDC's VARIABLES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-Objective: This file is responsible for creating the RDC's variables necessary for the HidroPixel Plugin operation.
+Objective: This file is responsible for creating the RDC's variables necessary for the Hidropixel Plugin operation.
 Author: João Vitor Dias
 Supervisor: Adriano Rolim
 Date of last update: 30/11/2023
@@ -10,23 +10,25 @@ Date of last update: 30/11/2023
 # IMPORTING libs
 import numpy as np
 
+
 class RDCVariables:
     """
-    This class is responsible for creating the RDC's variables necessary for the HidroPixel Plugin operation.
+    This class is responsible for creating the RDC's variables necessary for the Hidropixel Plugin operation.
     """
-    def __init__(self,nlin,ncol):
+
+    def __init__(self, nlin, ncol):
         """
-        This method is responsible for creating the RDC's variables necessary for the HidroPixel Plugin operation.
+        This method is responsible for creating the RDC's variables necessary for the Hidropixel Plugin operation.
         """
         # Matrix's declaration
-        self.Var2D = np.empty((nlin,ncol), dtype=float)
-        self.xx = np.empty((nlin,ncol), dtype=float)
-        self.yy = np.empty((nlin,ncol), dtype=float)
-        self.P2lc = np.empty((nlin,ncol), dtype=float)
-        self.VarMM2 = np.empty((nlin,ncol), dtype=float)
-        self.VarMM3 = np.empty((nlin,ncol,0), dtype=float)
-        self.cell = np.empty((nlin,ncol), dtype=np.int16)
-      
+        self.Var2D = np.empty((nlin, ncol), dtype=float)
+        self.xx = np.empty((nlin, ncol), dtype=float)
+        self.yy = np.empty((nlin, ncol), dtype=float)
+        self.P2lc = np.empty((nlin, ncol), dtype=float)
+        self.VarMM2 = np.empty((nlin, ncol), dtype=float)
+        self.VarMM3 = np.empty((nlin, ncol, 0), dtype=float)
+        self.cell = np.empty((nlin, ncol), dtype=np.int16)
+
         # string's declaration
         self.iauxchar1 = ""
         self.iauxchar2 = ""
@@ -41,7 +43,6 @@ class RDCVariables:
         self.projection = None
         self.projection = ""
 
-
         # Int's variables declaration
         self.i = 0
         self.narq = 0
@@ -55,7 +56,7 @@ class RDCVariables:
         self.lin3 = 0
         self.lin2 = 0
         self.col2 = 0
-        self.col3 =0 
+        self.col3 = 0
         self.nlin3 = 0
         self.resolucao = 0
         self.ncol3 = 0
@@ -76,7 +77,6 @@ class RDCVariables:
         self.tipo_dado = 0
         self.tipo1 = 0
         self.tipo2 = 0
-         
 
         # Real varibles declaration
         self.coordxie = 0.0
@@ -93,4 +93,3 @@ class RDCVariables:
         self.Varmin = 0.0
         self.Varmax = 0.0
         self.varaux = 0.0
-

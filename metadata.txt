@@ -3,17 +3,17 @@
 # This file should be included when you package your plugin.# Mandatory items:
 
 [general]
-name=Hidropixel
+name=Q-Hidropixel
 qgisMinimumVersion=3.22.0
 description=This is a plugin of the distributed rainfall-runoff hydrological model Hidropixel.
-version=3.3.0
+version=4.0.0
 author=João Vitor Lima, Dário Lima & Adriano Paz
 email=jvdsl_off@outlook.com
 
 about=Hidropixel is a distributed hydrological model that discretizes the basin into pixels of the available DEM. Based on this data and derived products, this model estimates the runoff travel time to the outlet for each watershed pixel. It then calculates the excess rainfall at each pixel using the Curve Number method from the Natural Resources Conservation Service (NRCS-CN), considering spatially variable rainfall fields. Translation effect is applied to each pixel’s excess rainfall based on the flow travel time of each grid element. A distributed linear reservoir approach is employed to represent the storage effects. Each pixel’s linear reservoir has the residence time of the water as a function of their flow travel time. Finally, the watershed's final hydrograph is obtained by overlaying the hydrographs generated individually for each pixel. A complete description of this model is presented in the paper Lima, D.M.; Paz, A.R.; Xuan, Y.; Allasia, D.G. Incorporating spatial variability in surface runoff modeling with new DEM-based distributed approaches. Computational Geosciences 1, 1, 2024. https://doi.org/10.1007/s10596-024-10321-x.
 
-tracker=https://github.com/J1Vitor/HidroPixel_test.git
-repository=https://github.com/J1Vitor/HidroPixel_test.git
+tracker=https://github.com/J1Vitor/Q-Hidropixel_test.git
+repository=https://github.com/J1Vitor/Q-Hidropixel_test.git
 # End of mandatory metadata
 
 # Recommended items:
@@ -23,9 +23,9 @@ hasProcessingProvider=no
 # changelog=
 
 # Tags are comma separated with spaces allowed
-tags=Hidropixel, Hydrologic modeling, Geoprocessing, rainfall-runoff
+tags=Q-Hidropixel, Hydrologic modeling, Distributed model, rainfall-runoff
 
-homepage=https://github.com/J1Vitor/HidroPixel_test.git
+homepage=https://github.com/J1Vitor/Q-Hidropixel_test.git
 category=Plugins
 icon=icons\icon3.png
 # experimental flag

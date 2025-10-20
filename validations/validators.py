@@ -1,5 +1,6 @@
 # core/validators.py
 import numpy as np
+import struct
 from qgis.core import QgsProject, QgsRasterLayer
 from qgis.PyQt.QtWidgets import QMessageBox, QApplication, QProgressDialog
 from qgis.PyQt.QtCore import QByteArray, Qt
@@ -150,11 +151,14 @@ class RasterValidator:
             QMessageBox.information(
                 self.dlg_flow_tt, "OK", "Valid basin raster.")
             self.atualizar_label_validacao(label, 1)
+            # marcar validação como bem sucedida
+            self.atualizar_validação("validar_raster_bacia", True)
 
         except Exception as e:
             QMessageBox.critical(self.dlg_flow_tt, "Unexpected error", str(e))
             self.atualizar_label_validacao(label, 0)
-            self.atualizar_validação("validar_raster_bacia", True)
+            # em caso de exceção, marca como falha
+            self.atualizar_validação("validar_raster_bacia", False)
 
     def validar_raster_mde(self):
         try:
@@ -936,7 +940,7 @@ class RasterValidator:
             cn_array = self.raster_to_array(cn_layer)
             bacia_array = self.raster_to_array(bacia_layer)
 
-            # Máscara da bacia
+            # Mascara da bacia
             dentro_bacia = (bacia_array == 1)
             valores_cn = cn_array[dentro_bacia]
 
@@ -1128,7 +1132,7 @@ class RasterValidator:
             self.atualizar_label_validacao(self.dlg_flow_rout.label_22, 0)
             self.atualizar_validação("verificar_chuva_excedente_total", False)
 
-    def validar_hietograma_txt(self):
+    def validar_hietograma_bin(self):
         aviso = self.mostrar_mensagem_processando(
             mensagem="Hyetograph file validation is running..."
         )
@@ -1141,115 +1145,94 @@ class RasterValidator:
                                     "Warning", "File not found.")
                 self.atualizar_label_validacao(
                     self.dlg_flow_rout.label_24, '⚠️ Not selected')
-                self.atualizar_validação("validar_hietograma_txt", False)
+                self.atualizar_validação("validar_hietograma_bin", False)
                 return
 
-            with open(path, 'r', encoding='utf-8') as f:
-                lines = [line.strip() for line in f if line.strip()]
+            # Lê o raster selecionado no combobox (para comparar o número de pixels)
+            camada_nome = self.dlg_exc_rain.cb_1_pg2.currentText()
+            raster = None
+            for camada in QgsProject.instance().mapLayers().values():
+                if camada.name() == camada_nome:
+                    raster = camada
+                    break
 
-            if len(lines) < 2:
+            if raster is None:
                 aviso.close()
-                QMessageBox.critical(
-                    self.dlg_flow_rout, "Error", "File does not contain enough data.")
-                self.atualizar_label_validacao(self.dlg_flow_rout.label_24, 0)
-                self.atualizar_validação("validar_hietograma_txt", False)
+                QMessageBox.warning(self.dlg_flow_rout,
+                                    "Warning", "No raster layer selected.")
                 return
 
-            header = [col.strip() for col in lines[0].split(',')]
-            if header[0].lower() != 'pixel':
-                aviso.close()
-                QMessageBox.critical(
-                    self.dlg_flow_rout, "Error", "Invalid header. Must start with 'Pixel'.")
-                self.atualizar_label_validacao(self.dlg_flow_rout.label_24, 0)
-                self.atualizar_validação("validar_hietograma_txt", False)
-                return
+            provider = raster.dataProvider()
+            extent = raster.extent()
+            rows = raster.height()
+            cols = raster.width()
+            total_pixels_raster = rows * cols
 
-            expected_cols = len(header)
+            # Leitura do arquivo binario
+            with open(path, 'rb') as f:
+                # Lê cabeçalho
+                n_pixels = struct.unpack('i', f.read(4))[0]
+                n_blocos = struct.unpack('i', f.read(4))[0]
+                discretizacao = struct.unpack('f', f.read(4))[0]
+                duracao = struct.unpack('f', f.read(4))[0]
 
-            for i, line in enumerate(lines[1:], start=2):
-                parts = [col.strip() for col in line.split(',')]
-                while parts and parts[-1] == '':
-                    parts.pop()
-
-                if len(parts) == expected_cols + 1:
-                    parts.pop()
-                elif len(parts) != expected_cols:
+                # Verifica se ha correspondência com o número de pixels da bacia
+                if n_pixels > total_pixels_raster:
                     aviso.close()
                     QMessageBox.critical(
                         self.dlg_flow_rout,
                         "Error",
-                        f"Line {i} has {len(parts)} columns, expected {expected_cols}."
+                        f"The file specifies {n_pixels} pixels, "
+                        f"but the raster contains only {total_pixels_raster}."
                     )
                     self.atualizar_label_validacao(
                         self.dlg_flow_rout.label_24, 0)
-                    self.atualizar_validação("validar_hietograma_txt", False)
+                    self.atualizar_validação("validar_hietograma_bin", False)
                     return
 
-                try:
-                    pixel_index = int(parts[0])
-                    if pixel_index <= 0:
-                        aviso.close()
-                        QMessageBox.critical(
-                            self.dlg_flow_rout,
-                            "Error",
-                            f"Line {i} has a non-positive pixel index."
-                        )
-                        self.atualizar_label_validacao(
-                            self.dlg_flow_rout.label_24, 0)
-                        self.atualizar_validação(
-                            "validar_hietograma_txt", False)
-                        return
-                except ValueError:
+                # Lê dados de precipitação
+                total_valores = n_pixels * n_blocos
+                dados = np.fromfile(f, dtype=np.float32, count=total_valores)
+
+                if dados.size != total_valores:
                     aviso.close()
                     QMessageBox.critical(
                         self.dlg_flow_rout,
                         "Error",
-                        f"Line {i} has an invalid pixel index."
+                        "Unexpected end of file: number of precipitation values is inconsistent."
                     )
                     self.atualizar_label_validacao(
                         self.dlg_flow_rout.label_24, 0)
-                    self.atualizar_validação("validar_hietograma_txt", False)
+                    self.atualizar_validação("validar_hietograma_bin", False)
                     return
 
-                temporal_values = parts[1:]
-                try:
-                    values = list(map(float, temporal_values))
-                    if not all(v >= 0 for v in values):
-                        aviso.close()
-                        QMessageBox.critical(
-                            self.dlg_flow_rout,
-                            "Error",
-                            f"Line {i} contains negative values."
-                        )
-                        self.atualizar_label_validacao(
-                            self.dlg_flow_rout.label_24, 0)
-                        self.atualizar_validação(
-                            "validar_hietograma_txt", False)
-                        return
-                except ValueError:
+                # Valida se todos os valores são positivos
+                if np.any(dados < 0):
                     aviso.close()
                     QMessageBox.critical(
                         self.dlg_flow_rout,
                         "Error",
-                        f"Line {i} contains non-numeric values."
+                        "The file contains negative precipitation values."
                     )
                     self.atualizar_label_validacao(
                         self.dlg_flow_rout.label_24, 0)
-                    self.atualizar_validação("validar_hietograma_txt", False)
+                    self.atualizar_validação("validar_hietograma_bin", False)
                     return
 
+            # Se chegou ate aqui, esta tudo certo
             aviso.close()
             QMessageBox.information(
-                self.dlg_flow_rout, "OK", "Hyetograph file is valid.")
+                self.dlg_flow_rout, "OK", "Hyetograph binary file is valid."
+            )
             self.atualizar_label_validacao(self.dlg_flow_rout.label_24, 1)
-            self.atualizar_validação("validar_hietograma_txt", True)
+            self.atualizar_validação("validar_hietograma_bin", True)
 
         except Exception as e:
             aviso.close()
             QMessageBox.critical(self.dlg_flow_rout,
                                  "Unexpected Error", str(e))
             self.atualizar_label_validacao(self.dlg_flow_rout.label_24, 0)
-            self.atualizar_validação("validar_hietograma_txt", False)
+            self.atualizar_validação("validar_hietograma_bin", False)
 
     def validar_regioes_interesse_raster(self):
         if not self.dlg_flow_rout.groupBox_2.isChecked():
