@@ -26,46 +26,6 @@ from qgis.PyQt.QtWidgets import QMessageBox
 import sys
 import importlib.util
 
-# Check whether required modules are available without importing them fully
-required = [
-    ("matplotlib", "matplotlib.pyplot"),
-    ("opencv-python", "cv2"),
-]
-missing = []
-for pkg_name, mod_name in required:
-    if importlib.util.find_spec(mod_name) is None:
-        missing.append(pkg_name)
-
-DEPENDENCIES_OK = len(missing) == 0
-
-# Guard so we only show the missing-deps dialog once (QGIS may call classFactory multiple times)
-_missing_deps_shown = False
-
-
-class DummyPlugin:
-    """No-op plugin used when dependencies are missing.
-
-    Returning this from classFactory prevents the real plugin from being
-    instantiated while allowing QGIS to continue running.
-    """
-
-    def __init__(self, iface):
-        self.iface = iface
-        # Show a single message to the user explaining why plugin is disabled
-        global _missing_deps_shown
-        if not _missing_deps_shown:
-            parent = getattr(iface, 'mainWindow', lambda: None)()
-            QMessageBox.critical(parent, 'Missing Dependencies',
-                                 f'Q-Hidropixel will not be loaded. Please install the "{", ".join(missing)}" package and restart QGIS.')
-
-            _missing_deps_shown = True
-
-    def initGui(self):
-        return
-
-    def unload(self):
-        return
-
 
 def classFactory(iface):  # pylint: disable=invalid-name
     """Load Hidropixel class from file Hidropixel.
@@ -73,9 +33,6 @@ def classFactory(iface):  # pylint: disable=invalid-name
     This function is called by QGIS to instantiate the plugin. If
     dependencies are missing, return a DummyPlugin that does nothing.
     """
-    if not DEPENDENCIES_OK:
-        return DummyPlugin(iface)
-
     # All dependencies present: import and instantiate the real plugin
     from .hidropixel import Hidropixel
     return Hidropixel(iface)
