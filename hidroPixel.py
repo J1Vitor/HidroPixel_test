@@ -22,8 +22,8 @@
 """
 from PyQt5.QtCore import Qt
 from qgis.PyQt import uic
-from qgis.PyQt.QtCore import Qt, QSettings, QTranslator, QCoreApplication
-from qgis.PyQt.QtGui import QIcon, QIntValidator, QDoubleValidator, QFont, QPixmap
+from qgis.PyQt.QtCore import Qt, QSettings, QTranslator, QCoreApplication, QUrl
+from qgis.PyQt.QtGui import QIcon, QIntValidator, QDoubleValidator, QFont, QPixmap, QDesktopServices
 from qgis.PyQt.QtWidgets import QApplication, QAction, QFileDialog, QMessageBox, QTableWidgetItem
 from qgis.core import QgsMapLayerProxyModel, Qgis, QgsProject, QgsMapLayer, QgsRasterLayer, QgsVectorLayer
 import qgis.utils
@@ -148,8 +148,6 @@ class Hidropixel:
         ui_file7 = os.path.join(
             file_path, 'hidropixel_dialog_save_project_flow_tt.ui')
 
-        ui_file8 = os.path.join(file_path, 'hidropixel_dialog_calibration.ui')
-
         # inicia instanica das diferentes routinas do plugin Hidropixel
         self.dlg_flow_tt = uic.loadUi(ui_file)
         self.dlg_exc_rain = uic.loadUi(ui_file1)
@@ -159,7 +157,6 @@ class Hidropixel:
         self.dlg_save_project_flow_tt = uic.loadUi(ui_file5)
         self.dlg_save_project_exc_rain = uic.loadUi(ui_file6)
         self.dlg_save_project_flow_rout = uic.loadUi(ui_file7)
-        self.dlg_calibration = uic.loadUi(ui_file8)
 
         # Cria outras variaveis necessarias
         self.save_result = None
@@ -3619,6 +3616,20 @@ class Hidropixel:
             self.dlg_exc_rain.tbtn_pg4_3.setEnabled(False)
             self.dlg_exc_rain.ch_9_pg4.setEnabled(False)
 
+        if self.dlg_exc_rain.ch_4_pg4.isChecked():
+            # ouput 4
+            self.dlg_exc_rain.label_72.setEnabled(True)
+            self.dlg_exc_rain.le_4_pg4.setEnabled(True)
+            self.dlg_exc_rain.tbtn_pg4_4.setEnabled(True)
+            self.dlg_exc_rain.ch_10_pg4.setEnabled(False)
+
+        else:
+            # ouput 3
+            self.dlg_exc_rain.label_72.setEnabled(False)
+            self.dlg_exc_rain.le_4_pg4.setEnabled(False)
+            self.dlg_exc_rain.tbtn_pg4_4.setEnabled(False)
+            self.dlg_exc_rain.ch_10_pg4.setEnabled(False)
+
     def ativiva_objetos_run_flow_rout(self):
         """Ativa objetos da pagina run do modulo flow routing e ajusta extensoes sugeridas."""
 
@@ -3888,6 +3899,20 @@ class Hidropixel:
             self.dlg_flow_tt.btn13_pg3.setEnabled(False)
             self.dlg_flow_tt.label_112.setEnabled(False)
 
+    def open_pdf_help(self):
+        # Caminho absoluto do PDF dentro do plugin
+        pdf_path = os.path.join(self.plugin_dir, "docs",
+                                "Q-Hidropixel_user_manual.pdf")
+
+        if not os.path.exists(pdf_path):
+            self.iface.messageBar().pushWarning(
+                "File not found",
+            )
+            return
+
+        # Abre o PDF usando o visualizador padrão do sistema
+        QDesktopServices.openUrl(QUrl.fromLocalFile(pdf_path))
+
     def run(self):
         """Esta e a funcao principal do plugin, todas as funcionalidades propostas anteriormente serao efetivadas na funcao run"""
         # Ensure DPI scaling attributes are set (safe to call repeatedly)
@@ -3970,6 +3995,8 @@ class Hidropixel:
                     lambda: self.dlg_flow_rout.show())
                 self.dlg_flow_rout.btn_config.setStyleSheet(
                     self.highlighted_style)
+                self.dlg_hidropixel.btn_help.clicked.connect(
+                    lambda: self.open_pdf_help())
             except Exception:
                 pass
 
@@ -4010,7 +4037,6 @@ class Hidropixel:
                 # ignore wiring errors so dialog still shows
                 pass
 
-            """AQUI"""
             # mark initialized so we don't reconnect signals on subsequent runs
             self._hidropixel_initialized = True
             # self.dlg_hidropixel.btn_help.clicked.connect()
@@ -4069,27 +4095,6 @@ class Hidropixel:
                 lambda: self.carregaArquivos(0, self.dlg_flow_tt.cb_8_pg2, file_type='shp'))
             self.dlg_flow_tt.tbtn_pg2_9.clicked.connect(
                 lambda: self.carregaArquivos(0, self.dlg_flow_tt.cb_6_pg2))
-
-            # Configura os botoes da pagina data validation tool: flow travel time
-            # pedro tt
-            # self.dlg_flow_tt.btn_6_pg3.clicked.connect(
-            #     lambda: self.validar_raster_bacia(self.dlg_flow_tt.cb_1_pg2.currentText(),modulo=1)
-            # )
-            # self.dlg_flow_tt.btn_7_pg3.clicked.connect(self.validar_raster_mde)
-            # self.dlg_flow_tt.btn_8_pg3.clicked.connect(self.preencher_direcoes_padrao)
-            # self.dlg_flow_tt.btn_8_pg3.clicked.connect(self.validar_direcoes_fluxo)
-            # self.dlg_flow_tt.btn_10_pg3.clicked.connect(lambda: self.verificar_dimensoes_rasters([
-            #             self.dlg_flow_tt.cb_1_pg2.currentText(),
-            #             self.dlg_flow_tt.cb_2_pg2.currentText(),
-            #             self.dlg_flow_tt.cb_3_pg2.currentText(),
-            #             self.dlg_flow_tt.cb_7_pg2.currentText()
-            #         ], modulo = 1)
-            #     )
-            # self.dlg_flow_tt.btn9_pg3.clicked.connect(lambda: self.executar_validacao_fluxo())
-            # self.dlg_flow_tt.btn11_pg3.clicked.connect(self.validar_uso_cobertura)
-            # self.dlg_flow_tt.btn12_pg3.clicked.connect(self.validar_tabela_manning)
-            # self.dlg_flow_tt.btn14_pg3.clicked.connect(self.verificar_conectividade_rede)
-            # self.dlg_flow_tt.btn15_pg3.clicked.connect(self.verificar_acumulado_drenagem)
 
             # Configura os botoes da pagina run page: flow travel time
             self.dlg_flow_tt.tbtn_pg4_6.clicked.connect(
@@ -4266,20 +4271,6 @@ class Hidropixel:
             self.dlg_exc_rain.tbtn_pg2_4.clicked.connect(
                 lambda: self.carregaArquivos(self.dlg_exc_rain.le_4_pg2, 0, file_type='bin'))
 
-            # Configura os botoes da pagina data validation tool : excess rainfall
-            # pedro ex
-            # self.dlg_exc_rain.btn1_pg_4.clicked.connect(lambda: self.verificar_dimensoes_rasters([
-            #             self.dlg_exc_rain.cb_1_pg2.currentText(),
-            #             self.dlg_exc_rain.cb_2_pg2.currentText(),
-            #         ], modulo = 2)
-            #     )
-            # self.dlg_exc_rain.btn2_pg_4.clicked.connect(
-            #     lambda: self.validar_raster_bacia(self.dlg_exc_rain.cb_1_pg2.currentText(),modulo=2)
-            # )
-            # self.dlg_exc_rain.btn3_pg_4.clicked.connect(self.validar_raster_cn)
-
-            # configura botoes de salvar e salvar para um arquivo: excess rainfall
-
             # Chama funcao para definir valor de path da GUI save to project
             self.dlg_exc_rain.btn_save_file_pg1.clicked.connect(
                 lambda: self.project_path())
@@ -4324,6 +4315,8 @@ class Hidropixel:
             self.dlg_exc_rain.ch_2_pg4.toggled.connect(
                 lambda: self.ativiva_objetos_run_exc_rainf())
             self.dlg_exc_rain.ch_3_pg4.toggled.connect(
+                lambda: self.ativiva_objetos_run_exc_rainf())
+            self.dlg_exc_rain.ch_4_pg4.toggled.connect(
                 lambda: self.ativiva_objetos_run_exc_rainf())
 
             self.dlg_exc_rain.tbtn_pg4_1.clicked.connect(
@@ -4482,14 +4475,6 @@ class Hidropixel:
 
             self.dlg_flow_rout.btn_close_pg4.clicked.connect(
                 lambda: self.close_gui(3))
-
-            """AQUI de fato"""
-            # Chama janela de calibracao
-
-            self.dlg_hidropixel.btn_calibration.clicked.connect(
-                lambda: self.dlg_calibration.show())
-            self.dlg_calibration.btn_fechar.clicked.connect(
-                lambda: self.dlg_calibration.close())
 
             '''Menu Q-Hidropixel'''
             # Elimina os arquivos criados durante a execucao do hidropixel

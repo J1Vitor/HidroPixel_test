@@ -1195,8 +1195,8 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>402</width>
-                 <height>229</height>
+                 <width>580</width>
+                 <height>390</height>
                 </rect>
                </property>
                <layout class="QGridLayout" name="gridLayout_14">
@@ -1490,7 +1490,7 @@
                           </size>
                          </property>
                          <property name="toolTip">
-                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;*Required file&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Add a .txt file containing spatially distributed rainfall data for the watershed.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;*Required file&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Add a .bin file containing spatially distributed rainfall data for the watershed.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                          </property>
                          <property name="text">
                           <string/>
@@ -1620,8 +1620,8 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>98</width>
-                 <height>89</height>
+                 <width>580</width>
+                 <height>390</height>
                 </rect>
                </property>
                <layout class="QGridLayout" name="gridLayout_30">
@@ -1635,8 +1635,8 @@
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>310</width>
-                     <height>145</height>
+                     <width>560</width>
+                     <height>370</height>
                     </rect>
                    </property>
                    <layout class="QGridLayout" name="gridLayout_28">
@@ -1978,8 +1978,8 @@
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>454</width>
-                 <height>389</height>
+                 <width>580</width>
+                 <height>390</height>
                 </rect>
                </property>
                <layout class="QGridLayout" name="gridLayout_17">
@@ -2663,7 +2663,7 @@
                     <item row="0" column="0">
                      <widget class="QCheckBox" name="ch_4_pg4">
                       <property name="enabled">
-                       <bool>false</bool>
+                       <bool>true</bool>
                       </property>
                       <property name="sizePolicy">
                        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -2675,7 +2675,7 @@
                        <string/>
                       </property>
                       <property name="checked">
-                       <bool>true</bool>
+                       <bool>false</bool>
                       </property>
                      </widget>
                     </item>
@@ -2684,7 +2684,7 @@
                       <item row="0" column="5">
                        <widget class="QCheckBox" name="ch_10_pg4">
                         <property name="enabled">
-                         <bool>true</bool>
+                         <bool>false</bool>
                         </property>
                         <property name="sizePolicy">
                          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -2751,13 +2751,19 @@
                       </item>
                       <item row="0" column="1">
                        <widget class="QLabel" name="label_72">
+                        <property name="enabled">
+                         <bool>false</bool>
+                        </property>
                         <property name="text">
-                         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Map of total rainfall (mm)*:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Map of total rainfall (mm):&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                         </property>
                        </widget>
                       </item>
                       <item row="0" column="2">
                        <widget class="QLineEdit" name="le_4_pg4">
+                        <property name="enabled">
+                         <bool>false</bool>
+                        </property>
                         <property name="sizePolicy">
                          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                           <horstretch>0</horstretch>
@@ -2783,6 +2789,9 @@
                       </item>
                       <item row="0" column="3">
                        <widget class="QToolButton" name="tbtn_pg4_4">
+                        <property name="enabled">
+                         <bool>false</bool>
+                        </property>
                         <property name="text">
                          <string>...</string>
                         </property>
@@ -2790,6 +2799,9 @@
                       </item>
                       <item row="0" column="6">
                        <widget class="QLabel" name="label_62">
+                        <property name="enabled">
+                         <bool>true</bool>
+                        </property>
                         <property name="sizePolicy">
                          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                           <horstretch>0</horstretch>
